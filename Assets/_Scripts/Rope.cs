@@ -12,28 +12,53 @@ public class Rope : MonoBehaviour
     public float ropeGenerateDelay = 0.05f; // Time in seconds between instantiating links
     public float shootSpeed = 10f; // Multiplier to speed up rope generation when shooting
 
-    private Vector2 targetPosition;
+    //[SerializeField] private float swingForce = 100f;
 
-    /*void Start ()
+    private GameObject lastRopeLink;
+
+    private bool inAir = true;
+    private float timeInAir = 0f;
+
+
+    private void Update ()
     {
-        GenerateRope();
-    }*/
+        if (inAir)
+        {
+            transform.Translate(Vector3.right * Time.deltaTime * shootSpeed);
 
-    public void SetTarget ( Vector2 target )
-    {
-        targetPosition = target;
+            // Increment the time in air
+            timeInAir += Time.deltaTime;
 
-        // Calculate the distance from the player to the target
-        float distanceToTarget = Vector2.Distance(hook.position, targetPosition);
+            // Check if the rope has been in the air for more than 1 second
+            if (timeInAir > 1)
+            {
+                Destroy(gameObject);
+            }
 
-        // Calculate the number of links required based on the distance
-        //int requiredLinks = Mathf.CeilToInt(distanceToTarget / linkLength);
+        }
+        else
+            timeInAir = 0f;
 
-        // Generate the rope using the required number of links
-        GenerateRope();
+
+     /*   if (lastRopeLink != null)
+            HandleSwing();*/
     }
+/*
+    private void HandleSwing ()
+    {
+        float horizontal = Input.GetAxis("Horizontal");
+        lastRopeLink.GetComponent<Rigidbody2D>().AddForce(transform.right * horizontal * swingForce, ForceMode2D.Force);
+    }
+*/
 
-
+    private void OnTriggerEnter2D ( Collider2D collision )
+    {
+        if (collision.CompareTag("Shootable"))
+        {
+            inAir = false;
+            GenerateRope();
+        }
+    }
 
 
     void GenerateRope ()
@@ -54,6 +79,7 @@ public class Rope : MonoBehaviour
             else
             {
                 playerRope.ConnectRopeEnd(link.GetComponent<Rigidbody2D>());
+                lastRopeLink = link;
             }
 
         }
@@ -64,6 +90,11 @@ public class Rope : MonoBehaviour
     public void SetPlayerRope ( PlayerRope _playerRope )
     {
         this.playerRope = _playerRope;
+    }
+
+    public bool IsLastLinkConnected()
+    {
+        return lastRopeLink != null;
     }
 
 

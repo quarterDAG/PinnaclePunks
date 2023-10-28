@@ -23,9 +23,10 @@ namespace TarodevController
 
         private float _time;
 
-        [SerializeField] private MouseAim mouseAim;
+        [SerializeField] private Weapon weapon;
+        [SerializeField] private PlayerRope playerRope;
 
-        private void Awake()
+        private void Awake ()
         {
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<CapsuleCollider2D>();
@@ -33,13 +34,13 @@ namespace TarodevController
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         }
 
-        private void Update()
+        private void Update ()
         {
             _time += Time.deltaTime;
             GatherInput();
         }
 
-        private void GatherInput()
+        private void GatherInput ()
         {
             _frameInput = new FrameInput
             {
@@ -62,23 +63,26 @@ namespace TarodevController
 
         }
 
-        private void FixedUpdate()
+        private void FixedUpdate ()
         {
             CheckCollisions();
 
             HandleJump();
             HandleDirection();
-            HandleGravity();
-            
-            ApplyMovement();
+            if (!playerRope.IsRopeConnected())
+            {
+                HandleGravity();
+                ApplyMovement();
+
+            }
         }
 
         #region Collisions
-        
+
         private float _frameLeftGrounded = float.MinValue;
         private bool _grounded;
 
-        private void CheckCollisions()
+        private void CheckCollisions ()
         {
             Physics2D.queriesStartInColliders = false;
 
@@ -99,7 +103,7 @@ namespace TarodevController
                 GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
             }
             // Left the Ground
-            else if (_grounded && !groundHit)
+            else if (_grounded && !groundHit /*&& !playerRope.IsRopeConnected()*/)
             {
                 _grounded = false;
                 _frameLeftGrounded = _time;
@@ -123,9 +127,9 @@ namespace TarodevController
         private bool HasBufferedJump => _bufferedJumpUsable && _time < _timeJumpWasPressed + _stats.JumpBuffer;
         private bool CanUseCoyote => _coyoteUsable && !_grounded && _time < _frameLeftGrounded + _stats.CoyoteTime;
 
-        private bool OnRope => mouseAim.HasRope();
+        private bool OnRope => playerRope.IsRopeConnected();
 
-        private void HandleJump()
+        private void HandleJump ()
         {
             if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && _rb.velocity.y > 0) _endedJumpEarly = true;
 
@@ -136,7 +140,7 @@ namespace TarodevController
             _jumpToConsume = false;
         }
 
-        private void ExecuteJump()
+        private void ExecuteJump ()
         {
             _endedJumpEarly = false;
             _timeJumpWasPressed = 0;
@@ -144,9 +148,9 @@ namespace TarodevController
             _coyoteUsable = false;
             _frameVelocity.y = _stats.JumpPower;
 
-            if(mouseAim.HasRope())
+            if (playerRope.IsRopeConnected())
             {
-                mouseAim.DestroyCurrentRope();
+                weapon.DestroyCurrentRope();
             }
 
             Jumped?.Invoke();
@@ -156,7 +160,7 @@ namespace TarodevController
 
         #region Horizontal
 
-        private void HandleDirection()
+        private void HandleDirection ()
         {
             if (_frameInput.Move.x == 0)
             {
@@ -173,7 +177,7 @@ namespace TarodevController
 
         #region Gravity
 
-        private void HandleGravity()
+        private void HandleGravity ()
         {
             if (_grounded && _frameVelocity.y <= 0f)
             {
@@ -189,10 +193,10 @@ namespace TarodevController
 
         #endregion
 
-        private void ApplyMovement() => _rb.velocity = _frameVelocity;
+        private void ApplyMovement () => _rb.velocity = _frameVelocity;
 
 #if UNITY_EDITOR
-        private void OnValidate()
+        private void OnValidate ()
         {
             if (_stats == null) Debug.LogWarning("Please assign a ScriptableStats asset to the Player Controller's Stats slot", this);
         }

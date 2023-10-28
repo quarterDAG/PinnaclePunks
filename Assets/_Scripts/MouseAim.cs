@@ -7,13 +7,13 @@ public class MouseAim : MonoBehaviour
     [SerializeField] private Transform player;
     [SerializeField] private float maxAimDistance = 5f;
 
-    [SerializeField] private GameObject ropePrefab; // Reference to the Rope prefab
+    //[SerializeField] private GameObject ropePrefab; 
 
     private Vector2 mousePosition;
     private Vector2 aimPosition;
     private bool isShootable;
 
-    private GameObject currentRope;
+    //private GameObject currentRope;
 
     [SerializeField] private Color shootableColor = Color.green; // Color when aim is on a shootable object
     [SerializeField] private Color nonShootableColor = Color.red; // Color when aim is not on a shootable object
@@ -31,13 +31,15 @@ public class MouseAim : MonoBehaviour
     void Update ()
     {
         HandleAim();
-        HandleRope();
+        //HandleRope();
     }
+
+   /*
 
     private void HandleRope ()
     {
         // Check for left mouse button click
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             if (isShootable)
             {
@@ -57,7 +59,7 @@ public class MouseAim : MonoBehaviour
         {
             DestroyCurrentRope();
         }
-    }
+    }*/
 
     private void HandleAim ()
     {
@@ -80,7 +82,7 @@ public class MouseAim : MonoBehaviour
             spriteRenderer.color = nonShootableColor;
         }
     }
-
+/*
 
     public void DestroyCurrentRope ()
     {
@@ -90,12 +92,12 @@ public class MouseAim : MonoBehaviour
             Destroy(currentRope);
             currentRope = null;
         }
-    }
-
+    }*/
+/*
     public bool HasRope ()
     {
         return currentRope != null;
-    }
+    }*/
 
     private void OnTriggerEnter2D ( Collider2D collision )
     {
@@ -113,14 +115,10 @@ public class MouseAim : MonoBehaviour
         }
     }
 
-    /*   private bool CanShoot ()
-       {
-           RaycastHit2D hit = Physics2D.Raycast(player.position, (aimPosition - (Vector2)player.position).normalized, maxAimDistance);
+    public Vector2 GetAimPosition()
+    {
+        return aimPosition;
+    }
 
-           // Check if the raycast hit a target and if the target has the "Shootable" tag
-           if (hit.collider != null && hit.collider.CompareTag("Shootable"))
-               return true;
-           else
-               return false;
-       }*/
+
 }
