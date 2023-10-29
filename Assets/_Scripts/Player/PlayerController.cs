@@ -21,13 +21,25 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     private float _time;
 
+    [SerializeField] private TimeManager timeManager;
     [SerializeField] private Weapon weapon;
-    [SerializeField] private PlayerRope playerRope;
+    private PlayerRope playerRope;
+    [SerializeField] HPBar hpBar;
+
+
+    [System.Serializable]
+    public class PlayerStates
+    {
+        public int Health = 100;
+    }
+
+    public PlayerStates stats = new PlayerStates();
 
     private void Awake ()
     {
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
+        playerRope = GetComponent<PlayerRope>();
 
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
     }
@@ -36,6 +48,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     {
         _time += Time.deltaTime;
         GatherInput();
+        HandleSlowMotion();
     }
 
     private void GatherInput ()
@@ -67,6 +80,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         HandleJump();
         HandleDirection();
+
         if (!playerRope.IsRopeConnected())
         {
             HandleGravity();
@@ -75,18 +89,35 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         }
     }
 
+    private void HandleSlowMotion ()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            timeManager.DoSlowMotion();
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            timeManager.StopSlowMotion();
+        }
+    }
+
+
+
     public void TakeDamage ( int damage )
     {
         Debug.Log("Player take damage!");
 
-        /*        stats.Health -= damage;
+        stats.Health -= damage;
 
-                hpBar.UpdateHPFillUI(stats.Health);
+        hpBar.UpdateHPFillUI(stats.Health);
+        playerRope.DestroyCurrentRope();
+        timeManager.StopSlowMotion();
 
-                if (stats.Health <= 0)
-                {
-                    GameMaster.KillEnemy(this);
-                }*/
+        if (stats.Health <= 0)
+        {
+            GameMaster.KillPlayer(this);
+        }
 
     }
 
@@ -164,7 +195,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         if (playerRope.IsRopeConnected())
         {
-            weapon.DestroyCurrentRope();
+            playerRope.DestroyCurrentRope();
         }
 
         Jumped?.Invoke();

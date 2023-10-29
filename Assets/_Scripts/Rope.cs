@@ -38,18 +38,9 @@ public class Rope : MonoBehaviour
         }
         else
             timeInAir = 0f;
+    }
 
 
-     /*   if (lastRopeLink != null)
-            HandleSwing();*/
-    }
-/*
-    private void HandleSwing ()
-    {
-        float horizontal = Input.GetAxis("Horizontal");
-        lastRopeLink.GetComponent<Rigidbody2D>().AddForce(transform.right * horizontal * swingForce, ForceMode2D.Force);
-    }
-*/
 
     private void OnTriggerEnter2D ( Collider2D collision )
     {

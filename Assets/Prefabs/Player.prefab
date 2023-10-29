@@ -15188,8 +15188,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stats: {fileID: 11400000, guid: 05e6a06c5af93134ab98ff12e2c27265, type: 2}
+  timeManager: {fileID: 0}
   weapon: {fileID: 3313171096125664222}
-  playerRope: {fileID: 5503615758264496031}
+  hpBar: {fileID: 0}
+  stats:
+    Health: 100
 --- !u!114 &5503615758264496031
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15202,6 +15205,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 505c77c2fbb975b40ad96199d8ccf561, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  mouseAim: {fileID: 0}
+  ropePrefab: {fileID: 0}
+  ropeDistance: 20
+  ropeSpawnRate: 10
+  firePoint: {fileID: 0}
   distanceFromChainEnd: 1.5
   joint: {fileID: 6786938023795512149}
   swingForce: 200
@@ -25001,13 +25010,41 @@ MonoBehaviour:
     m_Bits: 51
   firePoint: {fileID: 8237473891179616149}
   BulletTrailPrefab: {fileID: 4837951077257602686, guid: b2ff682995d94b6478984d712ed46b6a, type: 3}
+  bulletGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  damageThisTag: 
   fireRate: 10
   damage: 10
   shotDistance: 50
   effectSpawnRate: 10
-  ropePrefab: {fileID: 3043977089762269659, guid: 3c9c9799b6a069d4c969a9c455d3de70, type: 3}
-  ropeDistance: 20
-  ropeSpawnRate: 10
 --- !u!212 &6546406253227866737
 SpriteRenderer:
   m_ObjectHideFlags: 0

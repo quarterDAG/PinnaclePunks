@@ -74,20 +74,20 @@ namespace TarodevController
         private void HandleIdleSpeed()
         {
             var inputStrength = Mathf.Abs(_player.FrameInput.x);
-            _anim.SetFloat(IdleSpeedKey, Mathf.Lerp(1, _maxIdleSpeed, inputStrength));
+            //_anim.SetFloat(IdleSpeedKey, Mathf.Lerp(1, _maxIdleSpeed, inputStrength));
             _moveParticles.transform.localScale = Vector3.MoveTowards(_moveParticles.transform.localScale, Vector3.one * inputStrength, 2 * Time.deltaTime);
         }
 
         private void HandleCharacterTilt()
         {
             var runningTilt = _grounded ? Quaternion.Euler(0, 0, _maxTilt * _player.FrameInput.x) : Quaternion.identity;
-            _anim.transform.up = Vector3.RotateTowards(_anim.transform.up, runningTilt * Vector2.up, _tiltSpeed * Time.deltaTime, 0f);
+            //_anim.transform.up = Vector3.RotateTowards(_anim.transform.up, runningTilt * Vector2.up, _tiltSpeed * Time.deltaTime, 0f);
         }
 
         private void OnJumped()
         {
-            _anim.SetTrigger(JumpKey);
-            _anim.ResetTrigger(GroundedKey);
+            //_anim.SetTrigger(JumpKey);
+            //_anim.ResetTrigger(GroundedKey);
 
 
             if (_grounded) // Avoid coyote
@@ -107,7 +107,7 @@ namespace TarodevController
                 DetectGroundColor();
                 SetColor(_landParticles);
 
-                _anim.SetTrigger(GroundedKey);
+                //_anim.SetTrigger(GroundedKey);
                 _source.PlayOneShot(_footsteps[Random.Range(0, _footsteps.Length)]);
                 _moveParticles.Play();
 
@@ -136,8 +136,8 @@ namespace TarodevController
             main.startColor = _currentGradient;
         }
 
-        private static readonly int GroundedKey = Animator.StringToHash("Grounded");
+       /* private static readonly int GroundedKey = Animator.StringToHash("Grounded");
         private static readonly int IdleSpeedKey = Animator.StringToHash("IdleSpeed");
-        private static readonly int JumpKey = Animator.StringToHash("Jump");
+        private static readonly int JumpKey = Animator.StringToHash("Jump");*/
     }
 }

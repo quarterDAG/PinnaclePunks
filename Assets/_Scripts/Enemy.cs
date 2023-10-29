@@ -8,7 +8,12 @@ public class Enemy : MonoBehaviour, ICharacter
     [SerializeField] HPBar hpBar;
     [SerializeField] GameObject weapon;
     [SerializeField] GameObject bulletPrefab; // Bullet that the enemy will shoot
-    [SerializeField] private string damageThisTag;
+    [SerializeField] private Gradient bulletGradient;
+    [SerializeField] private LayerMask obstacleLayers;
+
+    private string damageThisTag = "Player";
+
+    [SerializeField] private int damage = 1;
     [SerializeField] float attackRange = 5f; // Range within which the enemy will start shooting
     [SerializeField] float fireRate = 1f; // How often the enemy shoots
     [SerializeField] Transform firePoint; // Point from where the bullet will be shot
@@ -39,6 +44,7 @@ public class Enemy : MonoBehaviour, ICharacter
     {
 
         targetPlayer = GetClosestPlayer();
+
         if (targetPlayer != null)
         {
             HandleRotation();
@@ -46,6 +52,7 @@ public class Enemy : MonoBehaviour, ICharacter
             float distanceToPlayer = Vector3.Distance(transform.position, targetPlayer.position);
             if (distanceToPlayer <= attackRange)
             {
+
                 if (Time.time >= timeToFire)
                 {
                     timeToFire = Time.time + 1 / fireRate;
@@ -74,15 +81,38 @@ public class Enemy : MonoBehaviour, ICharacter
 
         foreach (Transform player in players)
         {
-            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-            if (distanceToPlayer < closestDistance)
+            if (player != null)
             {
-                closestDistance = distanceToPlayer;
-                closestPlayer = player;
+                float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+                if (distanceToPlayer < closestDistance && ClearPathToPlayer(player))
+                {
+                    closestDistance = distanceToPlayer;
+                    closestPlayer = player;
+                }
             }
         }
 
         return closestPlayer;
+    }
+
+    bool ClearPathToPlayer ( Transform player )
+    {
+        Vector2 directionToPlayer = (player.position - firePoint.position).normalized;
+        float distanceToPlayer = Vector3.Distance(firePoint.position, player.position);
+
+        RaycastHit2D hit = Physics2D.Raycast(firePoint.position, directionToPlayer, distanceToPlayer, obstacleLayers);
+
+        // If the raycast hit something in the obstacle layers before reaching the player, return false.
+        if (hit.collider != null)
+        {
+            // If the raycast hits the player before hitting an obstacle, then there's a clear path.
+            if (hit.collider.transform == player)
+            {
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 
     public void TakeDamage ( int damage )
@@ -100,12 +130,11 @@ public class Enemy : MonoBehaviour, ICharacter
 
     void Shoot ()
     {
-        if (bulletPrefab != null && firePoint != null && targetPlayer != null)
-        {
-            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-            bullet.GetComponent<MoveTrail>().SetTagToDamage(damageThisTag);
-
-        }
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        MoveTrail moveTrail = bullet.GetComponent<MoveTrail>();
+        moveTrail.SetTagToDamage(damageThisTag);
+        moveTrail.SetBulletGradient(bulletGradient);
+        moveTrail.SetDamage(damage);
     }
 
 
