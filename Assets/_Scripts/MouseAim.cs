@@ -120,5 +120,10 @@ public class MouseAim : MonoBehaviour
         return aimPosition;
     }
 
+    public bool IsShootable()
+    {
+        return isShootable;
+    }
+
 
 }

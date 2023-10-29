@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Shootable
+  - Aim
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -12,8 +14,8 @@ TagManager:
   - Player
   - Water
   - UI
-  - 
-  - 
+  - Background
+  - Bullets
   - 
   - 
   - 
@@ -39,6 +41,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 1868697321
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
