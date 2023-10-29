@@ -2102,8 +2102,24 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2049960159}
     - target: {fileID: 3313171096125664222, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
+      propertyPath: damageThisTag
+      value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 3313171096125664222, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
       propertyPath: effectSpawnRate
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3313171096125664222, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
+      propertyPath: whatToHit.m_Bits
+      value: 273
+      objectReference: {fileID: 0}
+    - target: {fileID: 3313171096125664222, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
+      propertyPath: BulletTrailPrefab
+      value: 
+      objectReference: {fileID: 2372949663694061506, guid: b2ff682995d94b6478984d712ed46b6a, type: 3}
+    - target: {fileID: 3313171096125664222, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
+      propertyPath: damageTheseLayers.m_Bits
+      value: 273
       objectReference: {fileID: 0}
     - target: {fileID: 5240961817479375904, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2151,6 +2167,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6038754821143387965, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
       propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 6038754821143387965, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
+      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 6231824700150868758, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}

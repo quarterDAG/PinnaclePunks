@@ -7,7 +7,8 @@ public class MoveTrail : MonoBehaviour
 
     [SerializeField] private int moveSpeed = 230;
 
-    [SerializeField] private LayerMask destroyOnTheseLayers;
+    [SerializeField] private LayerMask hitTheseLayers;
+    [SerializeField] private string damageTag;
 
     [SerializeField] private int bulletDamage = 10;
 
@@ -22,14 +23,20 @@ public class MoveTrail : MonoBehaviour
     {
         Debug.Log("Bullet collided with: " + collision.gameObject.name);
 
-        if (destroyOnTheseLayers == (destroyOnTheseLayers | (1 << collision.gameObject.layer)))
+        if (hitTheseLayers == (hitTheseLayers | (1 << collision.gameObject.layer)))
         {
            Destroy(gameObject);
         }
 
-        if(collision.CompareTag("Enemy"))
+        if(collision.CompareTag(damageTag))
         {
-            collision.GetComponent<Enemy>().DamageEnemy(bulletDamage);
+            collision.GetComponent<ICharacter>().TakeDamage(bulletDamage);
+            Destroy(gameObject);
         }
+    }
+
+    public void SetTagToDamage ( string tag )
+    {
+        damageTag = tag;
     }
 }

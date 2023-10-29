@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
-public class PlayerController : MonoBehaviour, IPlayerController
+public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 {
     [SerializeField] private ScriptableStats _stats;
     private Rigidbody2D _rb;
@@ -74,6 +74,22 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
         }
     }
+
+    public void TakeDamage ( int damage )
+    {
+        Debug.Log("Player take damage!");
+
+        /*        stats.Health -= damage;
+
+                hpBar.UpdateHPFillUI(stats.Health);
+
+                if (stats.Health <= 0)
+                {
+                    GameMaster.KillEnemy(this);
+                }*/
+
+    }
+
 
     #region Collisions
 

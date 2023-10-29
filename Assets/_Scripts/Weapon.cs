@@ -10,7 +10,9 @@ public class Weapon : MonoBehaviour
     [SerializeField] private MouseAim mouseAim;
     [SerializeField] private LayerMask whatToHit;
     [SerializeField] private Transform firePoint;
-    [SerializeField] private Transform BulletTrailPrefab;
+    [SerializeField] private GameObject BulletTrailPrefab;
+    [SerializeField] private string damageThisTag;
+
 
     [SerializeField] private float fireRate = 0;
     //[SerializeField] private int damage = 10;
@@ -37,6 +39,16 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update ()
     {
+        HandleRotation();
+
+        HandleFire();
+        HandleRope();
+        HandleSlowMotion();
+
+    }
+
+    private void HandleRotation ()
+    {
         Vector2 mouseAimPosition = mouseAim.GetAimPosition();
         Vector2 weaponPosition = new Vector2(transform.position.x, transform.position.y);
         Vector2 difference = mouseAimPosition - weaponPosition;
@@ -44,11 +56,6 @@ public class Weapon : MonoBehaviour
         difference.Normalize();
         float rotZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, rotZ);
-
-        HandleFire();
-        HandleRope();
-        HandleSlowMotion();
-
     }
 
     private void HandleRope ()
@@ -147,7 +154,9 @@ public class Weapon : MonoBehaviour
 
     private void TrailEffect ()
     {
-        Instantiate(BulletTrailPrefab, firePoint.position, firePoint.rotation);
+        GameObject bullet = Instantiate(BulletTrailPrefab, firePoint.position, firePoint.rotation);
+        bullet.GetComponent<MoveTrail>().SetTagToDamage(damageThisTag);
+
     }
 
     private void InstantiateRope ()
@@ -175,9 +184,9 @@ public class Weapon : MonoBehaviour
             currentRope = null;
         }
     }
-
+/*
     public bool ConnectedToRope ()
     {
         return currentRope.GetComponent<Rope>().IsLastLinkConnected();
-    }
+    }*/
 }
