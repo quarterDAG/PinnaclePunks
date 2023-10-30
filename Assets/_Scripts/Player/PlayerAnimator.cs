@@ -1,13 +1,25 @@
+using Spine.Unity;
 using UnityEngine;
+using Spine;
+using System.Collections.Generic;
+
 
 public class PlayerAnimator : MonoBehaviour
 {
     [SerializeField] private Animator animator;
+    [SerializeField] private SkeletonMecanim skeletonMecanim;
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private Weapon weapon;
+    [SerializeField] private MouseAim mouseAim;
+    [SerializeField] private bool isShooting;
+
 
     private Rigidbody2D rb;
     [SerializeField] private Transform aim; // Reference to the aim gameObject
     [SerializeField] private MeshRenderer meshRenderer; // Reference to the Spine's MeshRenderer
+
+    private bool isFlipped = false;
+
 
     private float previousVerticalVelocity;
 
@@ -16,36 +28,31 @@ public class PlayerAnimator : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         playerController.GroundedChanged += OnGroundedChanged;
+        weapon.ShootEvent += ShootAnimation;
     }
 
     private void OnDestroy ()
     {
         playerController.GroundedChanged -= OnGroundedChanged;
+        weapon.ShootEvent -= ShootAnimation;
     }
 
     private void Update ()
     {
+
         HandleFlip();
         HandleRunningAnimation();
 
-        HandleFallingAnimation();
-
+        HandleWeaponRotation();
         previousVerticalVelocity = rb.velocity.y;
 
     }
 
-    private void HandleFallingAnimation ()
+    private void LateUpdate ()
     {
 
-       /* // If the player was jumping and is now moving downwards, set the falling state
-        if (!animator.GetBool("IsGrounded") && previousVerticalVelocity >= 0 && rb.velocity.y < 0)
-        {
-            animator.SetBool("IsJumping", false);
-            animator.SetBool("IsFalling", true);
-        }
-
-        previousVerticalVelocity = rb.velocity.y;*/
     }
+
 
     // Flip the MeshRenderer based on aim position
     private void HandleFlip ()
@@ -55,19 +62,64 @@ public class PlayerAnimator : MonoBehaviour
             Vector3 newScale = transform.localScale;
             newScale.x *= -1;
             transform.localScale = newScale;
+            isFlipped = false;
         }
         else if (aim.position.x < transform.position.x && transform.localScale.x > 0)
         {
             Vector3 newScale = transform.localScale;
             newScale.x *= -1;
             transform.localScale = newScale;
+            isFlipped = true;
         }
     }
+
+
+    private void HandleWeaponRotation ()
+    {
+        Vector2 mouseAimPosition = mouseAim.GetAimPosition();
+        Vector2 weaponPosition = new Vector2(transform.position.x, transform.position.y);
+        Vector2 difference = mouseAimPosition - weaponPosition;
+
+        difference.Normalize();
+
+        if (isFlipped)
+            difference.y = -difference.y; // Invert the y-axis difference
+
+        float rotZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
+
+        if (isFlipped)
+            rotZ += 70;
+        else
+            rotZ -= 110;
+
+        Skeleton skeleton = skeletonMecanim.skeleton;
+
+        // List of bones you want to manipulate
+       // List<string> weaponBone = new List<string> { "Hand_B", "Arrow" };
+
+        foreach (Slot slot in skeleton.Slots)
+        {
+
+            if (slot.Bone.Data.Name.Contains("Hand_B"))
+                slot.Bone.Rotation = rotZ;
+
+            if (slot.Bone.Data.Name.Contains("Arrow"))
+                slot.A = 0; // The last value (alpha) is set to 0 to make it transparent
+
+            if (slot.Bone.Data.Name.Contains("Shade"))
+                slot.A = 0;
+
+        }
+        skeleton.UpdateWorldTransform();
+
+    }
+
+
 
     // Switch between idle and run animations based on player movement
     private void HandleRunningAnimation ()
     {
-        if (Mathf.Abs(rb.velocity.x) > 0.1f) 
+        if (Mathf.Abs(rb.velocity.x) > 0.1f)
         {
             animator.SetBool("IsRunning", true);
         }
@@ -80,8 +132,6 @@ public class PlayerAnimator : MonoBehaviour
     private void OnGroundedChanged ( bool isGroundedNow, float velocityY )
     {
 
-        Debug.Log("GROUND CHANGED EVENT");
-
         if (isGroundedNow)
         {
             animator.SetBool("IsJumping", false);
@@ -91,6 +141,12 @@ public class PlayerAnimator : MonoBehaviour
         {
             animator.SetBool("IsJumping", true);
         }
+    }
+
+    public void ShootAnimation ( bool _isShooting )
+    {
+        animator.SetBool("IsShooting", _isShooting);
+        isShooting = _isShooting;
     }
 
 

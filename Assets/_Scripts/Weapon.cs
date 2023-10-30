@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -9,8 +10,8 @@ public class Weapon : MonoBehaviour
     [SerializeField] private MouseAim mouseAim;
     [SerializeField] private LayerMask whatToHit;
     [SerializeField] private Transform firePoint;
-    [SerializeField] private GameObject BulletTrailPrefab;
-    [SerializeField] private Gradient bulletGradient;
+    [SerializeField] private GameObject arrowPrefab;
+    //[SerializeField] private Gradient bulletGradient;
     [SerializeField] private string damageThisTag;
 
 
@@ -21,6 +22,8 @@ public class Weapon : MonoBehaviour
     [SerializeField] private float effectSpawnRate = 10;
     private float timeToSpawnEffect = 0;
     private float timeToFire = 0;
+
+    public event Action<bool> ShootEvent;
 
 
 
@@ -70,6 +73,11 @@ public class Weapon : MonoBehaviour
                 Shoot();
             }
         }
+
+        if (Input.GetButtonUp("Fire1"))
+        {
+            StopShoot();
+        }
     }
 
     private void Shoot ()
@@ -87,13 +95,20 @@ public class Weapon : MonoBehaviour
 
     private void TrailEffect ()
     {
-        GameObject bullet = Instantiate(BulletTrailPrefab, firePoint.position, firePoint.rotation);
+        ShootEvent?.Invoke(true);
+
+        GameObject bullet = Instantiate(arrowPrefab, firePoint.position, firePoint.rotation);
         MoveTrail moveTrail = bullet.GetComponent<MoveTrail>();
         moveTrail.SetTagToDamage(damageThisTag);
-        moveTrail.SetBulletGradient(bulletGradient);
+        //moveTrail.SetBulletGradient(bulletGradient);
         moveTrail.SetDamage(damage);
     }
 
-   
+    private void StopShoot()
+    {
+        ShootEvent?.Invoke(false);
+
+    }
+
 
 }
