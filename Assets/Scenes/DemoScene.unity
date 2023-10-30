@@ -2491,7 +2491,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slowdownFactor: 0.05
-  slowdownLength: 2
 --- !u!4 &2049960160
 Transform:
   m_ObjectHideFlags: 0
@@ -2512,6 +2511,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5240961817479375904, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
   m_PrefabInstance: {fileID: 2861508593614981113}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1544650613361685480 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8465121765532026979, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
+  m_PrefabInstance: {fileID: 2861508593614981113}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94eb2dba75763fc4b9b41783088a1481, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2861508593614981113
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2972,6 +2982,10 @@ PrefabInstance:
       propertyPath: damageThisTag
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 3313171096125664222, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
+      propertyPath: playerAnimator
+      value: 
+      objectReference: {fileID: 1544650613361685480}
     - target: {fileID: 3313171096125664222, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
       propertyPath: effectSpawnRate
       value: 20

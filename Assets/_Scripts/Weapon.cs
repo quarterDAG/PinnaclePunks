@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TarodevController;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
     [SerializeField] private Transform player;
+    [SerializeField] private PlayerAnimator playerAnimator;
     [SerializeField] private MouseAim mouseAim;
     [SerializeField] private LayerMask whatToHit;
     [SerializeField] private Transform firePoint;
@@ -95,8 +97,7 @@ public class Weapon : MonoBehaviour
 
     private void TrailEffect ()
     {
-        ShootEvent?.Invoke(true);
-
+        playerAnimator.ShootAnimation(true);
         GameObject bullet = Instantiate(arrowPrefab, firePoint.position, firePoint.rotation);
         MoveTrail moveTrail = bullet.GetComponent<MoveTrail>();
         moveTrail.SetTagToDamage(damageThisTag);
@@ -106,7 +107,7 @@ public class Weapon : MonoBehaviour
 
     private void StopShoot()
     {
-        ShootEvent?.Invoke(false);
+        playerAnimator.ShootAnimation(false);
 
     }
 

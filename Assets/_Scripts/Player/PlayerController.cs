@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
@@ -17,6 +18,14 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     public event Action<bool, float> GroundedChanged;
     public event Action Jumped;
 
+    [System.Serializable]
+    public class PlayerStates
+    {
+        public int Health = 100;
+    }
+
+    public PlayerStates stats = new PlayerStates();
+
     #endregion
 
     private float _time;
@@ -26,14 +35,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private PlayerRope playerRope;
     [SerializeField] HPBar hpBar;
 
-
-    [System.Serializable]
-    public class PlayerStates
-    {
-        public int Health = 100;
-    }
-
-    public PlayerStates stats = new PlayerStates();
+    [SerializeField] private PlayerAnimator playerAnimator;
 
     private void Awake ()
     {
@@ -85,7 +87,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         {
             HandleGravity();
             ApplyMovement();
-
         }
     }
 
@@ -104,19 +105,24 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
 
 
-    public void TakeDamage ( int damage )
+    public async void TakeDamage ( int damage )
     {
-        Debug.Log("Player take damage!");
-
+        playerAnimator.GetHitAnimation();
         stats.Health -= damage;
 
         hpBar.UpdateHPFillUI(stats.Health);
         playerRope.DestroyCurrentRope();
-        timeManager.StopSlowMotion();
+
+        if (timeManager.isSlowMotionActive)
+        {
+            await Task.Delay(1000);
+            timeManager.StopSlowMotion();
+        }
+
 
         if (stats.Health <= 0)
         {
-            GameMaster.KillPlayer(this);
+            //GameMaster.KillPlayer(this);
         }
 
     }
@@ -146,6 +152,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             _bufferedJumpUsable = true;
             _endedJumpEarly = false;
             GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
+
+            playerAnimator.Landed();
         }
         // Left the Ground
         else if (_grounded && !groundHit /*&& !playerRope.IsRopeConnected()*/)
@@ -198,6 +206,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             playerRope.DestroyCurrentRope();
         }
 
+        playerAnimator.JumpAnimation();
         Jumped?.Invoke();
     }
 

@@ -54,11 +54,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stats: {fileID: 11400000, guid: 05e6a06c5af93134ab98ff12e2c27265, type: 2}
+  stats:
+    Health: 100
   timeManager: {fileID: 0}
   weapon: {fileID: 3313171096125664222}
   hpBar: {fileID: 0}
-  stats:
-    Health: 100
+  playerAnimator: {fileID: 8465121765532026979}
 --- !u!114 &5503615758264496031
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,12 +72,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 505c77c2fbb975b40ad96199d8ccf561, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  mouseAim: {fileID: 0}
-  ropePrefab: {fileID: 0}
+  player: {fileID: 5240961817479375904}
+  mouseAim: {fileID: 6231824700150868758}
+  ropePrefab: {fileID: 3043977089762269659, guid: 3c9c9799b6a069d4c969a9c455d3de70, type: 3}
   ropeDistance: 20
   ropeSpawnRate: 10
-  firePoint: {fileID: 0}
+  firePoint: {fileID: 8237473891179616149}
   distanceFromChainEnd: 1.5
   joint: {fileID: 6786938023795512149}
   swingForce: 200
@@ -108,10 +109,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 3378641293856702304}
   skeletonMecanim: {fileID: 6312478140728088821}
-  playerController: {fileID: 7526632956683015887}
   weapon: {fileID: 3313171096125664222}
   mouseAim: {fileID: 6231824700150868758}
-  isShooting: 0
   aim: {fileID: 537444450710121095}
   meshRenderer: {fileID: 4255224336812636751}
 --- !u!50 &2079246341268384381

@@ -2,59 +2,51 @@ using Spine.Unity;
 using UnityEngine;
 using Spine;
 using System.Collections.Generic;
-
+using Unity.VisualScripting;
+using System.Threading.Tasks;
 
 public class PlayerAnimator : MonoBehaviour
 {
     [SerializeField] private Animator animator;
     [SerializeField] private SkeletonMecanim skeletonMecanim;
-    [SerializeField] private PlayerController playerController;
     [SerializeField] private Weapon weapon;
     [SerializeField] private MouseAim mouseAim;
-    [SerializeField] private bool isShooting;
 
 
     private Rigidbody2D rb;
-    [SerializeField] private Transform aim; // Reference to the aim gameObject
-    [SerializeField] private MeshRenderer meshRenderer; // Reference to the Spine's MeshRenderer
+    [SerializeField] private Transform aim;
+    [SerializeField] private MeshRenderer meshRenderer;
 
     private bool isFlipped = false;
-
-
-    private float previousVerticalVelocity;
-
+    private bool isHit = false;
 
     private void Awake ()
     {
         rb = GetComponent<Rigidbody2D>();
-        playerController.GroundedChanged += OnGroundedChanged;
-        weapon.ShootEvent += ShootAnimation;
     }
 
-    private void OnDestroy ()
-    {
-        playerController.GroundedChanged -= OnGroundedChanged;
-        weapon.ShootEvent -= ShootAnimation;
-    }
 
     private void Update ()
     {
-
         HandleFlip();
         HandleRunningAnimation();
-
         HandleWeaponRotation();
-        previousVerticalVelocity = rb.velocity.y;
-
     }
 
-    private void LateUpdate ()
+    public async void GetHitAnimation ()
     {
+        if (!isHit)
+        {
+            isHit = true;
+            animator.SetBool("GetHit", true);
+            await Task.Delay(1000);
+            animator.SetBool("GetHit", false);
+            isHit = false;
+        }
 
     }
 
 
-    // Flip the MeshRenderer based on aim position
     private void HandleFlip ()
     {
         if (aim.position.x > transform.position.x && transform.localScale.x < 0)
@@ -73,7 +65,6 @@ public class PlayerAnimator : MonoBehaviour
         }
     }
 
-
     private void HandleWeaponRotation ()
     {
         Vector2 mouseAimPosition = mouseAim.GetAimPosition();
@@ -83,7 +74,7 @@ public class PlayerAnimator : MonoBehaviour
         difference.Normalize();
 
         if (isFlipped)
-            difference.y = -difference.y; // Invert the y-axis difference
+            difference.y = -difference.y;
 
         float rotZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
 
@@ -94,9 +85,6 @@ public class PlayerAnimator : MonoBehaviour
 
         Skeleton skeleton = skeletonMecanim.skeleton;
 
-        // List of bones you want to manipulate
-       // List<string> weaponBone = new List<string> { "Hand_B", "Arrow" };
-
         foreach (Slot slot in skeleton.Slots)
         {
 
@@ -104,7 +92,7 @@ public class PlayerAnimator : MonoBehaviour
                 slot.Bone.Rotation = rotZ;
 
             if (slot.Bone.Data.Name.Contains("Arrow"))
-                slot.A = 0; // The last value (alpha) is set to 0 to make it transparent
+                slot.A = 0;
 
             if (slot.Bone.Data.Name.Contains("Shade"))
                 slot.A = 0;
@@ -114,9 +102,6 @@ public class PlayerAnimator : MonoBehaviour
 
     }
 
-
-
-    // Switch between idle and run animations based on player movement
     private void HandleRunningAnimation ()
     {
         if (Mathf.Abs(rb.velocity.x) > 0.1f)
@@ -129,24 +114,19 @@ public class PlayerAnimator : MonoBehaviour
         }
     }
 
-    private void OnGroundedChanged ( bool isGroundedNow, float velocityY )
+    public void JumpAnimation ()
     {
+        animator.SetBool("IsJumping", true);
+    }
 
-        if (isGroundedNow)
-        {
-            animator.SetBool("IsJumping", false);
-            animator.SetBool("IsFalling", false);
-        }
-        else if (previousVerticalVelocity > 0.1f) // Player was moving upwards in the previous frame
-        {
-            animator.SetBool("IsJumping", true);
-        }
+    public void Landed ()
+    {
+        animator.SetBool("IsJumping", false);
     }
 
     public void ShootAnimation ( bool _isShooting )
     {
         animator.SetBool("IsShooting", _isShooting);
-        isShooting = _isShooting;
     }
 
 

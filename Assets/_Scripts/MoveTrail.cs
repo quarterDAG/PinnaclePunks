@@ -24,14 +24,14 @@ public class MoveTrail : MonoBehaviour
     {
         if (collision.CompareTag(damageTag))
         {
-            Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
+    /*        Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
                 Vector2 forceDirection = transform.right; // Assuming the bullet moves to the right
                 float forceAmount = 100f; // Adjust this value as needed
                 rb.AddForce(forceDirection * forceAmount, ForceMode2D.Impulse);
             }
-
+*/
             collision.GetComponent<ICharacter>().TakeDamage(bulletDamage);
             Destroy(gameObject);
         }
