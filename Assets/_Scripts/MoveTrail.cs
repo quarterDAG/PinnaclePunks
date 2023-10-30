@@ -22,9 +22,6 @@ public class MoveTrail : MonoBehaviour
 
     private void OnTriggerEnter2D ( Collider2D collision )
     {
-        Debug.Log("Bullet collided with: " + collision.gameObject.name);
-
-
         if (collision.CompareTag(damageTag))
         {
             Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
