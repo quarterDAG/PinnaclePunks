@@ -8,7 +8,7 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     [SerializeField] private Transform player;
-    [SerializeField] private PlayerAnimator playerAnimator;
+    private PlayerAnimator playerAnimator;
     [SerializeField] private MouseAim mouseAim;
     [SerializeField] private LayerMask whatToHit;
     [SerializeField] private Transform firePoint;
@@ -25,23 +25,25 @@ public class Weapon : MonoBehaviour
     private float timeToSpawnEffect = 0;
     private float timeToFire = 0;
 
-    public event Action<bool> ShootEvent;
-
+    private bool canShoot = true;
 
 
     void Awake ()
     {
         if (firePoint == null)
-        {
             Debug.LogError("No Fire Point");
-        }
+
+        playerAnimator = GetComponentInParent<PlayerAnimator>();
+
     }
 
     // Update is called once per frame
     void Update ()
     {
         HandleRotation();
-        HandleFire();
+
+        if (canShoot)
+            HandleFire();
 
     }
 
@@ -105,10 +107,14 @@ public class Weapon : MonoBehaviour
         moveTrail.SetDamage(damage);
     }
 
-    private void StopShoot()
+    private void StopShoot ()
     {
         playerAnimator.ShootAnimation(false);
+    }
 
+    public void CanShoot ( bool _canShoot )
+    {
+        canShoot = _canShoot;
     }
 
 

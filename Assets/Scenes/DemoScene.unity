@@ -2850,6 +2850,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.106784694
       objectReference: {fileID: 0}
+    - target: {fileID: 2540522577654663218, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
+      propertyPath: playerAnimator
+      value: 
+      objectReference: {fileID: 1544650613361685480}
     - target: {fileID: 2542164986326016347, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.16950001
@@ -3036,7 +3040,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4131282336754808775, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
       propertyPath: m_Offset.y
-      value: 1.15
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4323160348561418000, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
       propertyPath: m_IsActive

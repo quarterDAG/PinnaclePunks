@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class DashSkill : MonoBehaviour
@@ -7,7 +8,9 @@ public class DashSkill : MonoBehaviour
     private const float DOUBLE_CLICK_TIME = .2f;
 
     [SerializeField] float dashSpeed = 10f;
-    [SerializeField] float dashDuration = 1f;
+    [SerializeField] float dashDuration = 2f;
+    private PlayerAnimator playerAnimator;
+    private Weapon weapon;
 
     private bool isDashing;
 
@@ -22,18 +25,23 @@ public class DashSkill : MonoBehaviour
     private void Start ()
     {
         rb = GetComponent<Rigidbody2D>();
+        playerAnimator = GetComponent<PlayerAnimator>();    
+        weapon = GetComponentInChildren<Weapon>();
     }
 
     private void Update ()
+    {
+        CheckForDoubleClickAndDash();
+    }
+
+    private void CheckForDoubleClickAndDash ()
     {
         if (!isDashing)
         {
             int currentTapDirection = 0;
 
             if (Input.GetButtonDown("Horizontal"))
-            {
                 currentTapDirection = (int)Mathf.Sign(Input.GetAxisRaw("Horizontal"));
-            }
 
             if (currentTapDirection != 0)
             {
@@ -53,30 +61,36 @@ public class DashSkill : MonoBehaviour
         }
     }
 
-
     private void Dash ( int direction )
     {
-        isDashing = true; // Dash started
         Vector2 startDashPosition = rb.position;
         Vector2 targetDashPosition = new Vector2(rb.position.x + (dashSpeed * direction), rb.position.y);
-        StartCoroutine(DashMovement(startDashPosition, targetDashPosition, dashDuration));
+        StartCoroutine(DashMovementCoroutine(startDashPosition, targetDashPosition, dashDuration));
     }
 
-
-    private IEnumerator DashMovement ( Vector2 start, Vector2 end, float duration )
+    private IEnumerator DashMovementCoroutine ( Vector2 start, Vector2 end, float duration )
     {
+        playerAnimator.DashAnimation(true);
+
+        gameObject.tag = "Dodge";
+        weapon.CanShoot(false);
+
         float elapsed = 0;
 
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            float normalizedTime = Mathf.Clamp(elapsed / duration, 0, 1); 
-            rb.position = Vector2.Lerp(start, end, normalizedTime); // Interpolate position based on elapsed time
-            yield return null; // Wait for the next frame
+            float normalizedTime = Mathf.Clamp(elapsed / duration, 0, 1);
+            rb.position = Vector2.Lerp(start, end, normalizedTime);
+            yield return null;
         }
 
-        rb.position = end; 
-        isDashing = false;
+        rb.position = end;
+        //yield return new WaitForSeconds(0.1f); // Equivalent to await Task.Delay(200); but in coroutine context
+
+        gameObject.tag = "Player";
+        weapon.CanShoot(true);
+        playerAnimator.DashAnimation(false);
     }
 
 

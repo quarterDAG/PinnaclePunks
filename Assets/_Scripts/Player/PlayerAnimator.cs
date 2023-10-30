@@ -114,19 +114,20 @@ public class PlayerAnimator : MonoBehaviour
         }
     }
 
-    public void JumpAnimation ()
+    public void JumpAnimation (bool _isJumping)
     {
-        animator.SetBool("IsJumping", true);
+        animator.SetBool("IsJumping", _isJumping);
     }
 
-    public void Landed ()
-    {
-        animator.SetBool("IsJumping", false);
-    }
-
+   
     public void ShootAnimation ( bool _isShooting )
     {
         animator.SetBool("IsShooting", _isShooting);
+    }
+
+    public void DashAnimation (bool _isDashing)
+    {
+        animator.SetBool("IsDashing", _isDashing);
     }
 
 

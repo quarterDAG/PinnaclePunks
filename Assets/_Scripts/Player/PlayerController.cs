@@ -35,13 +35,14 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private PlayerRope playerRope;
     [SerializeField] HPBar hpBar;
 
-    [SerializeField] private PlayerAnimator playerAnimator;
+    private PlayerAnimator playerAnimator;
 
     private void Awake ()
     {
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
         playerRope = GetComponent<PlayerRope>();
+        playerAnimator = GetComponent<PlayerAnimator>();    
 
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
     }
@@ -153,7 +154,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             _endedJumpEarly = false;
             GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
 
-            playerAnimator.Landed();
+            playerAnimator.JumpAnimation(false);
         }
         // Left the Ground
         else if (_grounded && !groundHit /*&& !playerRope.IsRopeConnected()*/)
@@ -206,7 +207,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             playerRope.DestroyCurrentRope();
         }
 
-        playerAnimator.JumpAnimation();
+        playerAnimator.JumpAnimation(true);
         Jumped?.Invoke();
     }
 
