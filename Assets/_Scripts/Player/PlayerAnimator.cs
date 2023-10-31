@@ -130,5 +130,10 @@ public class PlayerAnimator : MonoBehaviour
         animator.SetBool("IsDashing", _isDashing);
     }
 
+    public void DeathAnimation(bool _isDead)
+    {
+        animator.SetBool("IsDead", _isDead);
+    }
+
 
 }

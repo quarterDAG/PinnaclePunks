@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private PlayerRope playerRope;
     [SerializeField] HPBar hpBar;
 
+    private bool canMove = true;
+
     private PlayerAnimator playerAnimator;
 
     private void Awake ()
@@ -42,14 +44,18 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
         playerRope = GetComponent<PlayerRope>();
-        playerAnimator = GetComponent<PlayerAnimator>();    
+        playerAnimator = GetComponent<PlayerAnimator>();
 
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
     }
 
     private void Update ()
     {
+        if (!canMove)
+            return;
+
         _time += Time.deltaTime;
+
         GatherInput();
         HandleSlowMotion();
     }
@@ -123,9 +129,16 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         if (stats.Health <= 0)
         {
-            //GameMaster.KillPlayer(this);
+            Die();
         }
 
+    }
+
+    private void Die ()
+    {
+        //GameMaster.KillPlayer(this);
+        playerAnimator.DeathAnimation(true);
+        canMove = false;
     }
 
 

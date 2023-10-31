@@ -37,7 +37,6 @@ public class Weapon : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update ()
     {
         HandleRotation();
@@ -64,10 +63,7 @@ public class Weapon : MonoBehaviour
         if (fireRate == 0)
         {
             if (Input.GetButtonDown("Fire1"))
-            {
                 Shoot();
-            }
-
         }
         else
         {
@@ -79,9 +75,8 @@ public class Weapon : MonoBehaviour
         }
 
         if (Input.GetButtonUp("Fire1"))
-        {
             StopShoot();
-        }
+
     }
 
     private void Shoot ()

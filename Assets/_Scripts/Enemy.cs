@@ -1,6 +1,11 @@
+using Spine.Unity;
+using Spine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
+using Unity.VisualScripting;
 
 public class Enemy : MonoBehaviour, ICharacter
 {
@@ -22,6 +27,11 @@ public class Enemy : MonoBehaviour, ICharacter
     private Transform targetPlayer; // The player currently being targeted
     private float timeToFire = 0;
 
+    private SkeletonMecanim skeletonMecanim;
+    private Animator animator;
+    private bool isFlipped;
+    private bool isDead;
+
 
     [System.Serializable]
     public class EnemyStates
@@ -33,6 +43,10 @@ public class Enemy : MonoBehaviour, ICharacter
 
     private void Start ()
     {
+
+        animator = GetComponent<Animator>();
+        skeletonMecanim = GetComponent<SkeletonMecanim>();
+
         GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
         foreach (var playerObject in playerObjects)
         {
@@ -42,11 +56,22 @@ public class Enemy : MonoBehaviour, ICharacter
 
     private void Update ()
     {
+        if (isDead) return;
+        SearchPlayerAndShoot();
 
+    }
+    void LateUpdate ()
+    {
+
+    }
+
+    private void SearchPlayerAndShoot ()
+    {
         targetPlayer = GetClosestPlayer();
 
         if (targetPlayer != null)
         {
+            HandleFlip();
             HandleRotation();
 
             float distanceToPlayer = Vector3.Distance(transform.position, targetPlayer.position);
@@ -62,6 +87,25 @@ public class Enemy : MonoBehaviour, ICharacter
         }
     }
 
+    private void HandleFlip ()
+    {
+        if (GetClosestPlayer().position.x > transform.position.x && transform.localScale.x < 0)
+        {
+            Vector3 newScale = transform.localScale;
+            newScale.x *= -1;
+            transform.localScale = newScale;
+            isFlipped = false;
+        }
+        else if (GetClosestPlayer().position.x < transform.position.x && transform.localScale.x > 0)
+        {
+            Vector3 newScale = transform.localScale;
+            newScale.x *= -1;
+            transform.localScale = newScale;
+            isFlipped = true;
+        }
+    }
+
+
     private void HandleRotation ()
     {
 
@@ -71,8 +115,33 @@ public class Enemy : MonoBehaviour, ICharacter
 
         difference.Normalize();
         float rotZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
+
+        //Rotate weapon's fire point
         weapon.transform.rotation = Quaternion.Euler(0f, 0f, rotZ);
+
+        //Rotate the weapon's bone (spine)
+        if (isFlipped)
+            rotZ += 70;
+        else
+            rotZ -= 110;
+
+        Skeleton skeleton = skeletonMecanim.skeleton;
+
+        foreach (Slot slot in skeleton.Slots)
+        {
+
+            if (slot.Bone.Data.Name.Contains("BackHand"))
+            {
+                slot.Bone.Rotation = rotZ;
+                Debug.Log(slot);
+
+            }
+
+        }
+        skeleton.UpdateWorldTransform();
+
     }
+
 
     Transform GetClosestPlayer ()
     {
@@ -123,18 +192,25 @@ public class Enemy : MonoBehaviour, ICharacter
 
         if (stats.Health <= 0)
         {
-            GameMaster.KillEnemy(this);
+            //GameMaster.KillEnemy(this);
+            animator.SetBool("IsDead", true);
+            isDead = true;
         }
 
     }
 
-    void Shoot ()
+    private async void Shoot ()
     {
+        animator.SetBool("IsShooting", true);
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         MoveTrail moveTrail = bullet.GetComponent<MoveTrail>();
         moveTrail.SetTagToDamage(damageThisTag);
         moveTrail.SetBulletGradient(bulletGradient);
         moveTrail.SetDamage(damage);
+        int animationDelay = (int)fireRate * 100;
+        await Task.Delay(animationDelay);
+        animator.SetBool("IsShooting", false);
+
     }
 
 

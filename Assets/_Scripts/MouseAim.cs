@@ -7,13 +7,10 @@ public class MouseAim : MonoBehaviour
     [SerializeField] private Transform player;
     [SerializeField] private float maxAimDistance = 5f;
 
-    //[SerializeField] private GameObject ropePrefab; 
-
     private Vector2 mousePosition;
     private Vector2 aimPosition;
     private bool isShootable;
 
-    //private GameObject currentRope;
 
     [SerializeField] private Color shootableColor = Color.green; // Color when aim is on a shootable object
     [SerializeField] private Color nonShootableColor = Color.red; // Color when aim is not on a shootable object
@@ -31,35 +28,8 @@ public class MouseAim : MonoBehaviour
     void Update ()
     {
         HandleAim();
-        //HandleRope();
     }
 
-   /*
-
-    private void HandleRope ()
-    {
-        // Check for left mouse button click
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (isShootable)
-            {
-                DestroyCurrentRope();
-
-                // Instantiate a new Rope prefab at the aim position
-                currentRope = Instantiate(ropePrefab, aimPosition, Quaternion.identity);
-
-                PlayerRope playerRope = player.GetComponent<PlayerRope>();
-                currentRope.GetComponent<Rope>().SetPlayerRope(playerRope);
-
-                Rope ropeScript = currentRope.GetComponent<Rope>();
-                ropeScript.SetTarget(aimPosition);
-            }
-        }
-        else if (Input.GetMouseButtonDown(1) && currentRope)
-        {
-            DestroyCurrentRope();
-        }
-    }*/
 
     private void HandleAim ()
     {
@@ -82,22 +52,7 @@ public class MouseAim : MonoBehaviour
             spriteRenderer.color = nonShootableColor;
         }
     }
-/*
 
-    public void DestroyCurrentRope ()
-    {
-        if (currentRope)
-        {
-
-            Destroy(currentRope);
-            currentRope = null;
-        }
-    }*/
-/*
-    public bool HasRope ()
-    {
-        return currentRope != null;
-    }*/
 
     private void OnTriggerEnter2D ( Collider2D collision )
     {
