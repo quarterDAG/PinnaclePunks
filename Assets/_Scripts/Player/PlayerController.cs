@@ -38,9 +38,10 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private bool canMove = true;
 
     private PlayerAnimator playerAnimator;
-    private bool isDead;
+    public bool isDead { get; private set; }
     [SerializeField] private int lives = 3; // Each player starts with 3 lives
     [SerializeField] private Transform respawnPoint; // This will be the player's base or respawn point
+    private CountdownUI respawnCountdownUI;
 
 
     private void Awake ()
@@ -49,14 +50,16 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         _col = GetComponent<CapsuleCollider2D>();
         playerRope = GetComponent<PlayerRope>();
         playerAnimator = GetComponent<PlayerAnimator>();
+        respawnCountdownUI = GetComponentInChildren<CountdownUI>();
 
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
     }
 
     private void Update ()
     {
-        if (!canMove)
-            return;
+        if (isDead) return;
+
+        if (!canMove) return;
 
         _time += Time.deltaTime;
 
@@ -132,14 +135,17 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     public void Die ()
     {
         isDead = true;
-        //GameMaster.KillPlayer(this);
+        playerRope.DestroyCurrentRope();
         playerAnimator.DeathAnimation(true);
         canMove = false;
+
+        _rb.constraints = RigidbodyConstraints2D.FreezePositionX;
+
 
         lives--; // Reduce life by 1
         if (lives > 0)
         {
-            Invoke("Respawn", 3f); // Respawn the player after 3 seconds
+            Respawn();
         }
         else
         {
@@ -150,8 +156,14 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     async void Respawn ()
     {
         gameObject.tag = "Dodge";
+        await Task.Delay(2000);
 
         this.transform.position = respawnPoint.position;
+        respawnCountdownUI.StartTimer();
+        await Task.Delay(3000);
+
+        _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        isDead = false;
         playerAnimator.DeathAnimation(false);
 
         stats.Health = stats.MaxHealth;
@@ -162,7 +174,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         await Task.Delay(2000);
 
         gameObject.tag = "Player";
-        isDead = false;
     }
 
 

@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerRope : MonoBehaviour
 {
     [SerializeField] private Transform player;
+    private PlayerController playerController;
 
     [SerializeField] private MouseAim mouseAim;
 
@@ -19,8 +20,15 @@ public class PlayerRope : MonoBehaviour
 
     [SerializeField] private float swingForce = 100f;
 
+    private void Awake ()
+    {
+            playerController = GetComponent<PlayerController>();
+    }
+
     private void Update ()
     {
+        if(playerController.isDead) return;
+
         HandleRope();
 
 

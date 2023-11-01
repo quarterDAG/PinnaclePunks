@@ -11,6 +11,7 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] private SkeletonMecanim skeletonMecanim;
     [SerializeField] private Weapon weapon;
     [SerializeField] private MouseAim mouseAim;
+    private PlayerController playerController;
 
 
     private Rigidbody2D rb;
@@ -23,11 +24,14 @@ public class PlayerAnimator : MonoBehaviour
     private void Awake ()
     {
         rb = GetComponent<Rigidbody2D>();
+        playerController = GetComponent<PlayerController>();
     }
 
 
     private void Update ()
     {
+        if (playerController.isDead) return;
+
         HandleFlip();
         HandleRunningAnimation();
         HandleWeaponRotation();
@@ -114,23 +118,23 @@ public class PlayerAnimator : MonoBehaviour
         }
     }
 
-    public void JumpAnimation (bool _isJumping)
+    public void JumpAnimation ( bool _isJumping )
     {
         animator.SetBool("IsJumping", _isJumping);
     }
 
-   
+
     public void ShootAnimation ( bool _isShooting )
     {
         animator.SetBool("IsShooting", _isShooting);
     }
 
-    public void DashAnimation (bool _isDashing)
+    public void DashAnimation ( bool _isDashing )
     {
         animator.SetBool("IsDashing", _isDashing);
     }
 
-    public void DeathAnimation(bool _isDead)
+    public void DeathAnimation ( bool _isDead )
     {
         animator.SetBool("IsDead", _isDead);
     }

@@ -8,6 +8,7 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     [SerializeField] private Transform player;
+    private PlayerController playerController;
     private PlayerAnimator playerAnimator;
     [SerializeField] private MouseAim mouseAim;
     [SerializeField] private LayerMask whatToHit;
@@ -37,11 +38,14 @@ public class Weapon : MonoBehaviour
             Debug.LogError("No Fire Point");
 
         playerAnimator = GetComponentInParent<PlayerAnimator>();
+        playerController = GetComponentInParent<PlayerController>();    
 
     }
 
     void Update ()
     {
+        if (playerController.isDead) return;
+
         HandleRotation();
 
         if (canShoot)

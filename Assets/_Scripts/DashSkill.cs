@@ -10,6 +10,7 @@ public class DashSkill : MonoBehaviour
     [SerializeField] float dashSpeed = 10f;
     [SerializeField] float dashDuration = 2f;
     private PlayerAnimator playerAnimator;
+    private PlayerController playerController;
     private Weapon weapon;
 
     private bool isDashing;
@@ -25,17 +26,20 @@ public class DashSkill : MonoBehaviour
     private void Start ()
     {
         rb = GetComponent<Rigidbody2D>();
-        playerAnimator = GetComponent<PlayerAnimator>();    
+        playerAnimator = GetComponent<PlayerAnimator>();
         weapon = GetComponentInChildren<Weapon>();
+        playerController = GetComponent<PlayerController>();
     }
 
     private void Update ()
     {
+        if (playerController.isDead) return;
         CheckForDoubleClickAndDash();
     }
 
     private void CheckForDoubleClickAndDash ()
     {
+
         if (!isDashing)
         {
             int currentTapDirection = 0;

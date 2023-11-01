@@ -1156,6 +1156,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8237473891179616149, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
   m_PrefabInstance: {fileID: 2861508593614981113}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &545199189 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8803247499422605934, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
+  m_PrefabInstance: {fileID: 2861508593614981113}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 823b073ef80ddeb4396dfd84225b45d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &551256758
 GameObject:
   m_ObjectHideFlags: 0
@@ -3847,7 +3858,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2079246341268384381, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
       propertyPath: m_Mass
-      value: 50
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2306613836086595639, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4474,6 +4485,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1282267718}
     - target: {fileID: 7526632956683015887, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
+      propertyPath: lives
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7526632956683015887, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
       propertyPath: timeManager
       value: 
       objectReference: {fileID: 2049960159}
@@ -4485,6 +4500,14 @@ PrefabInstance:
       propertyPath: stats.Health
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 7526632956683015887, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
+      propertyPath: respawnCountdownUI
+      value: 
+      objectReference: {fileID: 545199189}
+    - target: {fileID: 7556095107396143456, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1978076457}
     - target: {fileID: 7588801696254306056, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
       propertyPath: m_Name
       value: Weapon
