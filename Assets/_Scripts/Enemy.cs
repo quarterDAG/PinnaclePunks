@@ -190,11 +190,15 @@ public class Enemy : MonoBehaviour, ICharacter
 
         if (stats.Health <= 0)
         {
-            //GameMaster.KillEnemy(this);
-            animator.SetBool("IsDead", true);
-            isDead = true;
+            Die();
         }
 
+    }
+
+    public void Die ()
+    {
+        animator.SetBool("IsDead", true);
+        isDead = true;
     }
 
     private async void Shoot ()

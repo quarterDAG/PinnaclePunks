@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     public class PlayerStates
     {
         public int Health = 100;
+        public int MaxHealth = 100;
     }
 
     public PlayerStates stats = new PlayerStates();
@@ -37,6 +38,10 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private bool canMove = true;
 
     private PlayerAnimator playerAnimator;
+    private bool isDead;
+    [SerializeField] private int lives = 3; // Each player starts with 3 lives
+    [SerializeField] private Transform respawnPoint; // This will be the player's base or respawn point
+
 
     private void Awake ()
     {
@@ -100,33 +105,66 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     public async void TakeDamage ( int damage )
     {
-        playerAnimator.GetHitAnimation();
-        stats.Health -= damage;
 
-        hpBar.UpdateValue( -damage );
-        //hpBar.UpdateFillUI(stats.Health);
-        playerRope.DestroyCurrentRope();
-
-        if (TimeManager.Instance.isSlowMotionActive)
+        if (stats.Health > 0)
         {
-            await Task.Delay(1000);
-            TimeManager.Instance.StopSlowMotion();
+            playerAnimator.GetHitAnimation();
+            stats.Health -= damage;
+            hpBar.UpdateValue(-damage);
+            //hpBar.UpdateFillUI(stats.Health);
+            playerRope.DestroyCurrentRope();
+
+            if (TimeManager.Instance.isSlowMotionActive)
+            {
+                await Task.Delay(1000);
+                TimeManager.Instance.StopSlowMotion();
+            }
         }
 
-
-        if (stats.Health <= 0)
+        else
         {
-            Die();
+            if (!isDead)
+                Die();
         }
 
     }
 
-    private void Die ()
+    public void Die ()
     {
+        isDead = true;
         //GameMaster.KillPlayer(this);
         playerAnimator.DeathAnimation(true);
         canMove = false;
+
+        lives--; // Reduce life by 1
+        if (lives > 0)
+        {
+            Invoke("Respawn", 3f); // Respawn the player after 3 seconds
+        }
+        else
+        {
+            //this.gameObject.SetActive(false);
+        }
     }
+
+    async void Respawn ()
+    {
+        gameObject.tag = "Dodge";
+
+        this.transform.position = respawnPoint.position;
+        playerAnimator.DeathAnimation(false);
+
+        stats.Health = stats.MaxHealth;
+        hpBar.UpdateValue(stats.Health);
+
+        canMove = true;
+
+        await Task.Delay(2000);
+
+        gameObject.tag = "Player";
+        isDead = false;
+    }
+
 
 
     #region Collisions

@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class GameMaster : MonoBehaviour
 {
-    public static void KillPlayer ( PlayerController player )
-    {
-        Destroy(player.gameObject);
-    }
+    public PlayerController[] players; // Array to hold all player references
 
-    public static void KillEnemy ( Enemy enemy )
+    // This method can be called when a player dies
+    public void PlayerDied ( PlayerController player )
     {
-        Destroy(enemy.gameObject);
+        player.Die();
+        // You can also add additional game-wide logic here if needed
     }
 
 }
