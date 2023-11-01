@@ -139,7 +139,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         playerAnimator.DeathAnimation(true);
         canMove = false;
 
-        _rb.constraints = RigidbodyConstraints2D.FreezePositionX;
+        _rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+
 
 
         lives--; // Reduce life by 1

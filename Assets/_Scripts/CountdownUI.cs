@@ -7,8 +7,9 @@ public class CountdownUI : MonoBehaviour
 {
     private const string NUMBER_POPUP = "NumberPopup";
 
-
+    [SerializeField] private Transform playerTransform;
     [SerializeField] private TextMeshProUGUI countdownText;
+    private Vector3 originalScale;
 
     private Animator animator;
 
@@ -26,6 +27,7 @@ public class CountdownUI : MonoBehaviour
 
     private void Start ()
     {
+        originalScale = transform.localScale;
         initialTime = timeRemaining;
         Hide();
     }
@@ -33,18 +35,36 @@ public class CountdownUI : MonoBehaviour
     private void Update ()
     {
         if (timerIsRunning)
+            RunTimer();
+
+        FlipCanvas();
+    }
+
+    private void FlipCanvas ()
+    {
+        // Flip the canvas based on the player's orientation
+        if (playerTransform.localScale.x < 0)
         {
-            if (timeRemaining > 0)
-            {
-                timeRemaining -= Time.deltaTime;
-                DisplayTime(timeRemaining);
-            }
-            else
-            {
-                timerIsRunning = false;
-                Hide();
-                timeRemaining = initialTime;
-            }
+            transform.localScale = new Vector3(-originalScale.x, originalScale.y, originalScale.z);
+        }
+        else
+        {
+            transform.localScale = originalScale;
+        }
+    }
+
+    private void RunTimer ()
+    {
+        if (timeRemaining > 0)
+        {
+            timeRemaining -= Time.deltaTime;
+            DisplayTime(timeRemaining);
+        }
+        else
+        {
+            timerIsRunning = false;
+            Hide();
+            timeRemaining = initialTime;
         }
     }
 
