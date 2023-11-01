@@ -10,7 +10,7 @@ using Unity.VisualScripting;
 public class Enemy : MonoBehaviour, ICharacter
 {
 
-    [SerializeField] HPBar hpBar;
+    [SerializeField] Bar hpBar;
     [SerializeField] GameObject weapon;
     [SerializeField] GameObject bulletPrefab; // Bullet that the enemy will shoot
     [SerializeField] private Gradient bulletGradient;
@@ -133,8 +133,6 @@ public class Enemy : MonoBehaviour, ICharacter
             if (slot.Bone.Data.Name.Contains("BackHand"))
             {
                 slot.Bone.Rotation = rotZ;
-                Debug.Log(slot);
-
             }
 
         }
@@ -188,7 +186,7 @@ public class Enemy : MonoBehaviour, ICharacter
     {
         stats.Health -= damage;
 
-        hpBar.UpdateHPFillUI(stats.Health);
+        hpBar.UpdateValue(-damage);
 
         if (stats.Health <= 0)
         {

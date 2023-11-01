@@ -16,6 +16,9 @@ public class Weapon : MonoBehaviour
     //[SerializeField] private Gradient bulletGradient;
     [SerializeField] private string damageThisTag;
 
+    [SerializeField] private Bar slowmotionBar;
+    [SerializeField] private float slowmotionIncrement = 5f;
+
 
     [SerializeField] private float fireRate = 0;
     [SerializeField] private int damage = 10;
@@ -100,6 +103,7 @@ public class Weapon : MonoBehaviour
         moveTrail.SetTagToDamage(damageThisTag);
         //moveTrail.SetBulletGradient(bulletGradient);
         moveTrail.SetDamage(damage);
+        slowmotionBar.UpdateValue(slowmotionIncrement);
     }
 
     private void StopShoot ()

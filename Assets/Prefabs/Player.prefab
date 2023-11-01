@@ -19713,6 +19713,7 @@ GameObject:
   - component: {fileID: 5503615758264496031}
   - component: {fileID: 2540522577654663218}
   - component: {fileID: 8465121765532026979}
+  - component: {fileID: 5721426548412157444}
   - component: {fileID: 2079246341268384381}
   - component: {fileID: 4131282336754808775}
   - component: {fileID: 6786938023795512149}
@@ -19756,7 +19757,6 @@ MonoBehaviour:
   _stats: {fileID: 11400000, guid: 05e6a06c5af93134ab98ff12e2c27265, type: 2}
   stats:
     Health: 100
-  timeManager: {fileID: 0}
   weapon: {fileID: 3313171096125664222}
   hpBar: {fileID: 0}
 --- !u!114 &5503615758264496031
@@ -19812,6 +19812,19 @@ MonoBehaviour:
   mouseAim: {fileID: 6231824700150868758}
   aim: {fileID: 537444450710121095}
   meshRenderer: {fileID: 4255224336812636751}
+--- !u!114 &5721426548412157444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6038754821143387965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d818642fe02444ab4b94d037ac1c78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slowmotionBar: {fileID: 0}
 --- !u!50 &2079246341268384381
 Rigidbody2D:
   serializedVersion: 4
@@ -34497,7 +34510,6 @@ MonoBehaviour:
   fireRate: 10
   damage: 10
   shotDistance: 50
-  offsetRotation: 0
   effectSpawnRate: 10
 --- !u!1 &7599851207667780729
 GameObject:

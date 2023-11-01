@@ -307,7 +307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 253610c37fb6f2748a124b746238da7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hpFillImage: {fileID: 4295400529642483279}
+  fillImage: {fileID: 4295400529642483279}
 --- !u!1 &8375636886613508897
 GameObject:
   m_ObjectHideFlags: 0

@@ -30,10 +30,9 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     private float _time;
 
-    [SerializeField] private TimeManager timeManager;
     [SerializeField] private Weapon weapon;
     private PlayerRope playerRope;
-    [SerializeField] HPBar hpBar;
+    [SerializeField] Bar hpBar;
 
     private bool canMove = true;
 
@@ -57,7 +56,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         _time += Time.deltaTime;
 
         GatherInput();
-        HandleSlowMotion();
     }
 
     private void GatherInput ()
@@ -97,18 +95,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         }
     }
 
-    private void HandleSlowMotion ()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            timeManager.DoSlowMotion();
-        }
-
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            timeManager.StopSlowMotion();
-        }
-    }
 
 
 
@@ -117,13 +103,14 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         playerAnimator.GetHitAnimation();
         stats.Health -= damage;
 
-        hpBar.UpdateHPFillUI(stats.Health);
+        hpBar.UpdateValue( -damage );
+        //hpBar.UpdateFillUI(stats.Health);
         playerRope.DestroyCurrentRope();
 
-        if (timeManager.isSlowMotionActive)
+        if (TimeManager.Instance.isSlowMotionActive)
         {
             await Task.Delay(1000);
-            timeManager.StopSlowMotion();
+            TimeManager.Instance.StopSlowMotion();
         }
 
 
