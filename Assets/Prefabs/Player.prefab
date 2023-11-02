@@ -19713,8 +19713,9 @@ GameObject:
   - component: {fileID: 5503615758264496031}
   - component: {fileID: 1518033666845181718}
   - component: {fileID: 2540522577654663218}
-  - component: {fileID: 8465121765532026979}
   - component: {fileID: 5721426548412157444}
+  - component: {fileID: 6875853117583122160}
+  - component: {fileID: 8495843112872683522}
   - component: {fileID: 2079246341268384381}
   - component: {fileID: 4131282336754808775}
   - component: {fileID: 6786938023795512149}
@@ -19798,6 +19799,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bcaf7050d7437b45a8d1f45b5b71921, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TagToAttack: 
+  inventory: {fileID: 0}
 --- !u!114 &2540522577654663218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19812,24 +19815,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dashSpeed: 10
   dashDuration: 0.2
---- !u!114 &8465121765532026979
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6038754821143387965}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94eb2dba75763fc4b9b41783088a1481, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 3378641293856702304}
-  skeletonMecanim: {fileID: 6312478140728088821}
-  weapon: {fileID: 3313171096125664222}
-  mouseAim: {fileID: 6231824700150868758}
-  aim: {fileID: 537444450710121095}
-  meshRenderer: {fileID: 4255224336812636751}
 --- !u!114 &5721426548412157444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19843,7 +19828,81 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slowmotionBar: {fileID: 0}
-  slowMotionDrainRate: 1
+  slowMotionDrainRate: 0.005
+--- !u!114 &6875853117583122160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6038754821143387965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3f9c3e4c858d3342a2f40fe8df2ce6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8495843112872683522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6038754821143387965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: cf6407fdce8bcbc4c986c6c6ae28daff, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6875853117583122160}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: OnMovementChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: db7cbd85-9cf5-411a-af01-c004501efeab
+    m_ActionName: Player/Movement[/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6875853117583122160}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 8c34cae6-d875-4a7f-af52-01c846a21b93
+    m_ActionName: Player/Jumping[/Keyboard/space]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!50 &2079246341268384381
 Rigidbody2D:
   serializedVersion: 4
@@ -34715,6 +34774,7 @@ GameObject:
   - component: {fileID: 3378641293856702304}
   - component: {fileID: 6312478140728088821}
   - component: {fileID: 2474787700856436878}
+  - component: {fileID: 5385049584004442954}
   m_Layer: 0
   m_Name: Archy Skeleton Animation
   m_TagString: Untagged
@@ -34850,6 +34910,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8228635455862769652}
   m_Mesh: {fileID: 0}
+--- !u!114 &5385049584004442954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8228635455862769652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94eb2dba75763fc4b9b41783088a1481, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 3378641293856702304}
+  skeletonMecanim: {fileID: 6312478140728088821}
+  weapon: {fileID: 3313171096125664222}
+  mouseAim: {fileID: 6231824700150868758}
+  aim: {fileID: 537444450710121095}
+  meshRenderer: {fileID: 4255224336812636751}
 --- !u!1 &8607543070534160506
 GameObject:
   m_ObjectHideFlags: 0

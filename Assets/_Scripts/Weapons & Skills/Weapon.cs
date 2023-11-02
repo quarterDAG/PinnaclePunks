@@ -1,15 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TarodevController;
-using Unity.VisualScripting;
+
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
     [SerializeField] private Transform player;
     private PlayerController playerController;
-    private PlayerAnimator playerAnimator;
+    [SerializeField] private PlayerAnimator playerAnimator;
     [SerializeField] private MouseAim mouseAim;
     [SerializeField] private LayerMask whatToHit;
     [SerializeField] private Transform firePoint;
@@ -37,7 +33,7 @@ public class Weapon : MonoBehaviour
         if (firePoint == null)
             Debug.LogError("No Fire Point");
 
-        playerAnimator = GetComponentInParent<PlayerAnimator>();
+        //playerAnimator = FindAnyObjectByType<PlayerAnimator>();
         playerController = GetComponentInParent<PlayerController>();    
 
     }

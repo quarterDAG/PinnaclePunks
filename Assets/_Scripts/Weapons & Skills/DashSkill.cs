@@ -7,6 +7,8 @@ public class DashSkill : MonoBehaviour
 {
     private const float DOUBLE_CLICK_TIME = .2f;
 
+    private InputManager inputManager;
+
     [SerializeField] float dashSpeed = 10f;
     [SerializeField] float dashDuration = 2f;
     private PlayerAnimator playerAnimator;
@@ -26,7 +28,7 @@ public class DashSkill : MonoBehaviour
     private void Start ()
     {
         rb = GetComponent<Rigidbody2D>();
-        playerAnimator = GetComponent<PlayerAnimator>();
+        playerAnimator = GetComponentInChildren<PlayerAnimator>();
         weapon = GetComponentInChildren<Weapon>();
         playerController = GetComponent<PlayerController>();
     }

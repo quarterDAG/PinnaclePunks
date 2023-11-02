@@ -4,17 +4,25 @@ using UnityEngine;
 
 public class PlayerMonsterSpawner : MonoBehaviour
 {
-    private Enemy selectedMonster;
+    private Monster selectedMonster;
     private Transform spawnPoint;
+    [SerializeField] private string TagToAttack;
+    [SerializeField] private Inventory inventory;
 
     private void Update ()
     {
         if (Input.GetKeyDown(KeyCode.R) && spawnPoint != null && selectedMonster != null)
         {
-            Instantiate(selectedMonster, spawnPoint.position, Quaternion.identity);
-            // Optionally clear the selection after spawning
-            selectedMonster = null;
+            if (inventory.GetSelectedMonsterAmount(selectedMonster) <= 0) return;
+            spawnPoint.GetComponent<MonsterSpawnPoint>().SpawnMonster(selectedMonster, TagToAttack, this);
+
         }
+    }
+
+    public void UpdateInventory ()
+    {
+        inventory.UpdateInventoryAfterSpawn();
+
     }
 
     private void OnTriggerEnter2D ( Collider2D other )
@@ -36,7 +44,7 @@ public class PlayerMonsterSpawner : MonoBehaviour
         }
     }
 
-    public void SetSelectedMonster ( Enemy monsterPrefab )
+    public void SetSelectedMonster ( Monster monsterPrefab )
     {
         selectedMonster = monsterPrefab;
     }

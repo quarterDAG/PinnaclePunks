@@ -44,14 +44,17 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private CountdownUI respawnCountdownUI;
     private string teamTag;
 
+    private InputManager inputManager;
+
 
     private void Awake ()
     {
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
         playerRope = GetComponent<PlayerRope>();
-        playerAnimator = GetComponent<PlayerAnimator>();
+        playerAnimator = GetComponentInChildren<PlayerAnimator>();
         respawnCountdownUI = GetComponentInChildren<CountdownUI>();
+        inputManager = GetComponent<InputManager>();    
 
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         teamTag = gameObject.tag;
@@ -72,9 +75,12 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     {
         _frameInput = new FrameInput
         {
-            JumpDown = Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.C),
-            JumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C),
-            Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))
+            //JumpDown = Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.C),
+            JumpDown = inputManager.IsJumpingPressed,
+            //JumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C),
+            JumpHeld = inputManager.IsJumpingPressed,
+            //Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))
+            Move = new Vector2(inputManager.InputVelocity.x, inputManager.InputVelocity.y),
         };
 
         if (_stats.SnapInput)

@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using Unity.Burst.Intrinsics;
 using UnityEngine;
 using Unity.VisualScripting;
+using System;
 
-public class Enemy : MonoBehaviour, ICharacter
+public class Monster : MonoBehaviour, ICharacter
 {
 
     [SerializeField] Bar hpBar;
@@ -16,7 +17,7 @@ public class Enemy : MonoBehaviour, ICharacter
     [SerializeField] private Gradient bulletGradient;
     [SerializeField] private LayerMask obstacleLayers;
 
-    private string damageThisTag = "Player";
+    //private string damageThisTag = "Player";
 
     [SerializeField] private int damage = 1;
     [SerializeField] float attackRange = 5f; // Range within which the enemy will start shooting
@@ -30,7 +31,9 @@ public class Enemy : MonoBehaviour, ICharacter
     private SkeletonMecanim skeletonMecanim;
     private Animator animator;
     private bool isFlipped;
-    private bool isDead;
+    public bool IsDead { get; private set; } = false;
+
+    public event Action OnDeath;
 
     private string tagToAttack;
 
@@ -45,13 +48,10 @@ public class Enemy : MonoBehaviour, ICharacter
 
     private void Start ()
     {
-
         animator = GetComponent<Animator>();
         skeletonMecanim = GetComponent<SkeletonMecanim>();
 
-
-
-        GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
+        GameObject[] playerObjects = GameObject.FindGameObjectsWithTag(tagToAttack);
         foreach (var playerObject in playerObjects)
         {
             players.Add(playerObject.transform);
@@ -60,13 +60,8 @@ public class Enemy : MonoBehaviour, ICharacter
 
     private void Update ()
     {
-        if (isDead) return;
+        if (IsDead) return;
         SearchPlayerAndShoot();
-
-    }
-    void LateUpdate ()
-    {
-
     }
 
     private void SearchPlayerAndShoot ()
@@ -81,7 +76,6 @@ public class Enemy : MonoBehaviour, ICharacter
             float distanceToPlayer = Vector3.Distance(transform.position, targetPlayer.position);
             if (distanceToPlayer <= attackRange)
             {
-
                 if (Time.time >= timeToFire)
                 {
                     timeToFire = Time.time + 1 / fireRate;
@@ -133,12 +127,10 @@ public class Enemy : MonoBehaviour, ICharacter
 
         foreach (Slot slot in skeleton.Slots)
         {
-
             if (slot.Bone.Data.Name.Contains("BackHand"))
             {
                 slot.Bone.Rotation = rotZ;
             }
-
         }
         skeleton.UpdateWorldTransform();
 
@@ -196,13 +188,16 @@ public class Enemy : MonoBehaviour, ICharacter
         {
             Die();
         }
-
     }
 
     public void Die ()
     {
-        animator.SetBool("IsDead", true);
-        isDead = true;
+        if (!IsDead)
+        {
+            animator.SetBool("IsDead", true);
+            IsDead = true;
+            OnDeath?.Invoke();
+        }
     }
 
     private async void Shoot ()
@@ -210,14 +205,17 @@ public class Enemy : MonoBehaviour, ICharacter
         animator.SetBool("IsShooting", true);
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         MoveTrail moveTrail = bullet.GetComponent<MoveTrail>();
-        moveTrail.SetTagToDamage(damageThisTag);
+        moveTrail.SetTagToDamage(tagToAttack);
         moveTrail.SetBulletGradient(bulletGradient);
         moveTrail.SetDamage(damage);
         int animationDelay = (int)fireRate * 100;
         await Task.Delay(animationDelay);
         animator.SetBool("IsShooting", false);
-
     }
 
+    public void SetTagToAttack ( string _tagToAttack )
+    {
+        tagToAttack = _tagToAttack;
+    }
 
 }

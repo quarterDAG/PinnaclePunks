@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SlowmostionController : MonoBehaviour
+public class SlowmotionController : MonoBehaviour
 {
 
     [SerializeField] private Bar slowmotionBar;
