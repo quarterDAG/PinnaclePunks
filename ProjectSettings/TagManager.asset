@@ -8,6 +8,8 @@ TagManager:
   - Aim
   - Enemy
   - Dodge
+  - Team A
+  - Team B
   layers:
   - Default
   - TransparentFX

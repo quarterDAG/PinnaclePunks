@@ -35,13 +35,14 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private PlayerRope playerRope;
     [SerializeField] Bar hpBar;
 
-    private bool canMove = true;
+    [SerializeField] private bool canMove = true;
 
     private PlayerAnimator playerAnimator;
     public bool isDead { get; private set; }
     [SerializeField] private int lives = 3; // Each player starts with 3 lives
     [SerializeField] private Transform respawnPoint; // This will be the player's base or respawn point
     private CountdownUI respawnCountdownUI;
+    private string teamTag;
 
 
     private void Awake ()
@@ -53,6 +54,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         respawnCountdownUI = GetComponentInChildren<CountdownUI>();
 
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
+        teamTag = gameObject.tag;
     }
 
     private void Update ()
@@ -174,7 +176,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         await Task.Delay(2000);
 
-        gameObject.tag = "Player";
+        gameObject.tag = teamTag;
     }
 
 

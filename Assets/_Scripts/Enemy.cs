@@ -32,6 +32,8 @@ public class Enemy : MonoBehaviour, ICharacter
     private bool isFlipped;
     private bool isDead;
 
+    private string tagToAttack;
+
 
     [System.Serializable]
     public class EnemyStates
@@ -46,6 +48,8 @@ public class Enemy : MonoBehaviour, ICharacter
 
         animator = GetComponent<Animator>();
         skeletonMecanim = GetComponent<SkeletonMecanim>();
+
+
 
         GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
         foreach (var playerObject in playerObjects)
