@@ -19711,6 +19711,7 @@ GameObject:
   - component: {fileID: 5240961817479375904}
   - component: {fileID: 7526632956683015887}
   - component: {fileID: 5503615758264496031}
+  - component: {fileID: 1518033666845181718}
   - component: {fileID: 2540522577654663218}
   - component: {fileID: 8465121765532026979}
   - component: {fileID: 5721426548412157444}
@@ -19761,6 +19762,7 @@ MonoBehaviour:
     MaxHealth: 100
   weapon: {fileID: 3313171096125664222}
   hpBar: {fileID: 0}
+  canMove: 1
   lives: 3
   respawnPoint: {fileID: 0}
 --- !u!114 &5503615758264496031
@@ -19784,6 +19786,18 @@ MonoBehaviour:
   distanceFromChainEnd: 1.5
   joint: {fileID: 6786938023795512149}
   swingForce: 200
+--- !u!114 &1518033666845181718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6038754821143387965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bcaf7050d7437b45a8d1f45b5b71921, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2540522577654663218
 MonoBehaviour:
   m_ObjectHideFlags: 0

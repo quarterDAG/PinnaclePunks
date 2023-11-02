@@ -10,6 +10,7 @@ TagManager:
   - Dodge
   - Team A
   - Team B
+  - EnemySpawn
   layers:
   - Default
   - TransparentFX
