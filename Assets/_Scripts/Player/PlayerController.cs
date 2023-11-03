@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         playerRope = GetComponent<PlayerRope>();
         playerAnimator = GetComponentInChildren<PlayerAnimator>();
         respawnCountdownUI = GetComponentInChildren<CountdownUI>();
-        inputManager = GetComponent<InputManager>();    
+        inputManager = GetComponent<InputManager>();
 
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         teamTag = gameObject.tag;
@@ -119,7 +119,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             playerAnimator.GetHitAnimation();
             stats.Health -= damage;
             hpBar.UpdateValue(-damage);
-            //hpBar.UpdateFillUI(stats.Health);
             playerRope.DestroyCurrentRope();
 
             if (TimeManager.Instance.isSlowMotionActive)
@@ -238,16 +237,32 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     private bool OnRope => playerRope.IsRopeConnected();
 
+
     private void HandleJump ()
     {
-        if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && _rb.velocity.y > 0) _endedJumpEarly = true;
+        if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && _rb.velocity.y > 0)
+        {
+            _endedJumpEarly = true;
+            inputManager.ResetJump(false, true);
+        }
+
+        if(_endedJumpEarly || _grounded && _frameInput.JumpHeld)
+        {
+            inputManager.ResetJump(false, false);
+        }
 
         if (!_jumpToConsume && !HasBufferedJump) return;
 
-        if (_grounded || CanUseCoyote || OnRope) ExecuteJump();
+        if (_grounded || CanUseCoyote || OnRope)
+        {
+            ExecuteJump();
+            inputManager.ResetJump(false, true);
+        }
 
         _jumpToConsume = false;
     }
+
+
 
     private void ExecuteJump ()
     {
