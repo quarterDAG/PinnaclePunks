@@ -17,10 +17,14 @@ public class MouseAim : MonoBehaviour
 
     private SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer of the aim
 
+    private InputManager inputManager;
 
-    private void Start ()
+    [SerializeField] private float gamepadAimSensitivity = 0.05f;
+
+    private void Awake ()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        inputManager = GetComponentInParent<InputManager>();
 
     }
 
@@ -30,19 +34,42 @@ public class MouseAim : MonoBehaviour
         HandleAim();
     }
 
-
     private void HandleAim ()
     {
-        mousePosition = sceneCamera.ScreenToWorldPoint(Input.mousePosition);
+        if (inputManager.IsUsingGamepad)
+        {
+            UpdateAimWithGamepad();
+        }
+        else
+        {
+            UpdateAimWithMouse();
+        }
+
+        // Apply the last known position to the transform and update the color
+        transform.position = aimPosition;
+        UpdateAimColor();
+    }
+
+    private void UpdateAimWithGamepad ()
+    {
+        Vector2 gamepadInput = inputManager.InputAim;
+        Vector2 aimInput = gamepadInput * gamepadAimSensitivity;
+        aimPosition = (Vector2)player.position + aimInput * maxAimDistance;
+
+        // If the input is in the deadzone, do not update lastAimPosition, keeping the aim in its last position
+    }
+
+    private void UpdateAimWithMouse ()
+    {
+        mousePosition = sceneCamera.ScreenToWorldPoint(inputManager.InputAim);
         Vector2 direction = (mousePosition - (Vector2)player.position).normalized;
         float actualDistance = Vector2.Distance(player.position, mousePosition);
-
         float aimDistance = Mathf.Min(actualDistance, maxAimDistance);
         aimPosition = (Vector2)player.position + direction * aimDistance;
+    }
 
-        transform.position = aimPosition;
-
-        // Change the color based on the result of the raycast
+    private void UpdateAimColor ()
+    {
         if (isShootable)
         {
             spriteRenderer.color = shootableColor;
@@ -54,9 +81,10 @@ public class MouseAim : MonoBehaviour
     }
 
 
+
     private void OnTriggerEnter2D ( Collider2D collision )
     {
-        if( collision.CompareTag("Shootable"))
+        if (collision.CompareTag("Shootable"))
         {
             isShootable = true;
         }
@@ -64,18 +92,18 @@ public class MouseAim : MonoBehaviour
 
     private void OnTriggerExit2D ( Collider2D collision )
     {
-        if(collision.CompareTag("Shootable"))
+        if (collision.CompareTag("Shootable"))
         {
             isShootable = false;
         }
     }
 
-    public Vector2 GetAimPosition()
+    public Vector2 GetAimPosition ()
     {
         return aimPosition;
     }
 
-    public bool IsShootable()
+    public bool IsShootable ()
     {
         return isShootable;
     }

@@ -7,6 +7,8 @@ using UnityEngine.UI; // This is required for interacting with UI components
 public class Inventory : MonoBehaviour
 {
     public PlayerMonsterSpawner spawner;
+    private InputManager inputManager;
+    [SerializeField] private PlayerController inventoryOwnerPlayerController;
 
     // A struct to hold both the prefab and the count of each type
     [System.Serializable]
@@ -20,21 +22,55 @@ public class Inventory : MonoBehaviour
     }
 
     public List<MonsterInventoryItem> monsterInventory;
+
+    private Dictionary<Vector2, int> directionToIndexMapping;
+
     private int selectedIndex = -1;
 
     public Color defaultColor;
     public Color selectedColor;
 
+    private void Awake ()
+    {
+        inputManager = inventoryOwnerPlayerController.GetComponent<InputManager>();
+    }
 
     private void Start ()
     {
-        // Initialize button colors and listeners
+        directionToIndexMapping = new Dictionary<Vector2, int>
+        {
+            { Vector2.up, 0 },
+            { Vector2.down, 1 },
+            { Vector2.left, 2 },
+            { Vector2.right, 3 }
+        };
+
         foreach (var item in monsterInventory)
         {
             item.button.image.color = defaultColor;
             item.countText.text = item.count.ToString();
         }
+
     }
+
+    private void Update ()
+    {
+        Vector2 inputDirection = inputManager.InventoryInput; // This method should return Vector2.zero if no direction is pressed
+
+        if (inputDirection != Vector2.zero)
+        {
+            TrySelectMonsterWithDirection(inputDirection);
+        }
+    }
+
+    private void TrySelectMonsterWithDirection ( Vector2 direction )
+    {
+        if (directionToIndexMapping.TryGetValue(direction, out int monsterIndex))
+        {
+            OnMonsterSelected(monsterIndex);
+        }
+    }
+
 
     public void OnMonsterSelected ( int monsterIndex )
     {

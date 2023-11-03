@@ -7,7 +7,7 @@ public class CountdownUI : MonoBehaviour
 {
     private const string NUMBER_POPUP = "NumberPopup";
 
-    [SerializeField] private Transform playerTransform;
+    private Transform playerTransform;
     [SerializeField] private TextMeshProUGUI countdownText;
     private Vector3 originalScale;
 
@@ -23,6 +23,8 @@ public class CountdownUI : MonoBehaviour
     private void Awake ()
     {
         animator = GetComponent<Animator>();
+        playerTransform = GetComponentInParent<PlayerController>().GetComponent<Transform>();
+
     }
 
     private void Start ()

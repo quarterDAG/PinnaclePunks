@@ -75,11 +75,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     {
         _frameInput = new FrameInput
         {
-            //JumpDown = Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.C),
-            JumpDown = inputManager.IsJumpingPressed,
-            //JumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C),
-            JumpHeld = inputManager.IsJumpingPressed,
-            //Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))
+            JumpDown = inputManager.IsJumpPressed,
+            JumpHeld = inputManager.IsJumpHeld,
             Move = new Vector2(inputManager.InputVelocity.x, inputManager.InputVelocity.y),
         };
 

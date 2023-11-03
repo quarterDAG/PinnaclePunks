@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DashSkill : MonoBehaviour
 {
-    private const float DOUBLE_CLICK_TIME = .2f;
+    private const float DOUBLE_CLICK_TIME = .5f;
+    private const float DASH_COOLDOWN = 1.0f; // Cooldown time in seconds
+    private float lastDashTime = -DASH_COOLDOWN;
 
     private InputManager inputManager;
 
@@ -31,32 +34,47 @@ public class DashSkill : MonoBehaviour
         playerAnimator = GetComponentInChildren<PlayerAnimator>();
         weapon = GetComponentInChildren<Weapon>();
         playerController = GetComponent<PlayerController>();
+        inputManager = GetComponent<InputManager>();
     }
 
     private void Update ()
     {
-        if (playerController.isDead) return;
         CheckForDoubleClickAndDash();
     }
 
     private void CheckForDoubleClickAndDash ()
     {
+        if (playerController.isDead || isDashing || Time.time < lastDashTime + DASH_COOLDOWN)
+            return;
 
-        if (!isDashing)
+        if (inputManager.IsUsingGamepad && inputManager.IsDashPressed)
         {
-            int currentTapDirection = 0;
+            Dash(GetDashDirectionForGamepad());
+            lastDashTime = Time.time; // Set the dash time after a successful dash
+            inputManager.ResetDash(); // Reset the dash press state
+        }
+        else if (!inputManager.IsUsingGamepad)
+        {
+            HandleKeyboardDash();
+        }
+    }
 
-            if (Input.GetButtonDown("Horizontal"))
-                currentTapDirection = (int)Mathf.Sign(Input.GetAxisRaw("Horizontal"));
+    private void HandleKeyboardDash ()
+    {
+        if (inputManager.InputVelocity.x != 0)
+        {
+            int currentTapDirection = (int)Mathf.Sign(inputManager.InputVelocity.x);
 
             if (currentTapDirection != 0)
             {
-                float timeSinceLastClick = Time.time - lastClickTime;
+                float timeSinceLastTap = Time.time - lastClickTime;
 
-                if (timeSinceLastClick <= DOUBLE_CLICK_TIME && currentTapDirection == lastTapDirection)
+                if (timeSinceLastTap <= DOUBLE_CLICK_TIME && currentTapDirection == lastTapDirection)
                 {
+                    lastDashTime = Time.time; // Set the dash time after a successful dash
                     Dash(currentTapDirection);
                     lastClickTime = 0;
+                    lastTapDirection = 0; // Reset the last tap direction after a successful dash
                 }
                 else
                 {
@@ -66,6 +84,15 @@ public class DashSkill : MonoBehaviour
             }
         }
     }
+
+
+    private int GetDashDirectionForGamepad ()
+    {
+        // Assuming the dash direction is determined by the horizontal axis of the gamepad's left stick
+        float gamepadDirection = inputManager.InputVelocity.x;
+        return (int)Mathf.Sign(gamepadDirection);
+    }
+
 
     private void Dash ( int direction )
     {
@@ -92,7 +119,6 @@ public class DashSkill : MonoBehaviour
         }
 
         rb.position = end;
-        //yield return new WaitForSeconds(0.1f); // Equivalent to await Task.Delay(200); but in coroutine context
 
         gameObject.tag = "Player";
         weapon.CanShoot(true);

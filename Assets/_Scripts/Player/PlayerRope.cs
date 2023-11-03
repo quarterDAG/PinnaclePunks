@@ -20,14 +20,17 @@ public class PlayerRope : MonoBehaviour
 
     [SerializeField] private float swingForce = 100f;
 
+    private InputManager inputManager;
+
     private void Awake ()
     {
-            playerController = GetComponent<PlayerController>();
+        playerController = GetComponent<PlayerController>();
+        inputManager = GetComponent<InputManager>();
     }
 
     private void Update ()
     {
-        if(playerController.isDead) return;
+        if (playerController.isDead) return;
 
         HandleRope();
 
@@ -38,7 +41,7 @@ public class PlayerRope : MonoBehaviour
 
     private void HandleRope ()
     {
-        if (Input.GetButton("Fire2"))
+        if (inputManager.IsRopeShootPressed)
         {
             if (mouseAim.IsShootable())
             {
@@ -47,6 +50,7 @@ public class PlayerRope : MonoBehaviour
             else
                 ShootRope();
         }
+        inputManager.ResetRope();
     }
 
 
@@ -97,13 +101,13 @@ public class PlayerRope : MonoBehaviour
 
     private void HandleSwing ()
     {
-        float vertical = Input.GetAxis("Vertical");
-        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = inputManager.InputVelocity.y;
+        float horizontal = inputManager.InputVelocity.x;
         transform.GetComponent<Rigidbody2D>().AddForce(transform.right * horizontal * swingForce, ForceMode2D.Force);
         transform.GetComponent<Rigidbody2D>().AddForce(transform.up * vertical * swingForce, ForceMode2D.Force);
     }
 
-    public void ConnectRopeEnd(Rigidbody2D endRB)
+    public void ConnectRopeEnd ( Rigidbody2D endRB )
     {
         joint.enabled = true;
         joint.autoConfigureConnectedAnchor = false;
@@ -112,7 +116,7 @@ public class PlayerRope : MonoBehaviour
     }
 
 
-    public bool IsRopeConnected()
+    public bool IsRopeConnected ()
     {
         return joint.connectedBody != null;
     }

@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 public class PlayerAnimator : MonoBehaviour
 {
-    [SerializeField] private Animator animator;
-    [SerializeField] private SkeletonMecanim skeletonMecanim;
-    [SerializeField] private Weapon weapon;
-    [SerializeField] private MouseAim mouseAim;
+    private Animator animator;
+    private SkeletonMecanim skeletonMecanim;
+    private MouseAim mouseAim;
     private PlayerController playerController;
 
 
@@ -25,6 +24,9 @@ public class PlayerAnimator : MonoBehaviour
     {
         rb = GetComponentInParent<Rigidbody2D>();
         playerController = GetComponentInParent<PlayerController>();
+        skeletonMecanim = GetComponent<SkeletonMecanim>();  
+        animator = GetComponent<Animator>();
+        mouseAim = playerController.GetComponentInChildren<MouseAim>();
     }
 
 
@@ -43,7 +45,9 @@ public class PlayerAnimator : MonoBehaviour
         {
             isHit = true;
             animator.SetBool("GetHit", true);
+
             await Task.Delay(1000);
+
             animator.SetBool("GetHit", false);
             isHit = false;
         }

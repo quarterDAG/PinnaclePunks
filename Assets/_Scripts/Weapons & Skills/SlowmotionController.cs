@@ -8,6 +8,13 @@ public class SlowmotionController : MonoBehaviour
     [SerializeField] private Bar slowmotionBar;
     [SerializeField] private float slowMotionDrainRate = 1f; 
 
+    private InputManager inputManager;
+
+
+    private void Awake ()
+    {
+        inputManager = GetComponent<InputManager>();    
+    }
 
     void Update ()
     {
@@ -17,12 +24,12 @@ public class SlowmotionController : MonoBehaviour
 
     private void HandleSlowMotion ()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !slowmotionBar.IsEmpty()) // Check if bar has value before activating slow motion.
+        if (inputManager.IsSlowmotionPressed && !slowmotionBar.IsEmpty()) // Check if bar has value before activating slow motion.
         {
             TimeManager.Instance.DoSlowMotion();
         }
 
-        if (Input.GetKeyUp(KeyCode.LeftShift) || slowmotionBar.IsEmpty()) // Stop slow motion on key release or when the bar is empty.
+        if (!inputManager.IsSlowmotionPressed || slowmotionBar.IsEmpty()) // Stop slow motion on key release or when the bar is empty.
         {
             TimeManager.Instance.StopSlowMotion();
         }

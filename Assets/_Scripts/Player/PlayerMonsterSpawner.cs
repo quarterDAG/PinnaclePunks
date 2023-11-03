@@ -8,10 +8,16 @@ public class PlayerMonsterSpawner : MonoBehaviour
     private Transform spawnPoint;
     [SerializeField] private string TagToAttack;
     [SerializeField] private Inventory inventory;
+    private InputManager inputManager;
+
+    private void Awake ()
+    {
+        inputManager = GetComponent<InputManager>();
+    }
 
     private void Update ()
     {
-        if (Input.GetKeyDown(KeyCode.R) && spawnPoint != null && selectedMonster != null)
+        if (inputManager.IsSpawnMonsterPressed && spawnPoint != null && selectedMonster != null)
         {
             if (inventory.GetSelectedMonsterAmount(selectedMonster) <= 0) return;
             spawnPoint.GetComponent<MonsterSpawnPoint>().SpawnMonster(selectedMonster, TagToAttack, this);

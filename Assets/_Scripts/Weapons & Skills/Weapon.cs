@@ -26,16 +26,13 @@ public class Weapon : MonoBehaviour
     private float timeToFire = 0;
 
     private bool canShoot = true;
+    private InputManager inputManager;
 
 
     void Awake ()
     {
-        if (firePoint == null)
-            Debug.LogError("No Fire Point");
-
-        //playerAnimator = FindAnyObjectByType<PlayerAnimator>();
-        playerController = GetComponentInParent<PlayerController>();    
-
+        playerController = GetComponentInParent<PlayerController>();   
+        inputManager = GetComponentInParent<InputManager>();    
     }
 
     void Update ()
@@ -65,19 +62,19 @@ public class Weapon : MonoBehaviour
     {
         if (fireRate == 0)
         {
-            if (Input.GetButtonDown("Fire1"))
+            if (inputManager.IsShootPressed)
                 Shoot();
         }
         else
         {
-            if (Input.GetButton("Fire1") && Time.time > timeToFire)
+            if (inputManager.IsShootPressed && Time.time > timeToFire)
             {
                 timeToFire = Time.time + 1 / fireRate;
                 Shoot();
             }
         }
 
-        if (Input.GetButtonUp("Fire1"))
+        if (!inputManager.IsShootPressed)
             StopShoot();
 
     }
