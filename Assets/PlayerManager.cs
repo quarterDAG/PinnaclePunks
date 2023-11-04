@@ -180,7 +180,7 @@ public class PlayerManager : MonoBehaviour
         {
             target = playerTransform,
             weight = 1f, 
-            radius = 2f  
+            radius = 5f  
         };
 
         cinemachineTargetGroup.AddMember(playerTransform, target.weight, target.radius);

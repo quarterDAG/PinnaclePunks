@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: af4e3e0adb8509649bceefeea3eb183c
+guid: f61e0f94992712b40bdd20abd803c807
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -20,11 +20,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -33,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -47,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -63,6 +64,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
   cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
@@ -70,11 +72,12 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -87,6 +90,33 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -99,31 +129,20 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 05_0
+      name: Mesa de trabajo 1_3
       rect:
         serializedVersion: 2
-        x: 5
-        y: 16
-        width: 37
-        height: 14
+        x: 17
+        y: 300
+        width: 12
+        height: 23
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -131,20 +150,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 753d70eefb9a88a44bc4dbeb0c3fc88a
-      internalID: -703969808
+      spriteID: 5b46987813ecb3c478011909170b0d38
+      internalID: 480029354
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 05_1
+      name: Mesa de trabajo 1_4
       rect:
         serializedVersion: 2
-        x: 53
-        y: 16
-        width: 37
-        height: 14
+        x: 47
+        y: 285
+        width: 188
+        height: 57
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -152,20 +171,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ab973c0bde1e495478bfdb6fdf03bd34
-      internalID: -584504071
+      spriteID: 4ef627e26e348ac419f9359f151e5c18
+      internalID: -995250098
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 05_2
+      name: Mesa de trabajo 1_9
       rect:
         serializedVersion: 2
-        x: 101
-        y: 16
-        width: 37
-        height: 14
+        x: 15
+        y: 223
+        width: 12
+        height: 22
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -173,20 +192,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 59135f7820177d64b981bfc9b5d9e2af
-      internalID: -336480601
+      spriteID: 1933a3845b5fc0441913344b180d05aa
+      internalID: 1827308036
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 05_3
+      name: Mesa de trabajo 1_10
       rect:
         serializedVersion: 2
-        x: 149
-        y: 16
-        width: 37
-        height: 14
+        x: 48
+        y: 207
+        width: 187
+        height: 56
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -194,113 +213,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aca4394f376b6224ab79f7118b1b8510
-      internalID: -1742076765
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 05_4
-      rect:
-        serializedVersion: 2
-        x: 197
-        y: 16
-        width: 37
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9cf61ddab7e2a0e4a8446f25f4eeb8e4
-      internalID: 2084810627
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 05_5
-      rect:
-        serializedVersion: 2
-        x: 245
-        y: 16
-        width: 37
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e623768968ac8a241a0a7fdd0cb40fde
-      internalID: -1775288579
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 05_6
-      rect:
-        serializedVersion: 2
-        x: 293
-        y: 16
-        width: 37
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 65b0e40098ff3b242b5053349a0d6573
-      internalID: -328637140
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 05_7
-      rect:
-        serializedVersion: 2
-        x: 341
-        y: 16
-        width: 37
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f30cf1aafcb9af94d9d6a261601beac4
-      internalID: 178005531
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 05_8
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 5
-        width: 288
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8113a48def63fed47ab940b178b874eb
-      internalID: -1589163630
+      spriteID: c332715b7cd36b34da04cbd22c2d3649
+      internalID: -1537173448
       vertices: []
       indices: 
       edges: []
@@ -316,18 +230,30 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      05_0: -703969808
-      05_1: -584504071
-      05_2: -336480601
-      05_3: -1742076765
-      05_4: 2084810627
-      05_5: -1775288579
-      05_6: -328637140
-      05_7: 178005531
-      05_8: -1589163630
-  spritePackingTag: 
+      Mesa de trabajo 1_0: -1976474595
+      Mesa de trabajo 1_1: -910571508
+      Mesa de trabajo 1_10: -1537173448
+      Mesa de trabajo 1_11: 532300305
+      Mesa de trabajo 1_12: 419391054
+      Mesa de trabajo 1_13: 201157766
+      Mesa de trabajo 1_14: 2056765984
+      Mesa de trabajo 1_15: 1489964411
+      Mesa de trabajo 1_16: -51321446
+      Mesa de trabajo 1_17: 1021518124
+      Mesa de trabajo 1_18: 1623855928
+      Mesa de trabajo 1_19: -1797887140
+      Mesa de trabajo 1_2: 1868125506
+      Mesa de trabajo 1_20: 7710939
+      Mesa de trabajo 1_21: -1806841668
+      Mesa de trabajo 1_3: 480029354
+      Mesa de trabajo 1_4: -995250098
+      Mesa de trabajo 1_5: 1034196233
+      Mesa de trabajo 1_6: 914062309
+      Mesa de trabajo 1_7: -2110442304
+      Mesa de trabajo 1_8: 275315604
+      Mesa de trabajo 1_9: 1827308036
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
