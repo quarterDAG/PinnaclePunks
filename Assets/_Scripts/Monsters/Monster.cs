@@ -51,10 +51,11 @@ public class Monster : MonoBehaviour, ICharacter
         animator = GetComponent<Animator>();
         skeletonMecanim = GetComponent<SkeletonMecanim>();
 
-        GameObject[] playerObjects = GameObject.FindGameObjectsWithTag(tagToAttack);
-        foreach (var playerObject in playerObjects)
+        GameObject[] otherTeamObjects = GameObject.FindGameObjectsWithTag(tagToAttack);
+        foreach (var otherTeamObject in otherTeamObjects)
         {
-            players.Add(playerObject.transform);
+            if (otherTeamObject.layer == 3)
+                players.Add(otherTeamObject.transform);
         }
     }
 

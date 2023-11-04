@@ -23,6 +23,7 @@ public class MoveTrail : MonoBehaviour
     private void OnTriggerEnter2D ( Collider2D collision )
     {
         // Check for damage tag and if the collision has an ICharacter component
+
         if (collision.CompareTag(damageTag) && collision.GetComponent<ICharacter>() != null)
         {
             collision.GetComponent<ICharacter>().TakeDamage(bulletDamage);
@@ -36,7 +37,7 @@ public class MoveTrail : MonoBehaviour
     }
 
 
-    public void SetDamage(int damage)
+    public void SetDamage ( int damage )
     {
         bulletDamage = damage;
     }

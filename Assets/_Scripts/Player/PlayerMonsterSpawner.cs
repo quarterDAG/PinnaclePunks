@@ -24,6 +24,7 @@ public class PlayerMonsterSpawner : MonoBehaviour
             if (teamInventory.GetSelectedMonsterAmount(selectedMonster) <= 0) return;
             spawnPoint.GetComponent<MonsterSpawnPoint>().SpawnMonster(selectedMonster, tagToAttack, this);
 
+
         }
     }
 
