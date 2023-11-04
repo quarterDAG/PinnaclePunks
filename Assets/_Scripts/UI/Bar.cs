@@ -7,8 +7,8 @@ public class Bar : MonoBehaviour
     [SerializeField] private Image fillImage; // Reference to the fill image component
     [SerializeField] private TextMeshProUGUI percentageText;
 
-    private float maxValue = 100f; // Assuming max health is 100
-    private float currentValue = 100f;
+    [SerializeField] private float maxValue = 100f; // Assuming max health is 100
+    [SerializeField] private float currentValue = 100f;
 
     public enum BarType
     {

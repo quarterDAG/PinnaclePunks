@@ -63,7 +63,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     {
         teamTag = gameObject.tag;
 
-        CreateAndAssignRespawn();
         FindAndAssignHpBar();
     }
 
@@ -86,11 +85,9 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         }
     }
 
-    private void CreateAndAssignRespawn ()
+    public void AssignRespawn (Transform spawnPoint)
     {
-        GameObject playerRespawn = new GameObject("Respawn" + teamTag);
-        playerRespawn.transform.position = transform.position;
-        respawnPoint = playerRespawn.transform;
+        respawnPoint = spawnPoint;
     }
 
     private void Update ()

@@ -4,7 +4,7 @@ using static PlayerManager;
 public class MouseAim : MonoBehaviour
 {
 
-    public Camera sceneCamera;
+    [SerializeField] private Camera sceneCamera;
     [SerializeField] private Transform player;
     [SerializeField] private float maxAimDistance = 5f;
 
@@ -24,7 +24,6 @@ public class MouseAim : MonoBehaviour
 
     private void Awake ()
     {
-        sceneCamera = Camera.main;
         spriteRenderer = GetComponent<SpriteRenderer>();
         inputManager = GetComponentInParent<InputManager>();
 

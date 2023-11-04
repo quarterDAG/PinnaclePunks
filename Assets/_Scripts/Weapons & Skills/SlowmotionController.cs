@@ -9,6 +9,9 @@ public class SlowmotionController : MonoBehaviour
     public Bar slowmotionBar { get; private set; }
     [SerializeField] private float slowMotionDrainRate = 1f;
 
+    private bool isRequestingSlowMotion = false;
+
+
     private InputManager inputManager;
 
     private void Awake ()
@@ -59,19 +62,23 @@ public class SlowmotionController : MonoBehaviour
 
     private void HandleSlowMotion ()
     {
-        if (inputManager.IsSlowmotionPressed && !slowmotionBar.IsEmpty()) // Check if bar has value before activating slow motion.
+        // If slow motion is pressed and the bar is not empty, request slow motion
+        if (inputManager.IsSlowmotionPressed && !slowmotionBar.IsEmpty() && !isRequestingSlowMotion)
         {
+            isRequestingSlowMotion = true;
             TimeManager.Instance.RequestSlowMotion();
         }
-
-        if (!inputManager.IsSlowmotionPressed || slowmotionBar.IsEmpty()) // Stop slow motion on key release or when the bar is empty.
+        // If slow motion is not pressed or the bar is empty, and slow motion was previously requested, cancel it
+        else if ((!inputManager.IsSlowmotionPressed || slowmotionBar.IsEmpty()) && isRequestingSlowMotion)
         {
+            isRequestingSlowMotion = false;
             TimeManager.Instance.CancelSlowMotionRequest();
         }
 
-        if (TimeManager.Instance.isSlowMotionActive) // If slow motion is active, drain the bar.
+        // If slow motion is active, drain the bar
+        if (TimeManager.Instance.isSlowMotionActive && isRequestingSlowMotion)
         {
-            slowmotionBar.UpdateValue(-slowMotionDrainRate * Time.unscaledTime); // Use Time.unscaledDeltaTime to ensure the drain rate is consistent regardless of time scale.
+            slowmotionBar.UpdateValue(-slowMotionDrainRate * Time.unscaledDeltaTime); // Use unscaledDeltaTime to ensure the drain rate is consistent
         }
     }
 
