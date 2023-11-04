@@ -28,11 +28,20 @@ public class Weapon : MonoBehaviour
     private bool canShoot = true;
     private InputManager inputManager;
 
+    private SlowmotionController slowmotionController;
+
 
     void Awake ()
     {
-        playerController = GetComponentInParent<PlayerController>();   
-        inputManager = GetComponentInParent<InputManager>();    
+        playerController = GetComponentInParent<PlayerController>();
+        inputManager = GetComponentInParent<InputManager>();
+        slowmotionController = GetComponentInParent<SlowmotionController>();
+    }
+
+    private void Start ()
+    {
+        damageThisTag = (gameObject.tag == "TeamA") ? "TeamB" : "TeamA";
+
     }
 
     void Update ()
@@ -87,12 +96,12 @@ public class Weapon : MonoBehaviour
 
         if (Time.unscaledTime >= timeToSpawnEffect)
         {
-            TrailEffect();
+            CreateShot();
             timeToSpawnEffect = Time.time + 1 / effectSpawnRate;
         }
     }
 
-    private void TrailEffect ()
+    private void CreateShot ()
     {
         playerAnimator.ShootAnimation(true);
         GameObject bullet = Instantiate(arrowPrefab, firePoint.position, firePoint.rotation);
@@ -100,7 +109,21 @@ public class Weapon : MonoBehaviour
         moveTrail.SetTagToDamage(damageThisTag);
         //moveTrail.SetBulletGradient(bulletGradient);
         moveTrail.SetDamage(damage);
-        slowmotionBar.UpdateValue(slowmotionIncrement);
+
+        IncreaseSlowmotionBar();
+
+    }
+
+    private void IncreaseSlowmotionBar ()
+    {
+        if (slowmotionBar == null)
+        {
+            slowmotionBar = slowmotionController.slowmotionBar;
+        }
+        else
+        {
+            slowmotionBar.UpdateValue(slowmotionIncrement);
+        }
     }
 
     private void StopShoot ()

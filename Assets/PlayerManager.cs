@@ -12,6 +12,7 @@ public class PlayerManager : MonoBehaviour
     {
         public ControlScheme controlScheme;
         public InputDevice device;
+        public Team team;
     }
 
     public enum ControlScheme
@@ -20,12 +21,15 @@ public class PlayerManager : MonoBehaviour
         Gamepad
     }
 
+    public enum Team
+    {
+        TeamA,
+        TeamB
+    }
+
     [Header("Player Settings")]
     public GameObject playerPrefab;
     public List<PlayerConfig> playerConfigs;
-
-    private int gamepadIndex = 0;
-
 
     void Start ()
     {
@@ -35,7 +39,7 @@ public class PlayerManager : MonoBehaviour
     private void InitializePlayers ()
     {
         var gamepads = Gamepad.all;
-        int gamepadIndex = 0; // Index to keep track of assigned gamepads
+        int gamepadIndex = 0;
 
         foreach (var config in playerConfigs)
         {
@@ -43,40 +47,47 @@ public class PlayerManager : MonoBehaviour
 
             if (config.controlScheme == ControlScheme.Keyboard)
             {
-                // Instantiate player with keyboard and mouse.
                 instantiatedPlayer = PlayerInput.Instantiate(
                     playerPrefab,
-                    controlScheme: "Keyboard", // This name should match the one in the Input Actions Asset
+                    controlScheme: "Keyboard",
                     pairWithDevices: new InputDevice[] { Keyboard.current, Mouse.current }
                 );
             }
             else if (config.controlScheme == ControlScheme.Gamepad && gamepadIndex < gamepads.Count)
             {
-                // Instantiate player with the current gamepad.
                 instantiatedPlayer = PlayerInput.Instantiate(
                     playerPrefab,
-                    controlScheme: "Gamepad", // This name should match the one in the Input Actions Asset
+                    controlScheme: "Gamepad",
                     pairWithDevice: gamepads[gamepadIndex]
                 );
 
-                gamepadIndex++; // Increment the index for the next gamepad.
+                gamepadIndex++;
             }
 
-            // After instantiation, switch the control scheme if necessary.
-            if (instantiatedPlayer != null)
-            {
-                string controlSchemeName = config.controlScheme.ToString();
-                InputDevice[] devices = config.controlScheme == ControlScheme.Keyboard ?
-                    new InputDevice[] { Keyboard.current, Mouse.current } :
-                    new InputDevice[] { gamepads[gamepadIndex - 1] };
+            instantiatedPlayer.GetComponent<InputManager>().UpdateCurrentControlScheme(config.controlScheme.ToString());
 
-                instantiatedPlayer.SwitchCurrentControlScheme(
-                    controlSchemeName,
-                    devices
-                );
-            }
+            SetupPlayerTag(config, instantiatedPlayer);
+
+            instantiatedPlayer.GetComponentInChildren<PlayerMonsterSpawner>().ConfigMonsterSpawner();
         }
     }
+
+    private void SetupPlayerTag ( PlayerConfig config, PlayerInput instantiatedPlayer )
+    {
+        string tag = config.team.ToString();
+        instantiatedPlayer.gameObject.tag = tag;
+        SetTagRecursively(instantiatedPlayer.gameObject.transform, tag);
+    }
+
+    void SetTagRecursively ( Transform parent, string tag )
+    {
+        parent.gameObject.tag = tag;
+        foreach (Transform child in parent)
+        {
+            SetTagRecursively(child, tag); // Recursive call for all children
+        }
+    }
+
 }
 
 
@@ -84,16 +95,16 @@ public class PlayerManager : MonoBehaviour
 #if UNITY_EDITOR
 
 [CustomEditor(typeof(PlayerManager))]
-    public class PlayerManagerEditor : Editor
+public class PlayerManagerEditor : Editor
+{
+    public override void OnInspectorGUI ()
     {
-        public override void OnInspectorGUI ()
-        {
-            base.OnInspectorGUI();
+        base.OnInspectorGUI();
 
-            PlayerManager setupScript = (PlayerManager)target;
+        PlayerManager setupScript = (PlayerManager)target;
 
-        }
     }
+}
 #endif
 
 

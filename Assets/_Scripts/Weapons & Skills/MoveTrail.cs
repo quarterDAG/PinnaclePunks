@@ -22,26 +22,19 @@ public class MoveTrail : MonoBehaviour
 
     private void OnTriggerEnter2D ( Collider2D collision )
     {
-        if (collision.CompareTag(damageTag))
+        // Check for damage tag and if the collision has an ICharacter component
+        if (collision.CompareTag(damageTag) && collision.GetComponent<ICharacter>() != null)
         {
-    /*        Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
-            if (rb != null)
-            {
-                Vector2 forceDirection = transform.right; // Assuming the bullet moves to the right
-                float forceAmount = 100f; // Adjust this value as needed
-                rb.AddForce(forceDirection * forceAmount, ForceMode2D.Impulse);
-            }
-*/
             collision.GetComponent<ICharacter>().TakeDamage(bulletDamage);
             Destroy(gameObject);
         }
-
-
-        if (hitTheseLayers == (hitTheseLayers | (1 << collision.gameObject.layer)))
+        // Check if the layer of the collided object is in the LayerMask
+        else if (hitTheseLayers == (hitTheseLayers | (1 << collision.gameObject.layer)))
         {
             Destroy(gameObject);
         }
     }
+
 
     public void SetDamage(int damage)
     {

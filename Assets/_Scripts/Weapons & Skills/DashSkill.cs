@@ -47,13 +47,14 @@ public class DashSkill : MonoBehaviour
         if (playerController.isDead || isDashing || Time.time < lastDashTime + DASH_COOLDOWN)
             return;
 
-        if (inputManager.IsUsingGamepad && inputManager.IsDashPressed)
+        if (inputManager.IsDashPressed)
         {
             Dash(GetDashDirectionForGamepad());
             lastDashTime = Time.time; // Set the dash time after a successful dash
             inputManager.ResetDash(); // Reset the dash press state
         }
-        else if (!inputManager.IsUsingGamepad)
+        
+        if (inputManager.currentControlScheme == "Keyboard")
         {
             HandleKeyboardDash();
         }

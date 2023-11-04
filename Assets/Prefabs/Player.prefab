@@ -20141,11 +20141,9 @@ MonoBehaviour:
   stats:
     Health: 100
     MaxHealth: 100
-  weapon: {fileID: 3313171096125664222}
   hpBar: {fileID: 0}
   canMove: 1
   lives: 3
-  respawnPoint: {fileID: 0}
 --- !u!114 &5503615758264496031
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20179,8 +20177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bcaf7050d7437b45a8d1f45b5b71921, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TagToAttack: Team B
-  inventory: {fileID: 0}
+  teamInventory: {fileID: 0}
 --- !u!114 &2540522577654663218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20207,7 +20204,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2d818642fe02444ab4b94d037ac1c78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slowmotionBar: {fileID: 0}
   slowMotionDrainRate: 0.005
 --- !u!114 &6875853117583122160
 MonoBehaviour:
@@ -20391,9 +20387,9 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: d051035f-0b44-4aa3-ba45-13345ce878b7
     m_ActionName: Player/New action
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Keyboard & Mouse
+  m_NeverAutoSwitchControlSchemes: 1
+  m_DefaultControlScheme: Gamepad
+  m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!50 &2079246341268384381
@@ -35078,12 +35074,12 @@ MonoBehaviour:
     m_Bits: 51
   firePoint: {fileID: 8237473891179616149}
   arrowPrefab: {fileID: 2372949663694061506, guid: 16dd276d99a67bc45a6c9eeee83b875b, type: 3}
-  damageThisTag: Team B
+  damageThisTag: TeamB
   slowmotionBar: {fileID: 0}
   slowmotionIncrement: 5
   fireRate: 10
   damage: 10
-  shotDistance: 50
+  shotDistance: 100
   effectSpawnRate: 10
 --- !u!1 &7599851207667780729
 GameObject:
@@ -35145,7 +35141,7 @@ Transform:
   m_GameObject: {fileID: 7756453249001439811}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: 2.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []

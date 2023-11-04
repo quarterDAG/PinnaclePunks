@@ -287,59 +287,15 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "Right Stick",
-                    "id": "370c2c22-750d-4010-ab47-d4fd9fd0a6f5",
-                    "path": "2DVector",
+                    "name": "",
+                    "id": "de65ced7-d923-4c4e-b28a-cb315d112ec3",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepad",
                     "action": "Aim",
-                    "isComposite": true,
+                    "isComposite": false,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "6a12bda4-9a60-4754-88a5-27bf2ed8100c",
-                    "path": "<Gamepad>/rightStick/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Aim",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "daaf1514-aae7-4c75-8c99-011091d0f0b8",
-                    "path": "<Gamepad>/rightStick/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Aim",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "19d7320b-c16e-4c4d-bf39-a2256314aecd",
-                    "path": "<Gamepad>/rightStick/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Aim",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "b5a19c64-a9db-4ecd-873b-35584b9cc3e3",
-                    "path": "<Gamepad>/rightStick/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Aim",
-                    "isComposite": false,
-                    "isPartOfComposite": true
                 },
                 {
                     "name": "",
@@ -513,12 +469,29 @@
         {
             "name": "Gamepad",
             "bindingGroup": "Gamepad",
-            "devices": []
+            "devices": [
+                {
+                    "devicePath": "<Gamepad>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
         },
         {
             "name": "Keyboard",
             "bindingGroup": "Keyboard",
-            "devices": []
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
         }
     ]
 }

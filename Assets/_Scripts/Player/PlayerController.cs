@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using static Bar;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
@@ -31,16 +32,15 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     private float _time;
 
-    [SerializeField] private Weapon weapon;
     private PlayerRope playerRope;
-    [SerializeField] Bar hpBar;
+    [SerializeField] private Bar hpBar;
 
     [SerializeField] private bool canMove = true;
 
     private PlayerAnimator playerAnimator;
     public bool isDead { get; private set; }
     [SerializeField] private int lives = 3; // Each player starts with 3 lives
-    [SerializeField] private Transform respawnPoint; // This will be the player's base or respawn point
+    private Transform respawnPoint; // This will be the player's base or respawn point
     private CountdownUI respawnCountdownUI;
     private string teamTag;
 
@@ -57,7 +57,40 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         inputManager = GetComponent<InputManager>();
 
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
+    }
+
+    private void Start ()
+    {
         teamTag = gameObject.tag;
+
+        CreateAndAssignRespawn();
+        FindAndAssignHpBar();
+    }
+
+    private void FindAndAssignHpBar ()
+    {
+        Bar[] allBars = FindObjectsOfType<Bar>();
+
+        foreach (var bar in allBars)
+        {
+            if (bar.barType == BarType.HP)
+            {
+                if (bar.tag == teamTag)
+                {
+                    hpBar = bar;
+                    break;
+                }
+
+            }
+
+        }
+    }
+
+    private void CreateAndAssignRespawn ()
+    {
+        GameObject playerRespawn = new GameObject("Respawn" + teamTag);
+        playerRespawn.transform.position = transform.position;
+        respawnPoint = playerRespawn.transform;
     }
 
     private void Update ()
@@ -124,7 +157,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             if (TimeManager.Instance.isSlowMotionActive)
             {
                 await Task.Delay(1000);
-                TimeManager.Instance.StopSlowMotion();
+                TimeManager.Instance.CancelSlowMotionRequest();
             }
         }
 
@@ -246,7 +279,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             inputManager.ResetJump(false, true);
         }
 
-        if(_endedJumpEarly || _grounded && _frameInput.JumpHeld)
+        if (_endedJumpEarly || _grounded && _frameInput.JumpHeld)
         {
             inputManager.ResetJump(false, false);
         }

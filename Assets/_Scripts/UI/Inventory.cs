@@ -6,9 +6,8 @@ using UnityEngine.UI; // This is required for interacting with UI components
 
 public class Inventory : MonoBehaviour
 {
-    public PlayerMonsterSpawner spawner;
-    private InputManager inputManager;
-    [SerializeField] private PlayerController inventoryOwnerPlayerController;
+    public PlayerMonsterSpawner[] inventoryOwners;
+    private InputManager[] inputManagers;
 
     // A struct to hold both the prefab and the count of each type
     [System.Serializable]
@@ -30,13 +29,11 @@ public class Inventory : MonoBehaviour
     public Color defaultColor;
     public Color selectedColor;
 
-    private void Awake ()
-    {
-        inputManager = inventoryOwnerPlayerController.GetComponent<InputManager>();
-    }
 
     private void Start ()
     {
+        GatherInputManagersFromOwners();
+
         directionToIndexMapping = new Dictionary<Vector2, int>
         {
             { Vector2.up, 0 },
@@ -53,26 +50,79 @@ public class Inventory : MonoBehaviour
 
     }
 
+
+    public void AddInventoryOwner ( PlayerMonsterSpawner newOwner )
+    {
+        if (inventoryOwners == null)
+        {
+            inventoryOwners = new PlayerMonsterSpawner[1] { newOwner };
+        }
+        else
+        {
+            // Create a new array that is one element larger than the current one
+            PlayerMonsterSpawner[] newInventoryOwners = new PlayerMonsterSpawner[inventoryOwners.Length + 1];
+            inventoryOwners.CopyTo(newInventoryOwners, 0);
+            newInventoryOwners[inventoryOwners.Length] = newOwner;
+            inventoryOwners = newInventoryOwners;
+        }
+    }
+
+    private void GatherInputManagersFromOwners ()
+    {
+        inputManagers = new InputManager[inventoryOwners.Length];
+
+        for (int i = 0; i < inventoryOwners.Length; i++)
+        {
+            inputManagers[i] = inventoryOwners[i].GetComponent<InputManager>();
+
+            if (inventoryOwners[i] != null)
+            {
+                InputManager manager = inventoryOwners[i].GetComponent<InputManager>();
+                if (manager != null)
+                {
+                    inputManagers[i] = manager;
+                }
+                else
+                {
+                    Debug.LogWarning("InputManager component not found on object with PlayerMonsterSpawner component.");
+                }
+            }
+        }
+    }
+
     private void Update ()
     {
-        Vector2 inputDirection = inputManager.InventoryInput; // This method should return Vector2.zero if no direction is pressed
+        // Calculate the minimum length to avoid IndexOutOfRangeException
+        int minLength = Mathf.Min(inventoryOwners.Length, inputManagers.Length);
 
-        if (inputDirection != Vector2.zero)
+        for (int i = 0; i < minLength; i++)
         {
-            TrySelectMonsterWithDirection(inputDirection);
+            if (inputManagers[i] != null)
+            {
+                Vector2 inputDirection = inputManagers[i].InventoryInput; // Make sure this method exists and returns Vector2
+
+                if (inputDirection != Vector2.zero)
+                {
+                    TrySelectMonsterWithDirection(inputDirection, inventoryOwners[i]);
+                }
+            }
         }
     }
 
-    private void TrySelectMonsterWithDirection ( Vector2 direction )
+
+    private void TrySelectMonsterWithDirection ( Vector2 inputDirection, PlayerMonsterSpawner owner )
     {
+        Vector2 direction = inputDirection.normalized;
+
+
         if (directionToIndexMapping.TryGetValue(direction, out int monsterIndex))
         {
-            OnMonsterSelected(monsterIndex);
+            OnMonsterSelected(monsterIndex, owner);
         }
     }
 
 
-    public void OnMonsterSelected ( int monsterIndex )
+    public void OnMonsterSelected ( int monsterIndex, PlayerMonsterSpawner owner )
     {
         if (monsterIndex >= 0 && monsterIndex < monsterInventory.Count)
         {
@@ -89,7 +139,7 @@ public class Inventory : MonoBehaviour
             selectedItem.button.image.color = selectedColor;
 
             // Pass the monster prefab to the spawner without instantiating
-            spawner.SetSelectedMonster(selectedItem.monsterPrefab);
+            owner.SetSelectedMonster(selectedItem.monsterPrefab);
         }
         else
         {

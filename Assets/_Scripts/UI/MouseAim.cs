@@ -1,4 +1,5 @@
 using UnityEngine;
+using static PlayerManager;
 
 public class MouseAim : MonoBehaviour
 {
@@ -23,8 +24,10 @@ public class MouseAim : MonoBehaviour
 
     private void Awake ()
     {
+        sceneCamera = Camera.main;
         spriteRenderer = GetComponent<SpriteRenderer>();
         inputManager = GetComponentInParent<InputManager>();
+
 
     }
 
@@ -36,13 +39,14 @@ public class MouseAim : MonoBehaviour
 
     private void HandleAim ()
     {
-        if (inputManager.IsUsingGamepad)
+        switch (inputManager.currentControlScheme)
         {
-            UpdateAimWithGamepad();
-        }
-        else
-        {
-            UpdateAimWithMouse();
+            case "Gamepad":
+                UpdateAimWithGamepad();
+                break;
+            case "Keyboard":
+                UpdateAimWithMouse();
+                break;
         }
 
         // Apply the last known position to the transform and update the color

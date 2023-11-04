@@ -6,8 +6,8 @@ public class PlayerMonsterSpawner : MonoBehaviour
 {
     private Monster selectedMonster;
     private Transform spawnPoint;
-    [SerializeField] private string TagToAttack;
-    [SerializeField] private Inventory inventory;
+    private string tagToAttack;
+    [SerializeField] private Inventory teamInventory;
     private InputManager inputManager;
 
     private void Awake ()
@@ -15,19 +15,40 @@ public class PlayerMonsterSpawner : MonoBehaviour
         inputManager = GetComponent<InputManager>();
     }
 
+ 
+
     private void Update ()
     {
-        if (inputManager.IsSpawnMonsterPressed && spawnPoint != null && selectedMonster != null)
+        if (inputManager.IsSpawnMonsterPressed && spawnPoint != null && selectedMonster != null && tagToAttack != null)
         {
-            if (inventory.GetSelectedMonsterAmount(selectedMonster) <= 0) return;
-            spawnPoint.GetComponent<MonsterSpawnPoint>().SpawnMonster(selectedMonster, TagToAttack, this);
+            if (teamInventory.GetSelectedMonsterAmount(selectedMonster) <= 0) return;
+            spawnPoint.GetComponent<MonsterSpawnPoint>().SpawnMonster(selectedMonster, tagToAttack, this);
 
+        }
+    }
+
+
+    public void ConfigMonsterSpawner ()
+    {
+
+        tagToAttack = (gameObject.tag == "TeamA") ? "TeamB" : "TeamA";
+
+        Inventory[] allInventories = FindObjectsOfType<Inventory>();
+
+        foreach (var inventory in allInventories)
+        {
+            if (inventory.tag == gameObject.tag)
+            {
+                teamInventory = inventory;
+                inventory.AddInventoryOwner(this);
+                break;
+            }
         }
     }
 
     public void UpdateInventory ()
     {
-        inventory.UpdateInventoryAfterSpawn();
+        teamInventory.UpdateInventoryAfterSpawn();
 
     }
 

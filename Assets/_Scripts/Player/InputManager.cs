@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
-    public bool IsUsingGamepad;
+    public string currentControlScheme { get; private set; } = "Gamepad"; //Default
+
     public Vector2 InputVelocity { get; private set; }
     public Vector2 InputAim { get; private set; }
 
@@ -25,7 +26,10 @@ public class InputManager : MonoBehaviour
 
     public bool IsSpawnMonsterPressed { get; private set; }
 
-
+    public void UpdateCurrentControlScheme(string controlScheme)
+    {
+        currentControlScheme = controlScheme;
+    }
 
     public void OnMovementChanged ( InputAction.CallbackContext context )
     {

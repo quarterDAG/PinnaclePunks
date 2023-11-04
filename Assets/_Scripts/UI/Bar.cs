@@ -10,6 +10,15 @@ public class Bar : MonoBehaviour
     private float maxValue = 100f; // Assuming max health is 100
     private float currentValue = 100f;
 
+    public enum BarType
+    {
+        HP,
+        Slowmotion
+    }
+
+    public BarType barType;
+
+
 
     private void Start ()
     {
