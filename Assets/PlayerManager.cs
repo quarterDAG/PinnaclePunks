@@ -13,6 +13,7 @@ public class PlayerManager : MonoBehaviour
     [Serializable]
     public struct PlayerConfig
     {
+        public int playerIndex;
         public ControlScheme controlScheme;
         public InputDevice device;
         public Team team;
@@ -33,6 +34,13 @@ public class PlayerManager : MonoBehaviour
     [Header("Player Settings")]
     public GameObject playerPrefab;
     public List<PlayerConfig> playerConfigs;
+
+    [Header("Player Status")]
+    public GameObject playerStatusPrefab;
+    public Transform teamAStatusParent;
+    public Transform teamBStatusParent;
+    [SerializeField] private List<Vector2> teamAStatusPositions;
+    [SerializeField] private List<Vector2> teamBStatusPositions;
 
     public int playerCount { get; private set; }
 
@@ -56,11 +64,11 @@ public class PlayerManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); 
+            DontDestroyOnLoad(gameObject);
         }
         else if (Instance != this)
         {
-            Destroy(gameObject); 
+            Destroy(gameObject);
         }
     }
 
@@ -101,23 +109,16 @@ public class PlayerManager : MonoBehaviour
     }
 
 
-
     private void InitializePlayers ()
     {
         var gamepads = Gamepad.all;
-
-       /* foreach (var gamepad in gamepads)
-        {
-            Debug.Log("Gamepad: " + gamepad.name);
-        }*/
-
         int gamepadIndex = 0;
-        int teamASpawnIndex = 0; 
-        int teamBSpawnIndex = 0; 
+
+        int teamASpawnIndex = 0;
+        int teamBSpawnIndex = 0;
 
         foreach (var config in playerConfigs)
         {
-            PlayerInput instantiatedPlayer = null;
             Transform spawnPoint = null;
 
             // Determine the spawn point based on the team
@@ -137,7 +138,7 @@ public class PlayerManager : MonoBehaviour
             }
 
             // Instantiate player at the spawn point
-            instantiatedPlayer = PlayerInput.Instantiate(
+            PlayerInput instantiatedPlayer = PlayerInput.Instantiate(
                 playerPrefab,
                 controlScheme: config.controlScheme.ToString(),
                 pairWithDevice: config.controlScheme == ControlScheme.Gamepad ? gamepads[gamepadIndex++] : null,
@@ -158,8 +159,61 @@ public class PlayerManager : MonoBehaviour
             instantiatedPlayer.GetComponentInChildren<PlayerMonsterSpawner>().ConfigMonsterSpawner();
 
             AddPlayerCameraToPlayerCameras(instantiatedPlayer);
+
+            // Instantiate player status component
+            InstantiatePlayerStatusComponent(config, instantiatedPlayer);
         }
     }
+    private void InstantiatePlayerStatusComponent ( PlayerConfig config, PlayerInput instantiatedPlayer )
+    {
+        Vector2 statusPosition = GetPlayerStatusPosition(config);
+        Transform parentGO = GetParentGO(config);
+
+        Debug.Log($"Instantiating status for player {config.playerIndex} on {config.team}");
+
+
+        // Instantiate player status and parent it to the position transform
+        GameObject playerStatusGO = Instantiate(playerStatusPrefab, parentGO.position, Quaternion.identity);
+        Bar hpBar = playerStatusGO.GetComponentInChildren<Bar>();
+
+        // Ensure the GameObject is active before trying to modify RectTransform properties
+        playerStatusGO.SetActive(true);
+
+        // Set the first child's anchoredPosition to be zero relative to its parent if it exists
+        if (playerStatusGO.transform.childCount > 0)
+        {
+            RectTransform HPAvatar = playerStatusGO.transform.GetChild(0).GetComponent<RectTransform>();
+            HPAvatar.anchoredPosition = statusPosition; // Reset the anchored position to (0,0)
+        }
+
+        // Link player status to the player
+        if (hpBar != null)
+        {
+            instantiatedPlayer.GetComponent<PlayerController>().AssignHPBar(hpBar);
+        }
+    }
+
+
+    private Vector2 GetPlayerStatusPosition ( PlayerConfig config )
+    {
+        List<Vector2> statusPositions = config.team == Team.TeamA ? teamAStatusPositions : teamBStatusPositions;
+        if (config.playerIndex >= 0 && config.playerIndex < statusPositions.Count)
+        {
+            return statusPositions[config.playerIndex];
+        }
+        else
+        {
+            Debug.LogError("Player index out of range for status positions.");
+            return statusPositions[config.playerIndex];
+        }
+    }
+
+
+    private Transform GetParentGO ( PlayerConfig config )
+    {
+        return config.team == Team.TeamA ? teamAStatusParent : teamBStatusParent;
+    }
+
 
     private void AddPlayerCameraToPlayerCameras ( PlayerInput instantiatedPlayer )
     {
@@ -179,8 +233,8 @@ public class PlayerManager : MonoBehaviour
         var target = new Cinemachine.CinemachineTargetGroup.Target
         {
             target = playerTransform,
-            weight = 1f, 
-            radius = 5f  
+            weight = 1f,
+            radius = 5f
         };
 
         cinemachineTargetGroup.AddMember(playerTransform, target.weight, target.radius);

@@ -63,26 +63,12 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     {
         teamTag = gameObject.tag;
 
-        FindAndAssignHpBar();
     }
 
-    private void FindAndAssignHpBar ()
+
+    public void AssignHPBar(Bar _hpBar)
     {
-        Bar[] allBars = FindObjectsOfType<Bar>();
-
-        foreach (var bar in allBars)
-        {
-            if (bar.barType == BarType.HP)
-            {
-                if (bar.tag == teamTag)
-                {
-                    hpBar = bar;
-                    break;
-                }
-
-            }
-
-        }
+        hpBar = _hpBar;
     }
 
     public void AssignRespawn (Transform spawnPoint)
