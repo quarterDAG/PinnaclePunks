@@ -107,7 +107,19 @@ MonoBehaviour:
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 554737950193281488}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_DeviceRegainedEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -191,6 +203,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 2a877aa7-2293-461f-b1cb-e23fcb355fee
     m_ActionName: Player/Start[/DualShock4GamepadHID/start,/DualShock4GamepadHID1/start,/XInputControllerWindows/start,/XInputControllerWindows1/start,/XInputControllerWindows2/start,/Keyboard/enter]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5f5a399e-5c0c-4df3-b72d-0e44e02d6667
+    m_ActionName: Player/Any Button
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player

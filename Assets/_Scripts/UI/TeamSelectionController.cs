@@ -34,24 +34,23 @@ public class TeamSelectionController : MonoBehaviour
         playerInputManager = GetComponent<PlayerInputManager>();
     }
 
-    private void Start ()
+    private void OnEnable ()
     {
         playerInputManager.onPlayerJoined += HandlePlayerJoined;
-
+        playerInputManager.onPlayerLeft += HandlePlayerLeft;
     }
 
-    private void OnDestroy ()
+    private void OnDisable ()
     {
-        // Always important to unsubscribe from the event on destroy to prevent memory leaks
-        if (PlayerInputManager.instance != null)
-        {
-            PlayerInputManager.instance.onPlayerJoined -= HandlePlayerJoined;
-        }
+        playerInputManager.onPlayerJoined -= HandlePlayerJoined;
+        playerInputManager.onPlayerLeft -= HandlePlayerLeft;
     }
+
+
 
     private async void HandlePlayerJoined ( PlayerInput playerInput )
     {
-        await Task.Delay( 500 );
+        await Task.Delay(500);
         // Make sure the playerInput is not null and has an InputIcon component.
         if (playerInput != null && playerInput.GetComponent<InputIcon>() != null)
         {
@@ -118,32 +117,46 @@ public class TeamSelectionController : MonoBehaviour
 
     public bool TryMovePlayerToSpectator ( int playerIndex )
     {
-        // Check if the key exists in the dictionary and add it if it doesn't.
         if (!playerTeamAssignments.ContainsKey(playerIndex))
-        {
             playerTeamAssignments[playerIndex] = PlayerState.Spectator;
-        }
 
-        // Check if the player is already a spectator.
         if (playerTeamAssignments[playerIndex] == PlayerState.Spectator)
-        {
             return false; // Player is already a spectator, so do nothing.
-        }
 
-        // Determine the current team and adjust the count accordingly.
         if (playerTeamAssignments[playerIndex] == PlayerState.TeamA)
-        {
             teamACount--;
-        }
-        else if (playerTeamAssignments[playerIndex] == PlayerState.TeamB)
-        {
-            teamBCount--;
-        }
 
-        // Set the player's team assignment to Spectator.
+        else if (playerTeamAssignments[playerIndex] == PlayerState.TeamB)
+            teamBCount--;
+
         playerTeamAssignments[playerIndex] = PlayerState.Spectator;
 
-        return true; // The player has been moved to the spectator position.
+        return true;
+    }
+
+
+    private void HandlePlayerLeft ( PlayerInput playerInput )
+    {
+        Debug.Log("Player Left: " +  playerInput);
+        if (playerInput != null)
+        {
+            int playerIndex = playerInput.playerIndex;
+
+            if (playerTeamAssignments.TryGetValue(playerIndex, out PlayerState state))
+            {
+                if (state == PlayerState.TeamA)
+                    teamACount = Mathf.Max(0, teamACount - 1);
+                else if (state == PlayerState.TeamB)
+                    teamBCount = Mathf.Max(0, teamBCount - 1);
+
+                playerTeamAssignments.Remove(playerIndex);
+            }
+
+            InputIcon inputIcon = playerInput.GetComponent<InputIcon>();
+            if (inputIcon != null)
+                Destroy(inputIcon.gameObject);
+
+        }
     }
 
 

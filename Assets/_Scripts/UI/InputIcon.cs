@@ -21,6 +21,8 @@ public class InputIcon : MonoBehaviour
 
     private InputManager inputManager;
 
+    private bool isReady;
+
     private void Awake ()
     {
         inputManager = GetComponent<InputManager>();
@@ -38,12 +40,15 @@ public class InputIcon : MonoBehaviour
         rect.localPosition = controller.playerIconPositions[index];
         teamSelectionController = controller;
         playerIndex = index;
+        isReady = true;
     }
 
 
 
     void Update ()
     {
+        if (!isReady) return;
+
         HandleMovement();
     }
 
@@ -52,8 +57,6 @@ public class InputIcon : MonoBehaviour
 
         if (inputManager.InventoryInput.x == 0)
             return;
-
-        Debug.Log(inputManager.InventoryInput);
 
         if (inputManager.InventoryInput.x > 0)
         {
@@ -105,6 +108,7 @@ public class InputIcon : MonoBehaviour
         newAnchoredPosition.x = newPositionX;
         rect.anchoredPosition = newAnchoredPosition;
     }
+
 
 }
 

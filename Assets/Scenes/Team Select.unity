@@ -578,7 +578,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2020993463}
         m_TargetAssemblyTypeName: TeamSelectionController, Assembly-CSharp
-        m_MethodName: SetIconPosition
+        m_MethodName: 
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 554737950193281488, guid: 4bc8777b32e6314499193ef66e40c5f0, type: 3}
