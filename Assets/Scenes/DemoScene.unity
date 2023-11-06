@@ -8051,7 +8051,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 621567455fd1c4ceb811cc8a00b6a1a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 2
   m_MaxPlayerCount: 4
   m_AllowJoining: 1
   m_JoinBehavior: 2
@@ -8092,7 +8092,7 @@ Transform:
   m_GameObject: {fileID: 611052161}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 235.75935, y: 263.95972, z: -2.6332407}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8113,13 +8113,13 @@ MonoBehaviour:
   playerPrefab: {fileID: 6038754821143387965, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
   playerConfigs:
   - playerIndex: 0
-    controlScheme: 1
+    playerColor: {r: 0.990566, g: 0.0046724924, b: 0.7665808, a: 1}
     team: 0
-    playerColor: 1
-  - playerIndex: 0
     controlScheme: 1
+  - playerIndex: 1
+    playerColor: {r: 0.2852877, g: 0.764151, b: 0.032440357, a: 1}
     team: 1
-    playerColor: 0
+    controlScheme: 1
   playerStatusPrefab: {fileID: 5951329947807079994, guid: acf2338cb7ade8648a1b20d96608444a, type: 3}
   teamAStatusParent: {fileID: 1914209661}
   teamBStatusParent: {fileID: 1804440192}

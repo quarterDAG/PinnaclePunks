@@ -1,47 +1,14 @@
 using System.Collections.Generic;
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEditor;
-using System.Linq;
 using UnityEngine.UI;
-using System.Drawing;
-using static PlayerManager;
 
 public class PlayerManager : MonoBehaviour
 {
 
     public static PlayerManager Instance { get; private set; }
 
-    [Serializable]
-    public struct PlayerConfig
-    {
-        public int playerIndex;
-        public ControlScheme controlScheme;
-        public InputDevice device;
-        public Team team;
-        public PlayerColor playerColor;
-    }
-
-    public enum ControlScheme
-    {
-        Keyboard,
-        Gamepad
-    }
-
-    public enum Team
-    {
-        TeamA,
-        TeamB
-    }
-
-    public enum PlayerColor
-    {
-        Blue,
-        Red,
-        Green,
-        Yellow
-    }
 
     [Header("Player Settings")]
     public GameObject playerPrefab;
@@ -64,7 +31,7 @@ public class PlayerManager : MonoBehaviour
     public GameObject playersParent;
 
     [Header("Camera Settings")]
-    public List<Camera> playerCameras; // Assign individual player cameras here
+    public List<Camera> playerCameras; 
     [SerializeField] private Cinemachine.CinemachineTargetGroup cinemachineTargetGroup;
     [SerializeField] private float proximityThreshold = 50f; // Distance at which cameras switch
     [SerializeField] private Canvas dividerCanvas;
@@ -123,6 +90,9 @@ public class PlayerManager : MonoBehaviour
 
     private void InitializePlayers ()
     {
+        var gamepadDevices = Gamepad.all;
+        Debug.Log($"Connected gamepads: {gamepadDevices.Count}");
+
         var gamepads = Gamepad.all;
         int gamepadIndex = 0;
 
@@ -134,11 +104,11 @@ public class PlayerManager : MonoBehaviour
             Transform spawnPoint = null;
 
             // Determine the spawn point based on the team
-            if (config.team == Team.TeamA && teamASpawnIndex < teamASpawnPoints.Count)
+            if (config.team == PlayerConfigData.Team.TeamA && teamASpawnIndex < teamASpawnPoints.Count)
             {
                 spawnPoint = teamASpawnPoints[teamASpawnIndex++];
             }
-            else if (config.team == Team.TeamB && teamBSpawnIndex < teamBSpawnPoints.Count)
+            else if (config.team == PlayerConfigData.Team.TeamB && teamBSpawnIndex < teamBSpawnPoints.Count)
             {
                 spawnPoint = teamBSpawnPoints[teamBSpawnIndex++];
             }
@@ -153,7 +123,7 @@ public class PlayerManager : MonoBehaviour
             PlayerInput instantiatedPlayer = PlayerInput.Instantiate(
                 playerPrefab,
                 controlScheme: config.controlScheme.ToString(),
-                pairWithDevice: config.controlScheme == ControlScheme.Gamepad ? gamepads[gamepadIndex++] : null,
+                pairWithDevice: config.controlScheme == PlayerConfigData.ControlScheme.Gamepad ? gamepads[gamepadIndex++] : null,
                 playerIndex: playerCount
             );
 
@@ -206,7 +176,7 @@ public class PlayerManager : MonoBehaviour
 
 
         // Find the PlayerColor GameObject and change its color
-        UnityEngine.Color unityColor = GetColorFromEnum(config.playerColor);
+        UnityEngine.Color unityColor = /*GetColorFromEnum(*/config.playerColor/*)*/;
 
         Transform playerColorTransform = playerStatusGO.transform.Find("HP & AVATAR/PlayerColor");
         Image playerColorImage = playerColorTransform.GetComponent<Image>();
@@ -220,26 +190,10 @@ public class PlayerManager : MonoBehaviour
 
     }
 
-    public static UnityEngine.Color GetColorFromEnum ( PlayerColor playerColor )
-    {
-        switch (playerColor)
-        {
-            case PlayerColor.Blue:
-                return UnityEngine.Color.blue;
-            case PlayerColor.Red:
-                return UnityEngine.Color.red;
-            case PlayerColor.Green:
-                return UnityEngine.Color.green;
-            case PlayerColor.Yellow:
-                return UnityEngine.Color.yellow;
-            default:
-                return UnityEngine.Color.white; // Default color if none is matched
-        }
-    }
 
     private Vector2 GetPlayerStatusPosition ( PlayerConfig config )
     {
-        List<Vector2> statusPositions = config.team == Team.TeamA ? teamAStatusPositions : teamBStatusPositions;
+        List<Vector2> statusPositions = config.team == PlayerConfigData.Team.TeamA ? teamAStatusPositions : teamBStatusPositions;
         if (config.playerIndex >= 0 && config.playerIndex < statusPositions.Count)
         {
             return statusPositions[config.playerIndex];
@@ -253,7 +207,7 @@ public class PlayerManager : MonoBehaviour
 
     private Transform GetParentGO ( PlayerConfig config )
     {
-        return config.team == Team.TeamA ? teamAStatusParent : teamBStatusParent;
+        return config.team == PlayerConfigData.Team.TeamA ? teamAStatusParent : teamBStatusParent;
     }
 
     private void AddPlayerCameraToPlayerCameras ( PlayerInput instantiatedPlayer )

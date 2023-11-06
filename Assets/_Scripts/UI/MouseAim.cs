@@ -10,9 +10,6 @@ public class MouseAim : MonoBehaviour
 
     private Vector2 mousePosition;
     private Vector2 aimPosition;
-    private bool isShootable;
-
-    private SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer of the aim
 
     private InputManager inputManager;
 
@@ -20,10 +17,7 @@ public class MouseAim : MonoBehaviour
 
     private void Awake ()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
         inputManager = GetComponentInParent<InputManager>();
-
-
     }
 
     // Update is called once per frame
@@ -67,33 +61,9 @@ public class MouseAim : MonoBehaviour
     }
 
 
-
-
-    private void OnTriggerEnter2D ( Collider2D collision )
-    {
-        if (collision.CompareTag("Shootable"))
-        {
-            isShootable = true;
-        }
-    }
-
-    private void OnTriggerExit2D ( Collider2D collision )
-    {
-        if (collision.CompareTag("Shootable"))
-        {
-            isShootable = false;
-        }
-    }
-
     public Vector2 GetAimPosition ()
     {
         return aimPosition;
     }
-
-    public bool IsShootable ()
-    {
-        return isShootable;
-    }
-
 
 }

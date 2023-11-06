@@ -18,19 +18,19 @@ public class TeamSelectionController : MonoBehaviour
 
     private PlayerInputManager playerInputManager;
 
-    public enum PlayerState
+    public enum PlayerTeam
     {
         TeamA,
         TeamB,
         Spectator
     }
 
-    private Dictionary<int, PlayerState> playerTeamAssignments; // true for team A, false for team B
+    private Dictionary<int, PlayerTeam> playerTeamAssignments; // true for team A, false for team B
 
 
     private void Awake ()
     {
-        playerTeamAssignments = new Dictionary<int, PlayerState>();
+        playerTeamAssignments = new Dictionary<int, PlayerTeam>();
         playerInputManager = GetComponent<PlayerInputManager>();
     }
 
@@ -69,17 +69,17 @@ public class TeamSelectionController : MonoBehaviour
     public bool TryMovePlayerToTeam ( int playerIndex, bool moveToTeamA )
     {
         // First, check if the playerIndex exists in the dictionary.
-        // If it does not, add it with a default state (e.g., Spectator).
+        // If it does not, add it with a default team (e.g., Spectator).
         if (!playerTeamAssignments.ContainsKey(playerIndex))
         {
-            playerTeamAssignments[playerIndex] = PlayerState.Spectator;
+            playerTeamAssignments[playerIndex] = PlayerTeam.Spectator;
         }
 
-        // Check if the player is in the state we want to move them to.
+        // Check if the player is in the team we want to move them to.
         // If they are, return false since no move is needed.
-        PlayerState currentPlayerState = playerTeamAssignments[playerIndex];
-        if ((moveToTeamA && currentPlayerState == PlayerState.TeamA) ||
-            (!moveToTeamA && currentPlayerState == PlayerState.TeamB))
+        PlayerTeam currentPlayerTeam = playerTeamAssignments[playerIndex];
+        if ((moveToTeamA && currentPlayerTeam == PlayerTeam.TeamA) ||
+            (!moveToTeamA && currentPlayerTeam == PlayerTeam.TeamB))
         {
             return false;
         }
@@ -87,24 +87,24 @@ public class TeamSelectionController : MonoBehaviour
         // Move the player to Team A if there's space
         if (moveToTeamA && teamACount < MaxPlayersPerTeam)
         {
-            if (currentPlayerState == PlayerState.TeamB)
+            if (currentPlayerTeam == PlayerTeam.TeamB)
             {
                 teamBCount--;
             }
 
-            playerTeamAssignments[playerIndex] = PlayerState.TeamA;
+            playerTeamAssignments[playerIndex] = PlayerTeam.TeamA;
             teamACount++;
             return true;
         }
         // Move the player to Team B if there's space
         else if (!moveToTeamA && teamBCount < MaxPlayersPerTeam)
         {
-            if (currentPlayerState == PlayerState.TeamA)
+            if (currentPlayerTeam == PlayerTeam.TeamA)
             {
                 teamACount--;
             }
 
-            playerTeamAssignments[playerIndex] = PlayerState.TeamB;
+            playerTeamAssignments[playerIndex] = PlayerTeam.TeamB;
             teamBCount++;
             return true;
         }
@@ -118,18 +118,18 @@ public class TeamSelectionController : MonoBehaviour
     public bool TryMovePlayerToSpectator ( int playerIndex )
     {
         if (!playerTeamAssignments.ContainsKey(playerIndex))
-            playerTeamAssignments[playerIndex] = PlayerState.Spectator;
+            playerTeamAssignments[playerIndex] = PlayerTeam.Spectator;
 
-        if (playerTeamAssignments[playerIndex] == PlayerState.Spectator)
+        if (playerTeamAssignments[playerIndex] == PlayerTeam.Spectator)
             return false; // Player is already a spectator, so do nothing.
 
-        if (playerTeamAssignments[playerIndex] == PlayerState.TeamA)
+        if (playerTeamAssignments[playerIndex] == PlayerTeam.TeamA)
             teamACount--;
 
-        else if (playerTeamAssignments[playerIndex] == PlayerState.TeamB)
+        else if (playerTeamAssignments[playerIndex] == PlayerTeam.TeamB)
             teamBCount--;
 
-        playerTeamAssignments[playerIndex] = PlayerState.Spectator;
+        playerTeamAssignments[playerIndex] = PlayerTeam.Spectator;
 
         return true;
     }
@@ -142,16 +142,17 @@ public class TeamSelectionController : MonoBehaviour
         {
             int playerIndex = playerInput.playerIndex;
 
-            if (playerTeamAssignments.TryGetValue(playerIndex, out PlayerState state))
+            if (playerTeamAssignments.TryGetValue(playerIndex, out PlayerTeam team))
             {
-                if (state == PlayerState.TeamA)
+                if (team == PlayerTeam.TeamA)
                     teamACount = Mathf.Max(0, teamACount - 1);
-                else if (state == PlayerState.TeamB)
+                else if (team == PlayerTeam.TeamB)
                     teamBCount = Mathf.Max(0, teamBCount - 1);
 
                 playerTeamAssignments.Remove(playerIndex);
             }
 
+    
             InputIcon inputIcon = playerInput.GetComponent<InputIcon>();
             if (inputIcon != null)
                 Destroy(inputIcon.gameObject);

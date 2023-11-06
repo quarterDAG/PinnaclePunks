@@ -32,26 +32,20 @@ public class PlayerRope : MonoBehaviour
     {
         if (playerController.isDead) return;
 
-        HandleRope();
-
+        if (inputManager.IsRopeShootPressed)
+        {
+            ShootRope();
+        }
 
         if (IsRopeConnected())
             HandleSwing();
     }
-
+/*
     private void HandleRope ()
     {
-        if (inputManager.IsRopeShootPressed)
-        {
-            if (mouseAim.IsShootable())
-            {
-                InstantiateRope();
-            }
-            else
-                ShootRope();
-        }
-        inputManager.ResetRope();
-    }
+    
+        //inputManager.ResetRope();
+    }*/
 
 
     private void ShootRope ()
@@ -72,21 +66,6 @@ public class PlayerRope : MonoBehaviour
             timeToSpawnRope = Time.time + 1 / ropeSpawnRate;
         }
 
-    }
-
-    private void InstantiateRope ()
-    {
-        DestroyCurrentRope();
-
-        Vector2 aimPosition = mouseAim.GetAimPosition();
-
-        // Instantiate a new Rope prefab at the aim position
-        currentRope = Instantiate(ropePrefab, aimPosition, Quaternion.identity);
-
-        PlayerRope playerRope = player.GetComponent<PlayerRope>();
-        currentRope.GetComponent<Rope>().SetPlayerRope(playerRope);
-
-        Rope ropeScript = currentRope.GetComponent<Rope>();
     }
 
 

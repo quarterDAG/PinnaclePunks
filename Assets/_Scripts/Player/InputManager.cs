@@ -26,12 +26,14 @@ public class InputManager : MonoBehaviour
 
     private void Update ()
     {
-        DisableDuplicateGamepads();
+        //DisableDuplicateGamepads();
     }
 
     private void LateUpdate ()
     {
         InventoryInput = Vector2.zero;
+        IsRopeShootPressed = false;
+
     }
 
     private void DisableDuplicateGamepads ()
@@ -158,10 +160,6 @@ public class InputManager : MonoBehaviour
         IsDashPressed = false;
     }
 
-    public void ResetRope ()
-    {
-        IsRopeShootPressed = false;
-    }
 
     public void ResetJump ( bool isJumpPressed, bool isJumpHeld )
     {
