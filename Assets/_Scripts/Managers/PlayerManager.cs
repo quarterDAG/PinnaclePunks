@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEditor;
 using System.Linq;
+using UnityEngine.UI;
+using System.Drawing;
+using static PlayerManager;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -17,6 +20,7 @@ public class PlayerManager : MonoBehaviour
         public ControlScheme controlScheme;
         public InputDevice device;
         public Team team;
+        public PlayerColor playerColor;
     }
 
     public enum ControlScheme
@@ -29,6 +33,14 @@ public class PlayerManager : MonoBehaviour
     {
         TeamA,
         TeamB
+    }
+
+    public enum PlayerColor
+    {
+        Blue,
+        Red,
+        Green,
+        Yellow
     }
 
     [Header("Player Settings")]
@@ -191,8 +203,39 @@ public class PlayerManager : MonoBehaviour
         {
             instantiatedPlayer.GetComponent<PlayerController>().AssignHPBar(hpBar);
         }
+
+
+        // Find the PlayerColor GameObject and change its color
+        UnityEngine.Color unityColor = GetColorFromEnum(config.playerColor);
+
+        Transform playerColorTransform = playerStatusGO.transform.Find("HP & AVATAR/PlayerColor");
+        Image playerColorImage = playerColorTransform.GetComponent<Image>();
+        playerColorImage.color = unityColor; // Set the color to the one specified in config
+
+        instantiatedPlayer.GetComponentInChildren<MouseAim>().GetComponent<SpriteRenderer>().color = unityColor;
+
+        instantiatedPlayer.transform.Find("Indicator").GetComponent<SpriteRenderer>().color = unityColor;
+
+
+
     }
 
+    public static UnityEngine.Color GetColorFromEnum ( PlayerColor playerColor )
+    {
+        switch (playerColor)
+        {
+            case PlayerColor.Blue:
+                return UnityEngine.Color.blue;
+            case PlayerColor.Red:
+                return UnityEngine.Color.red;
+            case PlayerColor.Green:
+                return UnityEngine.Color.green;
+            case PlayerColor.Yellow:
+                return UnityEngine.Color.yellow;
+            default:
+                return UnityEngine.Color.white; // Default color if none is matched
+        }
+    }
 
     private Vector2 GetPlayerStatusPosition ( PlayerConfig config )
     {
@@ -208,12 +251,10 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-
     private Transform GetParentGO ( PlayerConfig config )
     {
         return config.team == Team.TeamA ? teamAStatusParent : teamBStatusParent;
     }
-
 
     private void AddPlayerCameraToPlayerCameras ( PlayerInput instantiatedPlayer )
     {
@@ -239,7 +280,6 @@ public class PlayerManager : MonoBehaviour
 
         cinemachineTargetGroup.AddMember(playerTransform, target.weight, target.radius);
     }
-
 
     private void SetupPlayerTag ( PlayerConfig config, PlayerInput instantiatedPlayer )
     {

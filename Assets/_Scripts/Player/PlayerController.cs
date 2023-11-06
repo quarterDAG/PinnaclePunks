@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private string teamTag;
 
     private InputManager inputManager;
+    private LivesManager livesManager;
 
 
     private void Awake ()
@@ -66,12 +67,13 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     }
 
 
-    public void AssignHPBar(Bar _hpBar)
+    public void AssignHPBar ( Bar _hpBar )
     {
         hpBar = _hpBar;
+        livesManager = _hpBar.GetComponentInChildren<LivesManager>();
     }
 
-    public void AssignRespawn (Transform spawnPoint)
+    public void AssignRespawn ( Transform spawnPoint )
     {
         respawnPoint = spawnPoint;
     }
@@ -162,7 +164,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         _rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
 
 
-
+        livesManager.LoseLife();
         lives--; // Reduce life by 1
         if (lives > 0)
         {

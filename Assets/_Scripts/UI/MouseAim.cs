@@ -12,10 +12,6 @@ public class MouseAim : MonoBehaviour
     private Vector2 aimPosition;
     private bool isShootable;
 
-
-    [SerializeField] private Color shootableColor = Color.green; // Color when aim is on a shootable object
-    [SerializeField] private Color nonShootableColor = Color.red; // Color when aim is not on a shootable object
-
     private SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer of the aim
 
     private InputManager inputManager;
@@ -50,7 +46,6 @@ public class MouseAim : MonoBehaviour
 
         // Apply the last known position to the transform and update the color
         transform.position = aimPosition;
-        UpdateAimColor();
     }
 
     private void UpdateAimWithGamepad ()
@@ -71,17 +66,6 @@ public class MouseAim : MonoBehaviour
         aimPosition = (Vector2)player.position + direction * aimDistance;
     }
 
-    private void UpdateAimColor ()
-    {
-        if (isShootable)
-        {
-            spriteRenderer.color = shootableColor;
-        }
-        else
-        {
-            spriteRenderer.color = nonShootableColor;
-        }
-    }
 
 
 
