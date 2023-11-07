@@ -1,166 +1,112 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
+using System.Linq;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static PlayerConfigData;
 
 public class TeamSelectionController : MonoBehaviour
 {
-    public Vector3[] playerIconPositions; // Ensure this is a 3D vector to match Transform positions
+    public int MaxPlayersPerTeam = 2;
+    public List<PlayerConfig> playerConfigs;
 
-    public float teamAPositionX;
-    public float teamBPositionX;
-    public float spectatorPositionX = 0f;
-
-    private const int MaxPlayersPerTeam = 2;
-    private int teamACount = 0;
-    private int teamBCount = 0;
-
-    private PlayerInputManager playerInputManager;
-
-    public enum PlayerTeam
-    {
-        TeamA,
-        TeamB,
-        Spectator
-    }
-
-    private Dictionary<int, PlayerTeam> playerTeamAssignments; // true for team A, false for team B
-
+    [SerializeField] private Collider2D TeamAreaA;
+    [SerializeField] private Collider2D TeamAreaB;
 
     private void Awake ()
     {
-        playerTeamAssignments = new Dictionary<int, PlayerTeam>();
-        playerInputManager = GetComponent<PlayerInputManager>();
+        playerConfigs = new List<PlayerConfig>();
     }
 
-    private void OnEnable ()
+    #region Getters
+
+    public int GetUniquePlayerIndex ()
     {
-        playerInputManager.onPlayerJoined += HandlePlayerJoined;
-        playerInputManager.onPlayerLeft += HandlePlayerLeft;
-    }
+        int newIndex = 0;
 
-    private void OnDisable ()
-    {
-        playerInputManager.onPlayerJoined -= HandlePlayerJoined;
-        playerInputManager.onPlayerLeft -= HandlePlayerLeft;
-    }
-
-
-
-    private async void HandlePlayerJoined ( PlayerInput playerInput )
-    {
-        await Task.Delay(500);
-        // Make sure the playerInput is not null and has an InputIcon component.
-        if (playerInput != null && playerInput.GetComponent<InputIcon>() != null)
+        // Loop through existing configs to find an unused index.
+        while (playerConfigs.Any(p => p.playerIndex == newIndex))
         {
-            InputIcon inputIcon = playerInput.GetComponent<InputIcon>();
-            inputIcon.Initialize(this, playerInput.playerIndex);
-
-            // Other initialization code...
+            newIndex++;
         }
+        return newIndex;
+    }
+
+    private PlayerConfig GetPlayerConfig ( int playerIndex )
+    {
+        return playerConfigs.FirstOrDefault(pc => pc.playerIndex == playerIndex);
+    }
+
+    public bool CanJoinTeam ( PlayerConfigData.Team team )
+    {
+        Debug.Log("Team: " + team + CountTeamMembers(team));
+        return CountTeamMembers(team) < MaxPlayersPerTeam;
+    }
+
+    private int CountTeamMembers ( PlayerConfigData.Team team )
+    {
+        return playerConfigs.FindAll(p => p.team == team).Count;
+    }
+
+    #endregion
+
+    public void SetPlayerTeam ( int playerIndex, PlayerConfigData.Team team )
+    {
+
+        // Find the PlayerConfig and update the team.
+        int configIndex = playerConfigs.FindIndex(p => p.playerIndex == playerIndex);
+        //Debug.Log(configIndex);
+        if (configIndex != -1)
+        {
+            // Extract the PlayerConfig, modify it, and then put it back.
+            PlayerConfig playerConfig = playerConfigs[configIndex];
+            playerConfig.team = team;
+            playerConfigs[configIndex] = playerConfig;
+        }
+
+        HandleTeamAreasColliders();
+    }
+
+    public void HandleTeamAreasColliders ()
+    {
+        if (!CanJoinTeam(Team.TeamA))
+            TeamAreaA.forceSendLayers = 1 << 10;
         else
-        {
-            Debug.LogError("PlayerInput or InputIcon component is missing on the player GameObject.");
-        }
+            TeamAreaA.forceSendLayers = 0;
+        if (!CanJoinTeam(Team.TeamB))
+            TeamAreaB.forceSendLayers = 1 << 10;
+        else
+            TeamAreaB.forceSendLayers = 0;
     }
 
 
-    public bool TryMovePlayerToTeam ( int playerIndex, bool moveToTeamA )
+    public void SetPlayerReady ( int playerIndex )
     {
-        // First, check if the playerIndex exists in the dictionary.
-        // If it does not, add it with a default team (e.g., Spectator).
-        if (!playerTeamAssignments.ContainsKey(playerIndex))
-        {
-            playerTeamAssignments[playerIndex] = PlayerTeam.Spectator;
-        }
+        Debug.Log($"Player {playerIndex} is ready!");
 
-        // Check if the player is in the team we want to move them to.
-        // If they are, return false since no move is needed.
-        PlayerTeam currentPlayerTeam = playerTeamAssignments[playerIndex];
-        if ((moveToTeamA && currentPlayerTeam == PlayerTeam.TeamA) ||
-            (!moveToTeamA && currentPlayerTeam == PlayerTeam.TeamB))
-        {
-            return false;
-        }
+        PlayerConfig config = GetPlayerConfig(playerIndex);
 
-        // Move the player to Team A if there's space
-        if (moveToTeamA && teamACount < MaxPlayersPerTeam)
-        {
-            if (currentPlayerTeam == PlayerTeam.TeamB)
-            {
-                teamBCount--;
-            }
-
-            playerTeamAssignments[playerIndex] = PlayerTeam.TeamA;
-            teamACount++;
-            return true;
-        }
-        // Move the player to Team B if there's space
-        else if (!moveToTeamA && teamBCount < MaxPlayersPerTeam)
-        {
-            if (currentPlayerTeam == PlayerTeam.TeamA)
-            {
-                teamACount--;
-            }
-
-            playerTeamAssignments[playerIndex] = PlayerTeam.TeamB;
-            teamBCount++;
-            return true;
-        }
-
-        // If there's no space on the desired team, or the player is a spectator, don't move them
-        return false;
+        config.playerState = PlayerState.Ready;
+        UpdatePlayerConfig(playerIndex, config);
     }
 
-
-
-    public bool TryMovePlayerToSpectator ( int playerIndex )
+    public void SetPlayerChoosingTeam ( int playerIndex )
     {
-        if (!playerTeamAssignments.ContainsKey(playerIndex))
-            playerTeamAssignments[playerIndex] = PlayerTeam.Spectator;
+        Debug.Log($"Player {playerIndex} is choosing a team.");
 
-        if (playerTeamAssignments[playerIndex] == PlayerTeam.Spectator)
-            return false; // Player is already a spectator, so do nothing.
+        PlayerConfig config = GetPlayerConfig(playerIndex);
 
-        if (playerTeamAssignments[playerIndex] == PlayerTeam.TeamA)
-            teamACount--;
-
-        else if (playerTeamAssignments[playerIndex] == PlayerTeam.TeamB)
-            teamBCount--;
-
-        playerTeamAssignments[playerIndex] = PlayerTeam.Spectator;
-
-        return true;
+        config.playerState = PlayerState.ChoosingTeam;
+        UpdatePlayerConfig(playerIndex, config);
     }
 
-
-    private void HandlePlayerLeft ( PlayerInput playerInput )
+    private void UpdatePlayerConfig ( int playerIndex, PlayerConfig updatedConfig )
     {
-        Debug.Log("Player Left: " +  playerInput);
-        if (playerInput != null)
+        int configIndex = playerConfigs.FindIndex(pc => pc.playerIndex == playerIndex);
+        if (configIndex != -1)
         {
-            int playerIndex = playerInput.playerIndex;
-
-            if (playerTeamAssignments.TryGetValue(playerIndex, out PlayerTeam team))
-            {
-                if (team == PlayerTeam.TeamA)
-                    teamACount = Mathf.Max(0, teamACount - 1);
-                else if (team == PlayerTeam.TeamB)
-                    teamBCount = Mathf.Max(0, teamBCount - 1);
-
-                playerTeamAssignments.Remove(playerIndex);
-            }
-
-    
-            InputIcon inputIcon = playerInput.GetComponent<InputIcon>();
-            if (inputIcon != null)
-                Destroy(inputIcon.gameObject);
-
+            playerConfigs[configIndex] = updatedConfig;
         }
     }
-
-
-
 
 }

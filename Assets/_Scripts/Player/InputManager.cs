@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 using System;
 using UnityEngine.Windows;
 using System.Threading.Tasks;
+using static PlayerConfigData;
 
 public class InputManager : MonoBehaviour
 {
@@ -134,7 +135,7 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    public  void OnSelectChanged ( InputAction.CallbackContext context )
+    public void OnSelectChanged ( InputAction.CallbackContext context )
     {
 
         if (!context.performed)
@@ -160,11 +161,30 @@ public class InputManager : MonoBehaviour
         IsDashPressed = false;
     }
 
-
     public void ResetJump ( bool isJumpPressed, bool isJumpHeld )
     {
         IsJumpPressed = isJumpPressed;
         IsJumpHeld = isJumpHeld;
     }
 
+    public ControlScheme GetCurrentControlScheme ( InputDevice lastDevice )
+    {
+
+        if (lastDevice is Gamepad)
+        {
+            return ControlScheme.Gamepad;
+        }
+        else if (lastDevice is Mouse)
+        {
+            return ControlScheme.Keyboard;
+        }
+        else if (lastDevice is Keyboard)
+        {
+            return ControlScheme.Keyboard;
+        }
+        else
+            return ControlScheme.Gamepad;
+        // Add more checks for other device types if needed.
+
+    }
 }

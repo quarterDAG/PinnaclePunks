@@ -13,6 +13,7 @@ public struct PlayerConfig
     public Color playerColor;
     public Team team;
     public ControlScheme controlScheme;
+    public PlayerState playerState;
 }
 
 [CreateAssetMenu(fileName = "PlayerConfigData", menuName = "Game/Player Config Data", order = 1)]
@@ -30,7 +31,15 @@ public class PlayerConfigData : ScriptableObject
     public enum Team
     {
         TeamA,
-        TeamB
+        TeamB,
+        Spectator
+    }
+
+    public enum PlayerState
+    {
+        ChoosingTeam,
+        Ready,
+        Playing
     }
 
     public List<Color> playerColors = new List<Color>();

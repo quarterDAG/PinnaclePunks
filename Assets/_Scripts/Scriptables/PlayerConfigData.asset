@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 232f3081751c6bc40b7daa9eaa998593, type: 3}
+  m_Name: PlayerConfigData
+  m_EditorClassIdentifier: 
+  playerConfigs:
+  - playerIndex: 0
+    playerColor: {r: 1, g: 0, b: 0, a: 1}
+    team: 2
+    controlScheme: 0
+  - playerIndex: 0
+    playerColor: {r: 1, g: 0, b: 0, a: 1}
+    team: 2
+    controlScheme: 0
+  - playerIndex: 0
+    playerColor: {r: 1, g: 1, b: 1, a: 1}
+    team: 2
+    controlScheme: 0
+  - playerIndex: 0
+    playerColor: {r: 1, g: 1, b: 1, a: 1}
+    team: 2
+    controlScheme: 0
+  - playerIndex: 0
+    playerColor: {r: 1, g: 1, b: 1, a: 1}
+    team: 2
+    controlScheme: 0
+  - playerIndex: 0
+    playerColor: {r: 1, g: 1, b: 1, a: 1}
+    team: 2
+    controlScheme: 0
+  - playerIndex: 0
+    playerColor: {r: 1, g: 1, b: 1, a: 1}
+    team: 2
+    controlScheme: 0
+  playerColors:
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0.09040928, g: 0, b: 1, a: 1}
+  - {r: 0.011263967, g: 1, b: 0, a: 1}
+  - {r: 0.9061289, g: 1, b: 0, a: 1}

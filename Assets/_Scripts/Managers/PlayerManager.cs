@@ -191,6 +191,7 @@ public class PlayerManager : MonoBehaviour
     }
 
 
+
     private Vector2 GetPlayerStatusPosition ( PlayerConfig config )
     {
         List<Vector2> statusPositions = config.team == PlayerConfigData.Team.TeamA ? teamAStatusPositions : teamBStatusPositions;

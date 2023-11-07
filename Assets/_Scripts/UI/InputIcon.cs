@@ -1,114 +1,145 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(Collider2D))]
 public class InputIcon : MonoBehaviour
 {
     private TeamSelectionController teamSelectionController;
-    private int playerIndex;
-    private RectTransform rect;
+    [SerializeField] private PlayerConfig playerConfig;
+    private Rigidbody2D rb;
+    [SerializeField] private float speed = 10f;
 
-    public enum PlayerState
-    {
-        TeamA,
-        TeamB,
-        Spectator
-    }
+    [SerializeField] private PlayerConfigData playerConfigData;
+    [SerializeField] private PlayerInput playerInput;
+    [SerializeField] private InputManager inputManager;
 
-    [SerializeField] private PlayerState playerState = PlayerState.Spectator;
+    private InputDevice inputDevice;
 
-    private InputManager inputManager;
-
-    private bool isReady;
+    [SerializeField] private float pushBackForce = 5f;
 
     private void Awake ()
     {
-        inputManager = GetComponent<InputManager>();
-        rect = GetComponent<RectTransform>();
+        rb = GetComponent<Rigidbody2D>();
+        teamSelectionController = FindObjectOfType<TeamSelectionController>();
+        transform.SetParent(teamSelectionController.transform, false);
+        inputDevice = playerInput.devices[0];
+        AddPlayerConfig();
     }
 
-    private void Start ()
+    private void Update ()
     {
-        teamSelectionController = GetComponentInParent<TeamSelectionController>();
+        if (playerConfig.playerState != PlayerConfigData.PlayerState.Ready)
+            rb.velocity = inputManager.InputVelocity * speed;
+
+        if (inputManager.IsJumpPressed)
+            SetPlayerStateReady();
+
+        if (inputManager.IsRopeShootPressed)
+            SetPlayerStateChoosingTeam();
+
     }
 
-    public void Initialize ( TeamSelectionController controller, int index )
+    // Call this method when a player joins the game.
+    public void AddPlayerConfig ()
     {
-        rect.SetParent(controller.transform, false);
-        rect.localPosition = controller.playerIconPositions[index];
-        teamSelectionController = controller;
-        playerIndex = index;
-        isReady = true;
-    }
+        // Get the control scheme from the input manager, typically based on the last input received.
+        PlayerConfigData.ControlScheme controlScheme = inputManager.GetCurrentControlScheme(inputDevice);
+        int _playerIndex = teamSelectionController.GetUniquePlayerIndex();
 
 
+        // Call a method to get a unique color for the player.
+        Color playerColor = GetUniquePlayerColor(_playerIndex);
 
-    void Update ()
-    {
-        if (!isReady) return;
-
-        HandleMovement();
-    }
-
-    private void HandleMovement ()
-    {
-
-        if (inputManager.InventoryInput.x == 0)
-            return;
-
-        if (inputManager.InventoryInput.x > 0)
+        // Create the new PlayerConfig with the unique color and control scheme.
+        PlayerConfig newPlayerConfig = new PlayerConfig
         {
-            switch (playerState)
-            {
-                case PlayerState.TeamA:
-                    if (teamSelectionController.TryMovePlayerToSpectator(playerIndex))
-                    {
-                        MoveToPosition(teamSelectionController.spectatorPositionX);
-                        playerState = PlayerState.Spectator;
-                    }
-                    break;
-                case PlayerState.Spectator:
-                    if (teamSelectionController.TryMovePlayerToTeam(playerIndex, false))
-                    {
-                        MoveToPosition(teamSelectionController.teamBPositionX);
-                        playerState = PlayerState.TeamB;
-                    }
-                    break;
-            }
+            playerIndex = _playerIndex,
+            playerColor = playerColor,
+            team = PlayerConfigData.Team.Spectator,
+            controlScheme = controlScheme
+        };
+
+        GetComponent<SpriteRenderer>().color = playerColor;
+
+        // Add the new PlayerConfig to the playerConfigs list.
+        teamSelectionController.playerConfigs.Add(newPlayerConfig);
+
+        playerConfig = newPlayerConfig;
+
+    }
+
+    private Color GetUniquePlayerColor ( int playerIndex )
+    {
+        // Ensure that the player index is within the range of available colors.
+        if (playerConfigData.playerColors.Count > 0)
+        {
+            // Use modulo to loop back to the start of the color list if there are more players than colors.
+            return playerConfigData.playerColors[playerIndex % playerConfigData.playerColors.Count];
         }
+        else
+            return Color.white;
+    }
 
-        else if (inputManager.InventoryInput.x < 0)
+    private void SetPlayerStateReady ()
+    {
+        if (playerConfig.playerState != PlayerConfigData.PlayerState.Playing)
         {
-            switch (playerState)
-            {
-                case PlayerState.Spectator:
-                    if (teamSelectionController.TryMovePlayerToTeam(playerIndex, true))
-                    {
-                        MoveToPosition(teamSelectionController.teamAPositionX);
-                        playerState = PlayerState.TeamA;
-                    }
-                    break;
-                case PlayerState.TeamB:
-                    if (teamSelectionController.TryMovePlayerToSpectator(playerIndex))
-                    {
-                        MoveToPosition(teamSelectionController.spectatorPositionX);
-                        playerState = PlayerState.Spectator;
-                    }
-                    break;
-            }
+            playerConfig.playerState = PlayerConfigData.PlayerState.Ready;
+            teamSelectionController.SetPlayerReady(playerConfig.playerIndex);
+
+            // Handle any other functionality that should occur when the player is ready
         }
     }
 
-
-    private void MoveToPosition ( float newPositionX )
+    private void SetPlayerStateChoosingTeam ()
     {
-        Vector2 newAnchoredPosition = rect.anchoredPosition;
-        newAnchoredPosition.x = newPositionX;
-        rect.anchoredPosition = newAnchoredPosition;
+        if (playerConfig.playerState != PlayerConfigData.PlayerState.Playing)
+        {
+            playerConfig.playerState = PlayerConfigData.PlayerState.ChoosingTeam;
+            teamSelectionController.SetPlayerChoosingTeam(playerConfig.playerIndex);
+        }
     }
 
 
+    #region Colliders
+
+    private void OnTriggerEnter2D ( Collider2D other )
+    {
+        // Attempt to join TeamA.
+        if (other.CompareTag("TeamA"))
+        {
+            Debug.Log(teamSelectionController.CanJoinTeam(PlayerConfigData.Team.TeamA));
+            if (teamSelectionController.CanJoinTeam(PlayerConfigData.Team.TeamA))
+            {
+                playerConfig.team = PlayerConfigData.Team.TeamA;
+                teamSelectionController.SetPlayerTeam(playerConfig.playerIndex, PlayerConfigData.Team.TeamA);
+                gameObject.layer = 0;
+            }
+        }
+        // Attempt to join TeamB.
+        else if (other.CompareTag("TeamB"))
+        {
+            teamSelectionController.CanJoinTeam(PlayerConfigData.Team.TeamB);
+            if (teamSelectionController.CanJoinTeam(PlayerConfigData.Team.TeamB))
+            {
+                playerConfig.team = PlayerConfigData.Team.TeamB;
+                teamSelectionController.SetPlayerTeam(playerConfig.playerIndex, PlayerConfigData.Team.TeamB);
+                gameObject.layer = 0;
+            }
+        }
+    }
+
+    private void OnTriggerExit2D ( Collider2D other )
+    {
+        if ((other.CompareTag("TeamA") && playerConfig.team == PlayerConfigData.Team.TeamA) ||
+            (other.CompareTag("TeamB") && playerConfig.team == PlayerConfigData.Team.TeamB))
+        {
+            playerConfig.team = PlayerConfigData.Team.Spectator;
+            teamSelectionController.SetPlayerTeam(playerConfig.playerIndex, PlayerConfigData.Team.Spectator);
+            gameObject.layer = 10;
+        }
+    }
+
+    #endregion
 }
-
