@@ -1138,8 +1138,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxPlayersPerTeam: 2
-  TeamAreaA: {fileID: 0}
-  TeamAreaB: {fileID: 0}
+  TeamAreaA: {fileID: 976762698}
+  TeamAreaB: {fileID: 1939384048}
 --- !u!1 &1184728308
 GameObject:
   m_ObjectHideFlags: 0

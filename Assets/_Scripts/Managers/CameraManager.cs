@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 
 public class CameraManager : MonoBehaviour
 {
-    private List<PlayerConfig> playerConfigs;
 
     [Header("Camera Settings")]
     public List<Camera> playerCameras;
@@ -15,13 +14,11 @@ public class CameraManager : MonoBehaviour
 
     private void Start ()
     {
-        playerConfigs = PlayerManager.Instance.GetPlayerConfigList();
         PlayerManager.Instance.SetCameraManager(this);
     }
 
     private void Update ()
     {
-        if (playerConfigs.Count > 2)
             CheckPlayersProximity();
     }
 
@@ -54,9 +51,9 @@ public class CameraManager : MonoBehaviour
     {
         bool allPlayersClose = true;
 
-        for (int i = 0; i < playerConfigs.Count; i++)
+        for (int i = 0; i < playerCameras.Count; i++)
         {
-            for (int j = i + 1; j < playerConfigs.Count; j++)
+            for (int j = i + 1; j < playerCameras.Count; j++)
             {
                 float distance = Vector3.Distance(playerCameras[i].transform.parent.position, playerCameras[j].transform.parent.position);
                 if (distance > proximityThreshold)
