@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Collider2D))]
 public class InputIcon : MonoBehaviour
@@ -8,15 +9,13 @@ public class InputIcon : MonoBehaviour
     private TeamSelectionController teamSelectionController;
     [SerializeField] private PlayerConfig playerConfig;
     private Rigidbody2D rb;
-    [SerializeField] private float speed = 10f;
+    [SerializeField] private float speed = 1000f;
 
     [SerializeField] private PlayerConfigData playerConfigData;
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private InputManager inputManager;
 
     private InputDevice inputDevice;
-
-    [SerializeField] private float pushBackForce = 5f;
 
     private void Awake ()
     {
@@ -60,7 +59,7 @@ public class InputIcon : MonoBehaviour
             controlScheme = controlScheme
         };
 
-        GetComponent<SpriteRenderer>().color = playerColor;
+        GetComponent<Image>().color = playerColor;
 
         // Add the new PlayerConfig to the playerConfigs list.
         PlayerManager.Instance.playerConfigs.Add(newPlayerConfig);

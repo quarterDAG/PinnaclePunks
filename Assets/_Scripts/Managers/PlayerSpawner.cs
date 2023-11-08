@@ -37,6 +37,15 @@ public class PlayerSpawner : MonoBehaviour
      
         Transform spawnPoint = GetSpawnPoint(config);
 
+        if(config.team == PlayerConfigData.Team.TeamA)
+        {
+            teamASpawnIndex++;
+        }
+        else if (config.team == PlayerConfigData.Team.TeamB)
+        {
+            teamBSpawnIndex++;
+        }
+
         if (spawnPoint == null)
         {
             Debug.LogError("No available spawn points for team: " + config.team);
@@ -55,6 +64,9 @@ public class PlayerSpawner : MonoBehaviour
         // Set the instantiated player's position and rotation
         instantiatedPlayer.transform.position = spawnPoint.position;
         instantiatedPlayer.transform.SetParent(playersParent.transform, false);
+        
+        // Assign player's respawn point
+        instantiatedPlayer.GetComponent<PlayerController>().AssignRespawn(spawnPoint);
 
         return instantiatedPlayer;
     }
@@ -70,14 +82,16 @@ public class PlayerSpawner : MonoBehaviour
         {
             if (teamASpawnIndex < teamASpawnPoints.Count)
             {
-                spawnPoint = teamASpawnPoints[teamASpawnIndex++];
+                spawnPoint = teamASpawnPoints[teamASpawnIndex];
+                //teamASpawnIndex++;
             }
         }
         else if (config.team == PlayerConfigData.Team.TeamB)
         {
             if (teamBSpawnIndex < teamBSpawnPoints.Count)
             {
-                spawnPoint = teamBSpawnPoints[teamBSpawnIndex++];
+                spawnPoint = teamBSpawnPoints[teamBSpawnIndex];
+                //teamBSpawnIndex++;
             }
         }
 
@@ -86,7 +100,14 @@ public class PlayerSpawner : MonoBehaviour
 
     public void InstantiatePlayerStatusComponent ( PlayerConfig config, PlayerInput instantiatedPlayer )
     {
-        Vector2 statusPosition = GetPlayerStatusPosition(config);
+        // Calculate the status position index based on the playerIndex and team
+        int statusPositionIndex = config.playerIndex - (config.team == PlayerConfigData.Team.TeamB ? teamBSpawnIndex : teamASpawnIndex);
+
+        // Ensure index is within the range
+        statusPositionIndex = Mathf.Clamp(statusPositionIndex, 0, config.team == PlayerConfigData.Team.TeamA ? teamAStatusPositions.Count - 1 : teamBStatusPositions.Count - 1);
+
+        Vector2 statusPosition = GetPlayerStatusPosition(config, statusPositionIndex); 
+        
         Transform parentGO = GetParentGO(config);
 
         Debug.Log($"Instantiating status for player {config.playerIndex} on {config.team}");
@@ -121,8 +142,22 @@ public class PlayerSpawner : MonoBehaviour
         instantiatedPlayer.transform.Find("Indicator").GetComponent<SpriteRenderer>().color = config.playerColor;
     }
 
+    private Vector2 GetPlayerStatusPosition ( PlayerConfig config, int statusPositionIndex )
+    {
+        List<Vector2> statusPositions = config.team == PlayerConfigData.Team.TeamA ? teamAStatusPositions : teamBStatusPositions;
+        if (statusPositionIndex >= 0 && statusPositionIndex < statusPositions.Count)
+        {
+            return statusPositions[statusPositionIndex];
+        }
+        else
+        {
+            Debug.LogError($"Player status position index {statusPositionIndex} out of range for team {config.team}.");
+            return Vector2.zero; // Default to zero if out of range
+        }
+    }
 
 
+/*
     private Vector2 GetPlayerStatusPosition ( PlayerConfig config )
     {
         List<Vector2> statusPositions = config.team == PlayerConfigData.Team.TeamA ? teamAStatusPositions : teamBStatusPositions;
@@ -135,7 +170,7 @@ public class PlayerSpawner : MonoBehaviour
             Debug.LogError("Player index out of range for status positions.");
             return statusPositions[config.playerIndex];
         }
-    }
+    }*/
 
     private Transform GetParentGO ( PlayerConfig config )
     {

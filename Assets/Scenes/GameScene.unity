@@ -33506,16 +33506,16 @@ MonoBehaviour:
   teamBSpawnPoints:
   - {fileID: 1516222469}
   playerPrefab: {fileID: 6038754821143387965, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
-  playersParent: {fileID: 856197752}
+  playersParent: {fileID: 1169178941}
   playerStatusPrefab: {fileID: 5951329947807079994, guid: acf2338cb7ade8648a1b20d96608444a, type: 3}
   teamAStatusParent: {fileID: 1914209661}
   teamBStatusParent: {fileID: 1804440192}
   teamAStatusPositions:
-  - {x: -150, y: 0}
-  - {x: -100, y: 0}
+  - {x: -350, y: 150}
+  - {x: -300, y: 150}
   teamBStatusPositions:
-  - {x: 100, y: 0}
-  - {x: 150, y: 0}
+  - {x: 350, y: 150}
+  - {x: 300, y: 150}
 --- !u!1 &858979250
 GameObject:
   m_ObjectHideFlags: 0
@@ -37838,6 +37838,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1158533530}
   m_CullTransparentMesh: 1
+--- !u!1 &1169178941
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1169178942}
+  m_Layer: 0
+  m_Name: Players
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1169178942
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1169178941}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1169627427
 GameObject:
   m_ObjectHideFlags: 0
@@ -68283,6 +68314,7 @@ SceneRoots:
   - {fileID: 299132721}
   - {fileID: 2049960160}
   - {fileID: 2068035492692552113}
+  - {fileID: 856197753}
   - {fileID: 1310122505}
   - {fileID: 2048012002}
   - {fileID: 551256759}
@@ -68293,7 +68325,7 @@ SceneRoots:
   - {fileID: 141284271}
   - {fileID: 1093579737}
   - {fileID: 512263032}
-  - {fileID: 856197753}
+  - {fileID: 1169178942}
   - {fileID: 3604610644648105192}
   - {fileID: 2038061429}
   - {fileID: 75052762}
