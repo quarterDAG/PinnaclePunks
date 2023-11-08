@@ -45,7 +45,7 @@ public class InputIcon : MonoBehaviour
     {
         // Get the control scheme from the input manager, typically based on the last input received.
         PlayerConfigData.ControlScheme controlScheme = inputManager.GetCurrentControlScheme(inputDevice);
-        int _playerIndex = teamSelectionController.GetUniquePlayerIndex();
+        int _playerIndex = PlayerManager.Instance.GetUniquePlayerIndex();
 
 
         // Call a method to get a unique color for the player.
@@ -63,7 +63,7 @@ public class InputIcon : MonoBehaviour
         GetComponent<SpriteRenderer>().color = playerColor;
 
         // Add the new PlayerConfig to the playerConfigs list.
-        teamSelectionController.playerConfigs.Add(newPlayerConfig);
+        PlayerManager.Instance.playerConfigs.Add(newPlayerConfig);
 
         playerConfig = newPlayerConfig;
 

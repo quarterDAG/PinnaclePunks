@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static PlayerConfigData;
-using static PlayerManager;
+using UnityEngine.InputSystem;
 
 
 
@@ -14,6 +14,7 @@ public struct PlayerConfig
     public Team team;
     public ControlScheme controlScheme;
     public PlayerState playerState;
+    public InputDevice inputDevice;
 }
 
 [CreateAssetMenu(fileName = "PlayerConfigData", menuName = "Game/Player Config Data", order = 1)]

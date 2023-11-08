@@ -3,42 +3,32 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEditor;
 using UnityEngine.UI;
+using System.Linq;
+using static PlayerConfigData;
 
 public class PlayerManager : MonoBehaviour
 {
 
     public static PlayerManager Instance { get; private set; }
+    [SerializeField] PlayerConfigData playerConfigData;
+    private PlayerSpawner playerSpawner;
+    private CameraManager cameraManager;
 
 
-    [Header("Player Settings")]
-    public GameObject playerPrefab;
+    [Header("Players Settings")]
     public List<PlayerConfig> playerConfigs;
-
-    [Header("Player Status")]
-    public GameObject playerStatusPrefab;
-    public Transform teamAStatusParent;
-    public Transform teamBStatusParent;
-    [SerializeField] private List<Vector2> teamAStatusPositions;
-    [SerializeField] private List<Vector2> teamBStatusPositions;
 
     public int playerCount { get; private set; }
 
-    [Header("Spawn Points")]
-    public List<Transform> teamASpawnPoints;
-    public List<Transform> teamBSpawnPoints;
-
-    [Header("Hierarchy Settings")]
-    public GameObject playersParent;
-
-    [Header("Camera Settings")]
-    public List<Camera> playerCameras; 
-    [SerializeField] private Cinemachine.CinemachineTargetGroup cinemachineTargetGroup;
-    [SerializeField] private float proximityThreshold = 50f; // Distance at which cameras switch
-    [SerializeField] private Canvas dividerCanvas;
-
-
 
     private void Awake ()
+    {
+        Singleton();
+        playerConfigs = new List<PlayerConfig>();
+
+    }
+
+    private void Singleton ()
     {
         if (Instance == null)
         {
@@ -51,190 +41,98 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    void Start ()
-    {
-        InitializePlayers();
-    }
 
-    private void Update ()
-    {
-        CheckPlayersProximity();
-    }
+    #region Getters & Setters
 
-    private void CheckPlayersProximity ()
+    public int GetUniquePlayerIndex ()
     {
-        bool allPlayersClose = true;
+        int newIndex = 0;
 
-        for (int i = 0; i < playerConfigs.Count; i++)
+        // Loop through existing configs to find an unused index.
+        while (playerConfigs.Any(p => p.playerIndex == newIndex))
         {
-            for (int j = i + 1; j < playerConfigs.Count; j++)
-            {
-                float distance = Vector3.Distance(playerCameras[i].transform.parent.position, playerCameras[j].transform.parent.position);
-                if (distance > proximityThreshold)
-                {
-                    allPlayersClose = false;
-                    break;
-                }
-            }
-            if (!allPlayersClose) break;
+            newIndex++;
         }
-
-        // Enable/disable cameras based on players' proximity
-        foreach (var cam in playerCameras)
-        {
-            cam.enabled = !allPlayersClose;
-        }
-        dividerCanvas.enabled = !allPlayersClose;
+        return newIndex;
     }
 
 
-    private void InitializePlayers ()
+    public List<PlayerConfig> GetPlayerConfigList ()
     {
-        var gamepadDevices = Gamepad.all;
-        Debug.Log($"Connected gamepads: {gamepadDevices.Count}");
+        return playerConfigs;
+    }
 
-        var gamepads = Gamepad.all;
-        int gamepadIndex = 0;
+    public PlayerConfig GetPlayerConfig ( int playerIndex )
+    {
+        return playerConfigs.FirstOrDefault(pc => pc.playerIndex == playerIndex);
+    }
 
-        int teamASpawnIndex = 0;
-        int teamBSpawnIndex = 0;
+
+    public void SetPlayerSpawner ( PlayerSpawner _playerSpawner )
+    {
+        playerSpawner = _playerSpawner;
+    }
+
+    public void SetCameraManager ( CameraManager _cameraManager )
+    {
+        cameraManager = _cameraManager;
+    }
+    public void SetTeam ( int playerIndex, Team team )
+    {
+        PlayerConfig playerConfig = playerConfigs[playerIndex];
+        playerConfig.team = team;
+        playerConfigs[playerIndex] = playerConfig;
+    }
+
+    public void SetPlayerState ( int playerIndex, PlayerState playerState )
+    {
+        PlayerConfig playerConfig = playerConfigs[playerIndex];
+        playerConfig.playerState = playerState;
+        playerConfigs[playerIndex] = playerConfig;
+    }
+
+    #endregion
+
+
+    public void InitializePlayers ()
+    {
+        playerCount = 0;
 
         foreach (var config in playerConfigs)
         {
-            Transform spawnPoint = null;
 
-            // Determine the spawn point based on the team
-            if (config.team == PlayerConfigData.Team.TeamA && teamASpawnIndex < teamASpawnPoints.Count)
+            if (config.team == Team.Spectator)
             {
-                spawnPoint = teamASpawnPoints[teamASpawnIndex++];
-            }
-            else if (config.team == PlayerConfigData.Team.TeamB && teamBSpawnIndex < teamBSpawnPoints.Count)
-            {
-                spawnPoint = teamBSpawnPoints[teamBSpawnIndex++];
+                playerConfigData.RemovePlayerConfig(config);
+                //playerCount++;
+                return;
             }
 
-            if (spawnPoint == null)
+            var instantiatedPlayer = playerSpawner.InstantiatePlayer(config, playerCount);
+            if (instantiatedPlayer != null)
             {
-                Debug.LogError("No available spawn points for team: " + config.team);
-                continue; // Skip this iteration if no spawn point is available
+                // Set up the player components that are specific to PlayerManager's responsibilities
+                SetupPlayer(config, instantiatedPlayer);
+                playerCount++;
             }
 
-            // Instantiate player at the spawn point
-            PlayerInput instantiatedPlayer = PlayerInput.Instantiate(
-                playerPrefab,
-                controlScheme: config.controlScheme.ToString(),
-                pairWithDevice: config.controlScheme == PlayerConfigData.ControlScheme.Gamepad ? gamepads[gamepadIndex++] : null,
-                playerIndex: playerCount
-            );
-
-            // Set the instantiated player's position and rotation
-            instantiatedPlayer.transform.position = spawnPoint.position;
-            instantiatedPlayer.transform.SetParent(playersParent.transform, false);
-            instantiatedPlayer.GetComponent<PlayerController>().AssignRespawn(spawnPoint);
-
-            playerCount++;
-
-            // Set up other player components
-            AddPlayerToCinemachineTargetGroup(instantiatedPlayer.transform);
-            instantiatedPlayer.GetComponent<InputManager>().UpdateCurrentControlScheme(config.controlScheme.ToString());
-            SetupPlayerTag(config, instantiatedPlayer);
-            instantiatedPlayer.GetComponentInChildren<PlayerMonsterSpawner>().ConfigMonsterSpawner();
-
-            AddPlayerCameraToPlayerCameras(instantiatedPlayer);
-
-            // Instantiate player status component
-            InstantiatePlayerStatusComponent(config, instantiatedPlayer);
         }
     }
-    private void InstantiatePlayerStatusComponent ( PlayerConfig config, PlayerInput instantiatedPlayer )
+
+    private void SetupPlayer ( PlayerConfig config, PlayerInput instantiatedPlayer )
     {
-        Vector2 statusPosition = GetPlayerStatusPosition(config);
-        Transform parentGO = GetParentGO(config);
+        // Set up other player components
+        instantiatedPlayer.GetComponent<InputManager>().UpdateCurrentControlScheme(config.controlScheme.ToString());
+        cameraManager.AddPlayerToCinemachineTargetGroup(instantiatedPlayer.transform);
+        SetupPlayerTag(config, instantiatedPlayer);
+        instantiatedPlayer.GetComponentInChildren<PlayerMonsterSpawner>().ConfigMonsterSpawner();
 
-        Debug.Log($"Instantiating status for player {config.playerIndex} on {config.team}");
+        cameraManager.AddPlayerCameraToPlayerCameras(instantiatedPlayer);
 
-
-        // Instantiate player status and parent it to the position transform
-        GameObject playerStatusGO = Instantiate(playerStatusPrefab, parentGO.position, Quaternion.identity);
-        Bar hpBar = playerStatusGO.GetComponentInChildren<Bar>();
-
-        // Ensure the GameObject is active before trying to modify RectTransform properties
-        playerStatusGO.SetActive(true);
-
-        // Set the first child's anchoredPosition to be zero relative to its parent if it exists
-        if (playerStatusGO.transform.childCount > 0)
-        {
-            RectTransform HPAvatar = playerStatusGO.transform.GetChild(0).GetComponent<RectTransform>();
-            HPAvatar.anchoredPosition = statusPosition; // Reset the anchored position to (0,0)
-        }
-
-        // Link player status to the player
-        if (hpBar != null)
-        {
-            instantiatedPlayer.GetComponent<PlayerController>().AssignHPBar(hpBar);
-        }
-
-
-        // Find the PlayerColor GameObject and change its color
-        UnityEngine.Color unityColor = /*GetColorFromEnum(*/config.playerColor/*)*/;
-
-        Transform playerColorTransform = playerStatusGO.transform.Find("HP & AVATAR/PlayerColor");
-        Image playerColorImage = playerColorTransform.GetComponent<Image>();
-        playerColorImage.color = unityColor; // Set the color to the one specified in config
-
-        instantiatedPlayer.GetComponentInChildren<MouseAim>().GetComponent<SpriteRenderer>().color = unityColor;
-
-        instantiatedPlayer.transform.Find("Indicator").GetComponent<SpriteRenderer>().color = unityColor;
-
-
-
+        // Instantiate player status component
+        playerSpawner.InstantiatePlayerStatusComponent(config, instantiatedPlayer);
     }
 
-
-
-    private Vector2 GetPlayerStatusPosition ( PlayerConfig config )
-    {
-        List<Vector2> statusPositions = config.team == PlayerConfigData.Team.TeamA ? teamAStatusPositions : teamBStatusPositions;
-        if (config.playerIndex >= 0 && config.playerIndex < statusPositions.Count)
-        {
-            return statusPositions[config.playerIndex];
-        }
-        else
-        {
-            Debug.LogError("Player index out of range for status positions.");
-            return statusPositions[config.playerIndex];
-        }
-    }
-
-    private Transform GetParentGO ( PlayerConfig config )
-    {
-        return config.team == PlayerConfigData.Team.TeamA ? teamAStatusParent : teamBStatusParent;
-    }
-
-    private void AddPlayerCameraToPlayerCameras ( PlayerInput instantiatedPlayer )
-    {
-        Camera playerCamera = instantiatedPlayer.GetComponentInChildren<Camera>();
-        if (playerCamera != null)
-        {
-            playerCameras.Add(playerCamera); // Add the camera to the list
-        }
-        else
-        {
-            Debug.LogWarning("No camera found in the player's children. Make sure the player prefab has a camera.");
-        }
-    }
-
-    private void AddPlayerToCinemachineTargetGroup ( Transform playerTransform )
-    {
-        var target = new Cinemachine.CinemachineTargetGroup.Target
-        {
-            target = playerTransform,
-            weight = 1f,
-            radius = 5f
-        };
-
-        cinemachineTargetGroup.AddMember(playerTransform, target.weight, target.radius);
-    }
 
     private void SetupPlayerTag ( PlayerConfig config, PlayerInput instantiatedPlayer )
     {
@@ -252,27 +150,5 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+
 }
-
-
-
-#if UNITY_EDITOR
-
-[CustomEditor(typeof(PlayerManager))]
-public class PlayerManagerEditor : Editor
-{
-    public override void OnInspectorGUI ()
-    {
-        base.OnInspectorGUI();
-
-        PlayerManager setupScript = (PlayerManager)target;
-
-    }
-}
-#endif
-
-
-
-
-
-

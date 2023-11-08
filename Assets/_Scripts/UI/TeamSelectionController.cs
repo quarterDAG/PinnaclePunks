@@ -1,67 +1,37 @@
-using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using static PlayerConfigData;
 
 public class TeamSelectionController : MonoBehaviour
 {
     public int MaxPlayersPerTeam = 2;
-    public List<PlayerConfig> playerConfigs;
 
     [SerializeField] private Collider2D TeamAreaA;
     [SerializeField] private Collider2D TeamAreaB;
 
-    private void Awake ()
+
+    public bool CanJoinTeam ( Team team )
     {
-        playerConfigs = new List<PlayerConfig>();
-    }
-
-    #region Getters
-
-    public int GetUniquePlayerIndex ()
-    {
-        int newIndex = 0;
-
-        // Loop through existing configs to find an unused index.
-        while (playerConfigs.Any(p => p.playerIndex == newIndex))
-        {
-            newIndex++;
-        }
-        return newIndex;
-    }
-
-    private PlayerConfig GetPlayerConfig ( int playerIndex )
-    {
-        return playerConfigs.FirstOrDefault(pc => pc.playerIndex == playerIndex);
-    }
-
-    public bool CanJoinTeam ( PlayerConfigData.Team team )
-    {
-        Debug.Log("Team: " + team + CountTeamMembers(team));
         return CountTeamMembers(team) < MaxPlayersPerTeam;
     }
 
-    private int CountTeamMembers ( PlayerConfigData.Team team )
+    private int CountTeamMembers ( Team team )
     {
-        return playerConfigs.FindAll(p => p.team == team).Count;
+        return PlayerManager.Instance.GetPlayerConfigList().FindAll(p => p.team == team).Count;
     }
 
-    #endregion
 
-    public void SetPlayerTeam ( int playerIndex, PlayerConfigData.Team team )
+
+    public void SetPlayerTeam ( int playerIndex, Team team )
     {
+        if (PlayerManager.Instance.GetPlayerConfig(playerIndex).playerState == PlayerState.Ready) return;
 
         // Find the PlayerConfig and update the team.
-        int configIndex = playerConfigs.FindIndex(p => p.playerIndex == playerIndex);
+        int configIndex = PlayerManager.Instance.GetPlayerConfigList().FindIndex(p => p.playerIndex == playerIndex);
         //Debug.Log(configIndex);
         if (configIndex != -1)
         {
-            // Extract the PlayerConfig, modify it, and then put it back.
-            PlayerConfig playerConfig = playerConfigs[configIndex];
-            playerConfig.team = team;
-            playerConfigs[configIndex] = playerConfig;
+          PlayerManager.Instance.SetTeam(playerIndex, team);
         }
 
         HandleTeamAreasColliders();
@@ -84,29 +54,23 @@ public class TeamSelectionController : MonoBehaviour
     {
         Debug.Log($"Player {playerIndex} is ready!");
 
-        PlayerConfig config = GetPlayerConfig(playerIndex);
-
-        config.playerState = PlayerState.Ready;
-        UpdatePlayerConfig(playerIndex, config);
+        PlayerManager.Instance.SetPlayerState(playerIndex, PlayerState.Ready);
     }
 
     public void SetPlayerChoosingTeam ( int playerIndex )
     {
         Debug.Log($"Player {playerIndex} is choosing a team.");
 
-        PlayerConfig config = GetPlayerConfig(playerIndex);
-
-        config.playerState = PlayerState.ChoosingTeam;
-        UpdatePlayerConfig(playerIndex, config);
+        PlayerManager.Instance.SetPlayerState(playerIndex, PlayerState.ChoosingTeam);
     }
 
-    private void UpdatePlayerConfig ( int playerIndex, PlayerConfig updatedConfig )
+    public void StartGame ()
     {
-        int configIndex = playerConfigs.FindIndex(pc => pc.playerIndex == playerIndex);
-        if (configIndex != -1)
-        {
-            playerConfigs[configIndex] = updatedConfig;
-        }
+
+        //Start Button
+        SceneManager.LoadScene("GameScene");
     }
+
+
 
 }
