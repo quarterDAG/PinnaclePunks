@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static PlayerConfigData;
@@ -15,6 +16,18 @@ public class TeamSelectionController : MonoBehaviour
 
     private int teamPositionIndexA;
     private int teamPositionIndexB;
+
+    [SerializeField] private CountdownUI countdownUI;
+
+    private void Start ()
+    {
+        countdownUI.OnCountdownFinished += StartGame;
+    }
+
+    private void OnDestroy ()
+    {
+        countdownUI.OnCountdownFinished -= StartGame;
+    }
 
 
     public bool CanJoinTeam ( Team team )
@@ -89,6 +102,11 @@ public class TeamSelectionController : MonoBehaviour
         Debug.Log($"Player {playerIndex} is ready!");
 
         PlayerManager.Instance.SetPlayerState(playerIndex, PlayerState.Ready);
+
+        if(TwoPlayersAreReady())
+        {
+            StartGameCountdown();
+        }
     }
 
     public void SetPlayerChoosingTeam ( int playerIndex )
@@ -96,13 +114,33 @@ public class TeamSelectionController : MonoBehaviour
         Debug.Log($"Player {playerIndex} is choosing a team.");
 
         PlayerManager.Instance.SetPlayerState(playerIndex, PlayerState.ChoosingTeam);
-    }
-    /*
-        public void SetIconPosition ( Transform icon, int playerIndex )
+
+        if (!TwoPlayersAreReady())
         {
-            Team playerTeam = PlayerManager.Instance.GetPlayerConfig(playerIndex).team;
+            StopGameCoundown();
         }
-    */
+    }
+
+    private bool TwoPlayersAreReady ()
+    {
+        List<PlayerConfig> playerConfigs = PlayerManager.Instance.GetPlayerConfigList();
+
+        // Use LINQ to count how many players are ready
+        int readyPlayersCount = playerConfigs.Count(p => p.playerState == PlayerState.Ready);
+
+        return readyPlayersCount >= 2;
+    }
+
+    private void StartGameCountdown()
+    {
+        countdownUI.StartTimer();
+    }
+
+    private void StopGameCoundown()
+    {
+        countdownUI.StopTimer();
+    }
+
     public void StartGame ()
     {
 

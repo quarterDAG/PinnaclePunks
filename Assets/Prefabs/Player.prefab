@@ -10199,6 +10199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 823b073ef80ddeb4396dfd84225b45d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerTransform: {fileID: 5240961817479375904}
   countdownText: {fileID: 8867726076660150098}
   timeRemaining: 3
   timerIsRunning: 0
@@ -20472,6 +20473,14 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: d051035f-0b44-4aa3-ba45-13345ce878b7
     m_ActionName: Player/New action
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2a877aa7-2293-461f-b1cb-e23fcb355fee
+    m_ActionName: Player/Start[/DualShock4GamepadHID/start,/DualShock4GamepadHID1/start,/Keyboard/enter]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5f5a399e-5c0c-4df3-b72d-0e44e02d6667
+    m_ActionName: Player/Any Button
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player
