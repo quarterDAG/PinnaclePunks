@@ -17,7 +17,7 @@ public struct PlayerConfig
     public InputDevice inputDevice;
 }
 
-[CreateAssetMenu(fileName = "PlayerConfigData", menuName = "Game/Player Config Data", order = 1)]
+[CreateAssetMenu(fileName = "PlayerConfigData", menuName = "Player/Player Config Data", order = 1)]
 
 public class PlayerConfigData : ScriptableObject
 {

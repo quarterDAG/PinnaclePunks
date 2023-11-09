@@ -196,7 +196,7 @@ MonoBehaviour:
     team: 0
     controlScheme: 0
     playerState: 0
-  speed: 1000
+  speed: 1500
   playerConfigData: {fileID: 11400000, guid: d3e8662a30226a343a404490b291db19, type: 2}
   playerInput: {fileID: 3309607032991924660}
   inputManager: {fileID: 1247941865052248757}

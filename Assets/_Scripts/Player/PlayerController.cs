@@ -7,6 +7,7 @@ using static Bar;
 public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 {
     [SerializeField] private ScriptableStats _stats;
+
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
     private FrameInput _frameInput;
@@ -47,6 +48,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private InputManager inputManager;
     private LivesManager livesManager;
 
+    [SerializeField] private PlayerStats playerStats;
 
     private void Awake ()
     {
@@ -157,6 +159,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     public void Die ()
     {
         isDead = true;
+        playerStats.RecordDeath();
+
         playerRope.DestroyCurrentRope();
         playerAnimator.DeathAnimation(true);
         canMove = false;

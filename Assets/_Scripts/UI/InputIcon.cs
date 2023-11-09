@@ -120,7 +120,6 @@ public class InputIcon : MonoBehaviour
         // Attempt to join TeamA.
         if (other.CompareTag("TeamA"))
         {
-            Debug.Log(teamSelectionController.CanJoinTeam(PlayerConfigData.Team.TeamA));
             if (teamSelectionController.CanJoinTeam(PlayerConfigData.Team.TeamA))
             {
                 playerConfig.team = PlayerConfigData.Team.TeamA;

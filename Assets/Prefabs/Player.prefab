@@ -20231,6 +20231,7 @@ MonoBehaviour:
   hpBar: {fileID: 0}
   canMove: 1
   lives: 3
+  playerStats: {fileID: 11400000, guid: d39cfeff5f86f8447a21d0651fba2ee9, type: 2}
 --- !u!114 &5503615758264496031
 MonoBehaviour:
   m_ObjectHideFlags: 0
