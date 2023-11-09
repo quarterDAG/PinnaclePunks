@@ -8,12 +8,15 @@ public class MouseAim : MonoBehaviour
     [SerializeField] private Transform player;
     [SerializeField] private float maxAimDistance = 5f;
 
-    private Vector2 mousePosition;
     private Vector2 aimPosition;
+    private Vector2 aimDirection = Vector2.left;
+
 
     private InputManager inputManager;
 
     [SerializeField] private float gamepadAimSensitivity = 0.05f;
+    [SerializeField] private float deadzone = 0.1f;
+
 
     private void Awake ()
     {
@@ -39,26 +42,26 @@ public class MouseAim : MonoBehaviour
         }
 
         // Apply the last known position to the transform and update the color
-        transform.position = aimPosition;
+        transform.position = (Vector2)player.position + aimDirection * maxAimDistance;
+        aimPosition = transform.position;   
     }
 
     private void UpdateAimWithGamepad ()
     {
-        Vector2 gamepadInput = inputManager.InputAim;
-        Vector2 aimInput = gamepadInput * gamepadAimSensitivity;
-        aimPosition = (Vector2)player.position + aimInput * maxAimDistance;
-
-        // If the input is in the deadzone, do not update lastAimPosition, keeping the aim in its last position
+        Vector2 gamepadInput = inputManager.InputAim * gamepadAimSensitivity;
+        if (gamepadInput.magnitude > deadzone)
+        {
+            // Normalize the input and use it to set the new aim direction
+            aimDirection = gamepadInput;
+        }
     }
 
     private void UpdateAimWithMouse ()
     {
-        mousePosition = sceneCamera.ScreenToWorldPoint(inputManager.InputAim);
-        Vector2 direction = (mousePosition - (Vector2)player.position).normalized;
-        float actualDistance = Vector2.Distance(player.position, mousePosition);
-        float aimDistance = Mathf.Min(actualDistance, maxAimDistance);
-        aimPosition = (Vector2)player.position + direction * aimDistance;
+        Vector2 mousePosition = sceneCamera.ScreenToWorldPoint(inputManager.InputAim);
+        aimDirection = (mousePosition - (Vector2)player.position).normalized;
     }
+
 
 
     public Vector2 GetAimPosition ()

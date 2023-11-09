@@ -3534,7 +3534,7 @@ GameObject:
   - component: {fileID: 233169077}
   m_Layer: 6
   m_Name: Pillar (4)
-  m_TagString: Shootable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6227,7 +6227,7 @@ GameObject:
   - component: {fileID: 468517192}
   m_Layer: 6
   m_Name: Pillar (1)
-  m_TagString: Shootable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33277,7 +33277,7 @@ GameObject:
   - component: {fileID: 806518189}
   m_Layer: 6
   m_Name: Pillar
-  m_TagString: Shootable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -34629,6 +34629,87 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &936389117
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1548427209360214988, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: playerConfigs.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1548427209360214988, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: playerConfigs.Array.data[0].playerState
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1548427209360214988, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: playerConfigs.Array.data[0].controlScheme
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1548427209360214988, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: playerConfigs.Array.data[0].playerColor.b
+      value: 0.5732214
+      objectReference: {fileID: 0}
+    - target: {fileID: 1548427209360214988, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: playerConfigs.Array.data[0].playerColor.g
+      value: 0.05831255
+      objectReference: {fileID: 0}
+    - target: {fileID: 1548427209360214988, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: playerConfigs.Array.data[0].playerColor.r
+      value: 0.5943396
+      objectReference: {fileID: 0}
+    - target: {fileID: 7009612954289460978, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: m_Name
+      value: Player Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8160484088290800548, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8160484088290800548, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8160484088290800548, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8160484088290800548, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8160484088290800548, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8160484088290800548, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8160484088290800548, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8160484088290800548, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8160484088290800548, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8160484088290800548, guid: 305a441101cf06549a9c60c25576b586, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 305a441101cf06549a9c60c25576b586, type: 3}
 --- !u!1 &968116757
 GameObject:
   m_ObjectHideFlags: 0
@@ -34920,7 +35001,7 @@ GameObject:
   - component: {fileID: 1020648189}
   m_Layer: 6
   m_Name: Pillar (7)
-  m_TagString: Shootable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -36181,7 +36262,7 @@ GameObject:
   - component: {fileID: 1092716483}
   m_Layer: 6
   m_Name: Pillar (2)
-  m_TagString: Shootable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -64044,7 +64125,7 @@ GameObject:
   - component: {fileID: 1656380737}
   m_Layer: 6
   m_Name: Pillar (6)
-  m_TagString: Shootable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -66683,7 +66764,7 @@ GameObject:
   - component: {fileID: 1867726151}
   m_Layer: 6
   m_Name: Pillar (5)
-  m_TagString: Shootable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -67610,7 +67691,7 @@ GameObject:
   - component: {fileID: 2052080604}
   m_Layer: 6
   m_Name: Pillar (3)
-  m_TagString: Shootable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -68317,6 +68398,7 @@ SceneRoots:
   - {fileID: 2049960160}
   - {fileID: 2068035492692552113}
   - {fileID: 856197753}
+  - {fileID: 936389117}
   - {fileID: 1310122505}
   - {fileID: 2048012002}
   - {fileID: 551256759}
