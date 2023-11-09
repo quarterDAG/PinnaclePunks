@@ -33503,7 +33503,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teamASpawnPoints:
   - {fileID: 260813181}
+  - {fileID: 260813181}
   teamBSpawnPoints:
+  - {fileID: 1516222469}
   - {fileID: 1516222469}
   playerPrefab: {fileID: 6038754821143387965, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
   playersParent: {fileID: 1169178941}

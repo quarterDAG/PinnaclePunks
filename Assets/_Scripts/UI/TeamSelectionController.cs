@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static PlayerConfigData;
@@ -8,6 +9,12 @@ public class TeamSelectionController : MonoBehaviour
 
     [SerializeField] private Collider2D TeamAreaA;
     [SerializeField] private Collider2D TeamAreaB;
+
+    [SerializeField] private List<Transform> iconPositionsA;
+    [SerializeField] private List<Transform> iconPositionsB;
+
+    private int teamPositionIndexA;
+    private int teamPositionIndexB;
 
 
     public bool CanJoinTeam ( Team team )
@@ -21,21 +28,48 @@ public class TeamSelectionController : MonoBehaviour
     }
 
 
-
-    public void SetPlayerTeam ( int playerIndex, Team team )
+    public void SetPlayerTeam ( int playerIndex, Team team, Transform icon )
     {
-        if (PlayerManager.Instance.GetPlayerConfig(playerIndex).playerState == PlayerState.Ready) return;
+        var playerConfig = PlayerManager.Instance.GetPlayerConfig(playerIndex);
+        if (playerConfig.playerState == PlayerState.Ready) return;
 
-        // Find the PlayerConfig and update the team.
-        int configIndex = PlayerManager.Instance.GetPlayerConfigList().FindIndex(p => p.playerIndex == playerIndex);
-        //Debug.Log(configIndex);
-        if (configIndex != -1)
-        {
-          PlayerManager.Instance.SetTeam(playerIndex, team);
-        }
+        Team currentTeam = playerConfig.team;
 
+        // Set the team of the player in the PlayerManager
+        PlayerManager.Instance.SetTeam(playerIndex, team);
+
+        // Update the collider handling logic
         HandleTeamAreasColliders();
+
+        // If the player is switching teams, handle the icon's position and layer
+        if (currentTeam != team)
+        {
+            if (currentTeam == Team.TeamB && teamPositionIndexA > 0)
+                teamPositionIndexA--;
+            else if (currentTeam == Team.TeamA && teamPositionIndexB > 0)
+                teamPositionIndexB--;
+
+            // Set the new position of the icon based on the team
+            if (team == Team.TeamA)
+            {
+                icon.position = iconPositionsA[teamPositionIndexA++].position;
+                icon.gameObject.layer = LayerMask.NameToLayer("Default");
+            }
+            else if (team == Team.TeamB)
+            {
+                icon.position = iconPositionsB[teamPositionIndexB++].position;
+                icon.gameObject.layer = LayerMask.NameToLayer("Default");
+            }
+            // Handle the case when a player is set to Spectator
+            else if (team == Team.Spectator)
+            {
+                icon.gameObject.layer = LayerMask.NameToLayer("Spectators");
+            }
+        }
     }
+
+
+
 
     public void HandleTeamAreasColliders ()
     {
@@ -63,7 +97,12 @@ public class TeamSelectionController : MonoBehaviour
 
         PlayerManager.Instance.SetPlayerState(playerIndex, PlayerState.ChoosingTeam);
     }
-
+    /*
+        public void SetIconPosition ( Transform icon, int playerIndex )
+        {
+            Team playerTeam = PlayerManager.Instance.GetPlayerConfig(playerIndex).team;
+        }
+    */
     public void StartGame ()
     {
 

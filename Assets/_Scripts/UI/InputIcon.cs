@@ -17,6 +17,8 @@ public class InputIcon : MonoBehaviour
 
     private InputDevice inputDevice;
 
+    [SerializeField] private Image readyIcon;
+
     private void Awake ()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -26,12 +28,16 @@ public class InputIcon : MonoBehaviour
         AddPlayerConfig();
     }
 
+    private void Start ()
+    {
+    }
+
     private void Update ()
     {
         if (playerConfig.playerState != PlayerConfigData.PlayerState.Ready)
             rb.velocity = inputManager.InputVelocity * speed;
 
-        if (inputManager.IsJumpPressed)
+        if (inputManager.IsJumpPressed && playerConfig.team != PlayerConfigData.Team.Spectator)
             SetPlayerStateReady();
 
         if (inputManager.IsRopeShootPressed)
@@ -66,6 +72,7 @@ public class InputIcon : MonoBehaviour
 
         playerConfig = newPlayerConfig;
 
+        SetPlayerStateChoosingTeam();
     }
 
     private Color GetUniquePlayerColor ( int playerIndex )
@@ -82,10 +89,13 @@ public class InputIcon : MonoBehaviour
 
     private void SetPlayerStateReady ()
     {
-        if (playerConfig.playerState != PlayerConfigData.PlayerState.Playing)
+        if (playerConfig.playerState != PlayerConfigData.PlayerState.Ready)
         {
             playerConfig.playerState = PlayerConfigData.PlayerState.Ready;
+            rb.velocity = Vector2.zero;
+            teamSelectionController.SetPlayerTeam(playerConfig.playerIndex, playerConfig.team, transform);
             teamSelectionController.SetPlayerReady(playerConfig.playerIndex);
+            readyIcon.enabled = true;
 
             // Handle any other functionality that should occur when the player is ready
         }
@@ -97,6 +107,8 @@ public class InputIcon : MonoBehaviour
         {
             playerConfig.playerState = PlayerConfigData.PlayerState.ChoosingTeam;
             teamSelectionController.SetPlayerChoosingTeam(playerConfig.playerIndex);
+            readyIcon.enabled = false;
+
         }
     }
 
@@ -112,8 +124,8 @@ public class InputIcon : MonoBehaviour
             if (teamSelectionController.CanJoinTeam(PlayerConfigData.Team.TeamA))
             {
                 playerConfig.team = PlayerConfigData.Team.TeamA;
-                teamSelectionController.SetPlayerTeam(playerConfig.playerIndex, PlayerConfigData.Team.TeamA);
-                gameObject.layer = 0;
+                //teamSelectionController.SetPlayerTeam(playerConfig.playerIndex, PlayerConfigData.Team.TeamA, transform);
+                //gameObject.layer = 0;
             }
         }
         // Attempt to join TeamB.
@@ -123,8 +135,8 @@ public class InputIcon : MonoBehaviour
             if (teamSelectionController.CanJoinTeam(PlayerConfigData.Team.TeamB))
             {
                 playerConfig.team = PlayerConfigData.Team.TeamB;
-                teamSelectionController.SetPlayerTeam(playerConfig.playerIndex, PlayerConfigData.Team.TeamB);
-                gameObject.layer = 0;
+                //teamSelectionController.SetPlayerTeam(playerConfig.playerIndex, PlayerConfigData.Team.TeamB, transform);
+                //gameObject.layer = 0;
             }
         }
     }
@@ -135,8 +147,8 @@ public class InputIcon : MonoBehaviour
             (other.CompareTag("TeamB") && playerConfig.team == PlayerConfigData.Team.TeamB))
         {
             playerConfig.team = PlayerConfigData.Team.Spectator;
-            teamSelectionController.SetPlayerTeam(playerConfig.playerIndex, PlayerConfigData.Team.Spectator);
-            gameObject.layer = 10;
+            //teamSelectionController.SetPlayerTeam(playerConfig.playerIndex, PlayerConfigData.Team.Spectator, transform);
+            //gameObject.layer = 10;
         }
     }
 
