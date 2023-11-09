@@ -24,7 +24,7 @@ public class Inventory : MonoBehaviour
 
     private Dictionary<Vector2, int> directionToIndexMapping;
 
-    private int selectedIndex = -1;
+    private int selectedIndex = 0;
 
     public Color defaultColor;
     public Color selectedColor;
@@ -178,6 +178,16 @@ public class Inventory : MonoBehaviour
             }
         }
         return 0;
+    }
+
+    public void AddMonster ()
+    {
+        MonsterInventoryItem item = monsterInventory[0]; // because there is only one moster currently
+        item.count++;
+        item.countText.text = item.count.ToString();
+
+        monsterInventory[selectedIndex] = item;
+
     }
 
 }

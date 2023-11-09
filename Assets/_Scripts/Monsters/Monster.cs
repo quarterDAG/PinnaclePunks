@@ -196,10 +196,29 @@ public class Monster : MonoBehaviour, ICharacter
         if (!IsDead)
         {
             animator.SetBool("IsDead", true);
+            OtherTeamInventory(tagToAttack).AddMonster();
             IsDead = true;
             OnDeath?.Invoke();
+
         }
     }
+
+    public Inventory OtherTeamInventory ( string othereamTag )
+    {
+        Inventory[] inventories = FindObjectsOfType<Inventory>();
+
+        foreach (Inventory inventory in inventories)
+        {
+            if (inventory.gameObject.tag == othereamTag)
+            {
+                return inventory;
+            }
+        }
+
+        return null;
+    }
+
+
 
     private async void Shoot ()
     {
