@@ -68,7 +68,7 @@ public class PlayerSpawner : MonoBehaviour
         // Assign player's respawn point
         instantiatedPlayer.GetComponent<PlayerController>().AssignRespawn(spawnPoint);
 
-        instantiatedPlayer.GetComponent<PlayerController>().SetPlayerConfigAndStates(config);
+        instantiatedPlayer.GetComponent<PlayerController>().SetPlayerConfig(config);
 
         return instantiatedPlayer;
     }

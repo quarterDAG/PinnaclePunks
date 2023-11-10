@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using static Bar;
 
@@ -62,14 +63,22 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
     }
 
-    private void Start ()
-    {
-        teamTag = gameObject.tag;
-    }
 
-    public void SetPlayerConfigAndStates ( PlayerConfig _playerConfig )
+    public void SetPlayerConfig ( PlayerConfig _playerConfig )
     {
         playerConfig = _playerConfig;
+        teamTag = playerConfig.team.ToString();
+
+        SetTagRecursively(transform, teamTag);
+    }
+
+       void SetTagRecursively ( Transform parent, string tag )
+    {
+        parent.gameObject.tag = tag;
+        foreach (Transform child in parent)
+        {
+            SetTagRecursively(child, tag); // Recursive call for all children
+        }
     }
 
 
@@ -171,7 +180,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         gameObject.tag = "Dodge";
         isDead = true;
         PlayerStatsManager.Instance.allPlayerStats[playerConfig.playerIndex].RecordDeath();
-        if (killerIndex >= 0)
+        if (killerIndex >= 0) 
             PlayerStatsManager.Instance.allPlayerStats[killerIndex].RecordKill();
 
         playerRope.DestroyCurrentRope();

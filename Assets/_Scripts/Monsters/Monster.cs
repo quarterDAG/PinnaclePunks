@@ -35,7 +35,7 @@ public class Monster : MonoBehaviour, ICharacter
 
     public event Action OnDeath;
 
-    private string tagToAttack;
+    [SerializeField] private string tagToAttack;
 
 
     [System.Serializable]
@@ -50,12 +50,22 @@ public class Monster : MonoBehaviour, ICharacter
     {
         animator = GetComponent<Animator>();
         skeletonMecanim = GetComponent<SkeletonMecanim>();
+    }
 
-        GameObject[] otherTeamObjects = GameObject.FindGameObjectsWithTag(tagToAttack);
+    private void SearchPlayersFromEnemyTeam ()
+    {
+        GameObject[] otherTeamObjects = new GameObject[0];
+
+        otherTeamObjects = GameObject.FindGameObjectsWithTag(tagToAttack);
         foreach (var otherTeamObject in otherTeamObjects)
         {
-            if (otherTeamObject.layer == 3)
+            Debug.Log(otherTeamObject.layer);
+
+            if (otherTeamObject.layer == 9) // 9 = player layer
+            {
                 players.Add(otherTeamObject.transform);
+                Debug.Log(players);
+            }
         }
     }
 
@@ -145,15 +155,15 @@ public class Monster : MonoBehaviour, ICharacter
 
         foreach (Transform player in players)
         {
-            if (player != null)
+
+            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+            if (distanceToPlayer < closestDistance && ClearPathToPlayer(player))
             {
-                float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-                if (distanceToPlayer < closestDistance && ClearPathToPlayer(player))
-                {
-                    closestDistance = distanceToPlayer;
-                    closestPlayer = player;
-                }
+                closestDistance = distanceToPlayer;
+                closestPlayer = player;
+                Debug.Log(closestPlayer);
             }
+
         }
 
         return closestPlayer;
@@ -179,7 +189,7 @@ public class Monster : MonoBehaviour, ICharacter
         return true;
     }
 
-    public void TakeDamage ( int damage , int shooterIndex)
+    public void TakeDamage ( int damage, int shooterIndex )
     {
         stats.Health -= damage;
 
@@ -193,7 +203,7 @@ public class Monster : MonoBehaviour, ICharacter
         }
     }
 
-    public void Die (int killerIndex)
+    public void Die ( int killerIndex )
     {
         if (!IsDead)
         {
@@ -238,6 +248,8 @@ public class Monster : MonoBehaviour, ICharacter
     public void SetTagToAttack ( string _tagToAttack )
     {
         tagToAttack = _tagToAttack;
+        SearchPlayersFromEnemyTeam();
+
     }
 
 }

@@ -6,13 +6,14 @@ public class DeathZone : MonoBehaviour
 {
     private void OnCollisionEnter2D ( Collision2D collision )
     {
-        if (collision != null)
+        if (collision.gameObject.CompareTag("Dodge")) return;
+
+
+        ICharacter character = collision.gameObject.GetComponent<ICharacter>();
+        if (character != null)
         {
-            ICharacter character = collision.gameObject.GetComponent<ICharacter>();
-            if (character != null)
-            {
-                character.Die(-1);
-            }
+            character.Die(-1);
         }
+
     }
 }

@@ -62,7 +62,8 @@ public class InputIcon : MonoBehaviour
             playerName = _playerName,
             playerColor = _playerColor,
             team = PlayerConfigData.Team.Spectator,
-            controlScheme = controlScheme
+            controlScheme = controlScheme,
+            inputDevice = inputDevice
         };
 
 
