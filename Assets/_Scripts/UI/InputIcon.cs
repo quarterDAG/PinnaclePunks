@@ -12,6 +12,7 @@ public class InputIcon : MonoBehaviour
     [SerializeField] private float speed = 1000f;
 
     [SerializeField] private PlayerConfigData playerConfigData;
+    [SerializeField] private PlayerStats playerStats;
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private InputManager inputManager;
 
@@ -28,9 +29,6 @@ public class InputIcon : MonoBehaviour
         AddPlayerConfig();
     }
 
-    private void Start ()
-    {
-    }
 
     private void Update ()
     {
@@ -52,20 +50,25 @@ public class InputIcon : MonoBehaviour
         PlayerConfigData.ControlScheme controlScheme = inputManager.GetCurrentControlScheme(inputDevice);
         int _playerIndex = PlayerManager.Instance.GetUniquePlayerIndex();
 
+        Color _playerColor = GetUniquePlayerColor(_playerIndex);
+        string _playerName = GetPlayerNameByColor(_playerIndex);
 
-        // Call a method to get a unique color for the player.
-        Color playerColor = GetUniquePlayerColor(_playerIndex);
+        Debug.Log("Player Index: " + _playerIndex + "Player Name: " + _playerName);
 
         // Create the new PlayerConfig with the unique color and control scheme.
         PlayerConfig newPlayerConfig = new PlayerConfig
         {
             playerIndex = _playerIndex,
-            playerColor = playerColor,
+            playerName = _playerName,
+            playerColor = _playerColor,
             team = PlayerConfigData.Team.Spectator,
             controlScheme = controlScheme
         };
 
-        GetComponent<Image>().color = playerColor;
+
+        GetComponent<Image>().color = _playerColor;
+
+        SetNameAndSendPlayerStats(_playerName, _playerIndex);
 
         // Add the new PlayerConfig to the playerConfigs list.
         PlayerManager.Instance.playerConfigs.Add(newPlayerConfig);
@@ -73,6 +76,13 @@ public class InputIcon : MonoBehaviour
         playerConfig = newPlayerConfig;
 
         SetPlayerStateChoosingTeam();
+    }
+
+    private void SetNameAndSendPlayerStats ( string _playerName, int _playerIndex )
+    {
+        PlayerStats _playerStats = new PlayerStats();
+        _playerStats.playerName = _playerName;
+        PlayerStatsManager.Instance.UpdatePlayerStats(_playerStats, _playerIndex);
     }
 
     private Color GetUniquePlayerColor ( int playerIndex )
@@ -85,6 +95,24 @@ public class InputIcon : MonoBehaviour
         }
         else
             return Color.white;
+    }
+
+    private string GetPlayerNameByColor ( int playerIndex )
+    {
+        switch (playerIndex)
+        {
+            case 0:
+                return "Red";
+            case 1:
+                return "Blue";
+            case 2:
+                return "Green";
+            case 3:
+                return "Yellow";
+            default:
+                return "Unknown";
+
+        }
     }
 
     private void SetPlayerStateReady ()
@@ -123,8 +151,6 @@ public class InputIcon : MonoBehaviour
             if (teamSelectionController.CanJoinTeam(PlayerConfigData.Team.TeamA))
             {
                 playerConfig.team = PlayerConfigData.Team.TeamA;
-                //teamSelectionController.SetPlayerTeam(playerConfig.playerIndex, PlayerConfigData.Team.TeamA, transform);
-                //gameObject.layer = 0;
             }
         }
         // Attempt to join TeamB.
@@ -134,8 +160,6 @@ public class InputIcon : MonoBehaviour
             if (teamSelectionController.CanJoinTeam(PlayerConfigData.Team.TeamB))
             {
                 playerConfig.team = PlayerConfigData.Team.TeamB;
-                //teamSelectionController.SetPlayerTeam(playerConfig.playerIndex, PlayerConfigData.Team.TeamB, transform);
-                //gameObject.layer = 0;
             }
         }
     }
@@ -146,8 +170,6 @@ public class InputIcon : MonoBehaviour
             (other.CompareTag("TeamB") && playerConfig.team == PlayerConfigData.Team.TeamB))
         {
             playerConfig.team = PlayerConfigData.Team.Spectator;
-            //teamSelectionController.SetPlayerTeam(playerConfig.playerIndex, PlayerConfigData.Team.Spectator, transform);
-            //gameObject.layer = 10;
         }
     }
 

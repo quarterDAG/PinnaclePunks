@@ -18,7 +18,7 @@ public class DashSkill : MonoBehaviour
     private PlayerController playerController;
     private Weapon weapon;
 
-    private bool isDashing;
+    //private bool isDashing;
 
     private Rigidbody2D rb;
 
@@ -44,7 +44,7 @@ public class DashSkill : MonoBehaviour
 
     private void CheckForDoubleClickAndDash ()
     {
-        if (playerController.isDead || isDashing || Time.time < lastDashTime + DASH_COOLDOWN)
+        if (playerController.isDead || Time.time < lastDashTime + DASH_COOLDOWN)
             return;
 
         if (inputManager.IsDashPressed)
@@ -53,7 +53,7 @@ public class DashSkill : MonoBehaviour
             lastDashTime = Time.time; // Set the dash time after a successful dash
             inputManager.ResetDash(); // Reset the dash press state
         }
-        
+
         if (inputManager.currentControlScheme == "Keyboard")
         {
             HandleKeyboardDash();

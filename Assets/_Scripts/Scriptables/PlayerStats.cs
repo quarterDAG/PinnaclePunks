@@ -19,4 +19,5 @@ public class PlayerStats : ScriptableObject
     public void RecordKill () => kills++;
     public void RecordDeath () => deaths++;
     public void RecordDamage ( int amount ) => damage += amount;
+
 }

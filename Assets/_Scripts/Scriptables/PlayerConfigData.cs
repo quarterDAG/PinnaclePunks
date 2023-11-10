@@ -10,6 +10,7 @@ using UnityEngine.InputSystem;
 public struct PlayerConfig
 {
     public int playerIndex;
+    public string playerName;
     public Color playerColor;
     public Team team;
     public ControlScheme controlScheme;

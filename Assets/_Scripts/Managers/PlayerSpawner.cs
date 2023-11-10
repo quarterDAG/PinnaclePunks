@@ -68,6 +68,8 @@ public class PlayerSpawner : MonoBehaviour
         // Assign player's respawn point
         instantiatedPlayer.GetComponent<PlayerController>().AssignRespawn(spawnPoint);
 
+        instantiatedPlayer.GetComponent<PlayerController>().SetPlayerConfigAndStates(config);
+
         return instantiatedPlayer;
     }
 
@@ -156,21 +158,6 @@ public class PlayerSpawner : MonoBehaviour
         }
     }
 
-
-/*
-    private Vector2 GetPlayerStatusPosition ( PlayerConfig config )
-    {
-        List<Vector2> statusPositions = config.team == PlayerConfigData.Team.TeamA ? teamAStatusPositions : teamBStatusPositions;
-        if (config.playerIndex >= 0 && config.playerIndex < statusPositions.Count)
-        {
-            return statusPositions[config.playerIndex];
-        }
-        else
-        {
-            Debug.LogError("Player index out of range for status positions.");
-            return statusPositions[config.playerIndex];
-        }
-    }*/
 
     private Transform GetParentGO ( PlayerConfig config )
     {

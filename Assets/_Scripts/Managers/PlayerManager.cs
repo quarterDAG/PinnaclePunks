@@ -11,8 +11,10 @@ public class PlayerManager : MonoBehaviour
 
     public static PlayerManager Instance { get; private set; }
     [SerializeField] PlayerConfigData playerConfigData;
+
     private PlayerSpawner playerSpawner;
     private CameraManager cameraManager;
+
 
 
     [Header("Players Settings")]
@@ -91,6 +93,8 @@ public class PlayerManager : MonoBehaviour
         playerConfigs[playerIndex] = playerConfig;
     }
 
+
+
     #endregion
 
 
@@ -104,17 +108,21 @@ public class PlayerManager : MonoBehaviour
             if (config.team == Team.Spectator)
             {
                 playerConfigData.RemovePlayerConfig(config);
-                //playerCount++;
+                //playerCount--;
                 return;
             }
-
-            var instantiatedPlayer = playerSpawner.InstantiatePlayer(config, playerCount);
-            if (instantiatedPlayer != null)
+            else
             {
-                // Set up the player components that are specific to PlayerManager's responsibilities
-                SetupPlayer(config, instantiatedPlayer);
-                playerCount++;
+                var instantiatedPlayer = playerSpawner.InstantiatePlayer(config, playerCount);
+                if (instantiatedPlayer != null)
+                {
+                    // Set up the player components that are specific to PlayerManager's responsibilities
+                    SetupPlayer(config, instantiatedPlayer);
+                    playerCount++;
+                }
+
             }
+
 
         }
     }

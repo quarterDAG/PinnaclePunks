@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private InputManager inputManager;
     private LivesManager livesManager;
 
-    [SerializeField] private PlayerStats playerStats;
+    private PlayerConfig playerConfig;
 
     private void Awake ()
     {
@@ -65,7 +65,11 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private void Start ()
     {
         teamTag = gameObject.tag;
+    }
 
+    public void SetPlayerConfigAndStates ( PlayerConfig _playerConfig )
+    {
+        playerConfig = _playerConfig;
     }
 
 
@@ -159,7 +163,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     public void Die ()
     {
         isDead = true;
-        playerStats.RecordDeath();
+        PlayerStatsManager.Instance.allPlayerStats[playerConfig.playerIndex].RecordDeath();
 
         playerRope.DestroyCurrentRope();
         playerAnimator.DeathAnimation(true);
@@ -170,13 +174,14 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         livesManager.LoseLife();
         lives--; // Reduce life by 1
+
         if (lives > 0)
         {
             Respawn();
         }
         else
         {
-            //this.gameObject.SetActive(false);
+            PlayerStatsManager.Instance.DisplayStats();
         }
     }
 
