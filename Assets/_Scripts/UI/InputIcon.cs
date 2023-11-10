@@ -81,7 +81,7 @@ public class InputIcon : MonoBehaviour
 
     private void SetNameAndSendPlayerStats ( string _playerName, int _playerIndex )
     {
-        PlayerStats _playerStats = new PlayerStats();
+        PlayerStats _playerStats = ScriptableObject.CreateInstance<PlayerStats>();
         _playerStats.playerName = _playerName;
         PlayerStatsManager.Instance.UpdatePlayerStats(_playerStats, _playerIndex);
     }

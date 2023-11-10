@@ -105,6 +105,7 @@ MonoBehaviour:
     m_Bits: 17
   damageTag: 
   bulletDamage: 10
+  pushbackForce: 50000
 --- !u!61 &-1423828689342372402
 BoxCollider2D:
   m_ObjectHideFlags: 0

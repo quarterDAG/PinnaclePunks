@@ -12,6 +12,8 @@ public class MoveTrail : MonoBehaviour
     [SerializeField] private string damageTag;
 
     [SerializeField] private int bulletDamage = 10;
+    [SerializeField] private float pushbackForce = 50f;
+
 
     private int shotOwnerIndex;
 
@@ -30,7 +32,17 @@ public class MoveTrail : MonoBehaviour
         {
             collision.GetComponent<ICharacter>().TakeDamage(bulletDamage, shotOwnerIndex);
 
-           
+            Debug.Log(collision);
+
+            // Pushback effect
+            Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                Vector2 pushbackDirection = (collision.transform.position - transform.position).normalized;
+                rb.AddForce(pushbackDirection * pushbackForce);
+            }
+
+
             Destroy(gameObject);
         }
         // Check if the layer of the collided object is in the LayerMask
@@ -51,7 +63,7 @@ public class MoveTrail : MonoBehaviour
         damageTag = tag;
     }
 
-    public void SetPlayerOwnerIndex(int _playerIndex)
+    public void SetPlayerOwnerIndex ( int _playerIndex )
     {
         shotOwnerIndex = _playerIndex;
     }
