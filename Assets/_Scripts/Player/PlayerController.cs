@@ -23,8 +23,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     [System.Serializable]
     public class PlayerStates
     {
-        public int Health = 100;
-        public int MaxHealth = 100;
+        public int Health = 99;
+        public int MaxHealth = 99;
     }
 
     public PlayerStates stats = new PlayerStates();
@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private InputManager inputManager;
     private LivesManager livesManager;
 
-    private PlayerConfig playerConfig;
+    public PlayerConfig playerConfig { get; private set; }
 
     private void Awake ()
     {
@@ -87,6 +87,9 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private void Update ()
     {
         if (isDead) return;
+        /*
+                if (stats.Health <= 0)
+                    Die();*/
 
         if (!canMove) return;
 
@@ -135,7 +138,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
 
 
-    public async void TakeDamage ( int damage )
+    public async void TakeDamage ( int damage, int otherPlayerIndex )
     {
 
         if (stats.Health > 0)
@@ -150,20 +153,26 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
                 await Task.Delay(1000);
                 TimeManager.Instance.CancelSlowMotionRequest();
             }
+
+            PlayerStatsManager.Instance.AddDamageToPlayerState(damage, otherPlayerIndex);
+
         }
 
         else
         {
             if (!isDead)
-                Die();
+                Die(otherPlayerIndex);
         }
 
     }
 
-    public void Die ()
+    public void Die ( int killerIndex )
     {
+        gameObject.tag = "Dodge";
         isDead = true;
         PlayerStatsManager.Instance.allPlayerStats[playerConfig.playerIndex].RecordDeath();
+        if (killerIndex >= 0)
+            PlayerStatsManager.Instance.allPlayerStats[killerIndex].RecordKill();
 
         playerRope.DestroyCurrentRope();
         playerAnimator.DeathAnimation(true);
@@ -187,7 +196,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     async void Respawn ()
     {
-        gameObject.tag = "Dodge";
         await Task.Delay(2000);
 
         this.transform.position = respawnPoint.position;

@@ -30,6 +30,8 @@ public class Weapon : MonoBehaviour
 
     private SlowmotionController slowmotionController;
 
+    private int playerIndex;
+
 
     void Awake ()
     {
@@ -40,8 +42,8 @@ public class Weapon : MonoBehaviour
 
     private void Start ()
     {
+        playerIndex = playerController.playerConfig.playerIndex;
         damageThisTag = (gameObject.tag == "TeamA") ? "TeamB" : "TeamA";
-
     }
 
     void Update ()
@@ -107,6 +109,7 @@ public class Weapon : MonoBehaviour
         GameObject bullet = Instantiate(arrowPrefab, firePoint.position, firePoint.rotation);
         MoveTrail moveTrail = bullet.GetComponent<MoveTrail>();
         moveTrail.SetTagToDamage(damageThisTag);
+        moveTrail.SetPlayerOwnerIndex(playerIndex);
         //moveTrail.SetBulletGradient(bulletGradient);
         moveTrail.SetDamage(damage);
 

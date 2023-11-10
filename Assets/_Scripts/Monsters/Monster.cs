@@ -41,7 +41,7 @@ public class Monster : MonoBehaviour, ICharacter
     [System.Serializable]
     public class EnemyStates
     {
-        public int Health = 100;
+        public int Health = 99;
     }
 
     public EnemyStates stats = new EnemyStates();
@@ -179,19 +179,21 @@ public class Monster : MonoBehaviour, ICharacter
         return true;
     }
 
-    public void TakeDamage ( int damage )
+    public void TakeDamage ( int damage , int shooterIndex)
     {
         stats.Health -= damage;
 
         hpBar.UpdateValue(-damage);
+        PlayerStatsManager.Instance.AddDamageToPlayerState(damage, shooterIndex);
+
 
         if (stats.Health <= 0)
         {
-            Die();
+            Die(shooterIndex);
         }
     }
 
-    public void Die ()
+    public void Die (int killerIndex)
     {
         if (!IsDead)
         {

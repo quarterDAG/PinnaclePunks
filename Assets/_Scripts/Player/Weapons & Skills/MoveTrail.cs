@@ -13,6 +13,8 @@ public class MoveTrail : MonoBehaviour
 
     [SerializeField] private int bulletDamage = 10;
 
+    private int shotOwnerIndex;
+
 
     void Update ()
     {
@@ -26,7 +28,9 @@ public class MoveTrail : MonoBehaviour
 
         if (collision.CompareTag(damageTag) && collision.GetComponent<ICharacter>() != null)
         {
-            collision.GetComponent<ICharacter>().TakeDamage(bulletDamage);
+            collision.GetComponent<ICharacter>().TakeDamage(bulletDamage, shotOwnerIndex);
+
+           
             Destroy(gameObject);
         }
         // Check if the layer of the collided object is in the LayerMask
@@ -45,6 +49,11 @@ public class MoveTrail : MonoBehaviour
     public void SetTagToDamage ( string tag )
     {
         damageTag = tag;
+    }
+
+    public void SetPlayerOwnerIndex(int _playerIndex)
+    {
+        shotOwnerIndex = _playerIndex;
     }
 
     public void SetBulletGradient ( Gradient newGradient )

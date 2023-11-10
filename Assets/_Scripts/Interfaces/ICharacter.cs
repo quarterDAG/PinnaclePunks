@@ -1,7 +1,7 @@
 
 public interface ICharacter
 {
-    void TakeDamage ( int damageAmount );
-    void Die ();
+    void TakeDamage ( int damageAmount, int shooterIndex );
+    void Die (int killerIndex);
 
 }

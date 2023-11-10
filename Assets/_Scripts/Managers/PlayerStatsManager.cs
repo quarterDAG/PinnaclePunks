@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 
 public class PlayerStatsManager : MonoBehaviour
@@ -58,8 +59,6 @@ public class PlayerStatsManager : MonoBehaviour
         canvas.enabled = true;
     }
 
-
-
     // Call this at the end of the match
     public void DisplayStats ()
     {
@@ -97,5 +96,12 @@ public class PlayerStatsManager : MonoBehaviour
                 return Color.white;
 
         }
+    }
+
+
+    public void AddDamageToPlayerState ( int _damage, int _playerIndex )
+    {
+        if (_playerIndex >= 0) // (-1 = Shot by a monster)
+            allPlayerStats[_playerIndex].damage += _damage;
     }
 }

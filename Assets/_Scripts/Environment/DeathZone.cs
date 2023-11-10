@@ -11,7 +11,7 @@ public class DeathZone : MonoBehaviour
             ICharacter character = collision.gameObject.GetComponent<ICharacter>();
             if (character != null)
             {
-                character.Die();
+                character.Die(-1);
             }
         }
     }
