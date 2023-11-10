@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         SetTagRecursively(transform, teamTag);
     }
 
-       void SetTagRecursively ( Transform parent, string tag )
+    void SetTagRecursively ( Transform parent, string tag )
     {
         parent.gameObject.tag = tag;
         foreach (Transform child in parent)
@@ -96,9 +96,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private void Update ()
     {
         if (isDead) return;
-        /*
-                if (stats.Health <= 0)
-                    Die();*/
 
         if (!canMove) return;
 
@@ -144,6 +141,14 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         }
     }
 
+    private void LateUpdate ()
+    {
+        if (inputManager.IsJumpPressed)
+        {
+            PlayerStatsManager.Instance.VoteForRematch(playerConfig.playerIndex);
+        }
+    }
+
 
 
 
@@ -180,7 +185,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         gameObject.tag = "Dodge";
         isDead = true;
         PlayerStatsManager.Instance.allPlayerStats[playerConfig.playerIndex].RecordDeath();
-        if (killerIndex >= 0) 
+        if (killerIndex >= 0)
             PlayerStatsManager.Instance.allPlayerStats[killerIndex].RecordKill();
 
         playerRope.DestroyCurrentRope();
@@ -199,7 +204,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         }
         else
         {
-            PlayerStatsManager.Instance.DisplayStats();
+            PlayerStatsManager.Instance.EndMatch();
         }
     }
 

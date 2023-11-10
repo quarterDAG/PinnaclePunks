@@ -118,6 +118,9 @@ public class PlayerManager : MonoBehaviour
                 {
                     // Set up the player components that are specific to PlayerManager's responsibilities
                     SetupPlayer(config, instantiatedPlayer);
+
+                    // Create a reference to the config in the player stats (mainly to access the team when calculating the score)
+                    PlayerStatsManager.Instance.allPlayerStats[config.playerIndex].SetPlayerConfig(config);
                     playerCount++;
                 }
 

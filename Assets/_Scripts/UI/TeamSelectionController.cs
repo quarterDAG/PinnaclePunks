@@ -99,7 +99,7 @@ public class TeamSelectionController : MonoBehaviour
 
     public void SetPlayerReady ( int playerIndex )
     {
-        Debug.Log($"Player {playerIndex} is ready!");
+        //Debug.Log($"Player {playerIndex} is ready!");
 
         PlayerManager.Instance.SetPlayerState(playerIndex, PlayerState.Ready);
 
@@ -111,7 +111,7 @@ public class TeamSelectionController : MonoBehaviour
 
     public void SetPlayerChoosingTeam ( int playerIndex )
     {
-        Debug.Log($"Player {playerIndex} is choosing a team.");
+        //Debug.Log($"Player {playerIndex} is choosing a team.");
 
         PlayerManager.Instance.SetPlayerState(playerIndex, PlayerState.ChoosingTeam);
 

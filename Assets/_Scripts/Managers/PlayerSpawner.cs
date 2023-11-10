@@ -23,6 +23,9 @@ public class PlayerSpawner : MonoBehaviour
     [SerializeField] private List<Vector2> teamAStatusPositions;
     [SerializeField] private List<Vector2> teamBStatusPositions;
 
+    private int teamAPlayerCount = 0;
+    private int teamBPlayerCount = 0;
+
 
 
     private void Start ()
@@ -34,10 +37,10 @@ public class PlayerSpawner : MonoBehaviour
 
     public PlayerInput InstantiatePlayer ( PlayerConfig config, int playerCount )
     {
-     
+
         Transform spawnPoint = GetSpawnPoint(config);
 
-        if(config.team == PlayerConfigData.Team.TeamA)
+        if (config.team == PlayerConfigData.Team.TeamA)
         {
             teamASpawnIndex++;
         }
@@ -64,7 +67,7 @@ public class PlayerSpawner : MonoBehaviour
         // Set the instantiated player's position and rotation
         instantiatedPlayer.transform.position = spawnPoint.position;
         instantiatedPlayer.transform.SetParent(playersParent.transform, false);
-        
+
         // Assign player's respawn point
         instantiatedPlayer.GetComponent<PlayerController>().AssignRespawn(spawnPoint);
 
@@ -102,17 +105,12 @@ public class PlayerSpawner : MonoBehaviour
 
     public void InstantiatePlayerStatusComponent ( PlayerConfig config, PlayerInput instantiatedPlayer )
     {
-        // Calculate the status position index based on the playerIndex and team
-        int statusPositionIndex = config.playerIndex - (config.team == PlayerConfigData.Team.TeamB ? teamBSpawnIndex : teamASpawnIndex);
 
-        // Ensure index is within the range
-        statusPositionIndex = Mathf.Clamp(statusPositionIndex, 0, config.team == PlayerConfigData.Team.TeamA ? teamAStatusPositions.Count - 1 : teamBStatusPositions.Count - 1);
+        Vector2 statusPosition = GetPlayerStatusPosition(config);
 
-        Vector2 statusPosition = GetPlayerStatusPosition(config, statusPositionIndex); 
-        
         Transform parentGO = GetParentGO(config);
 
-        Debug.Log($"Instantiating status for player {config.playerIndex} on {config.team}");
+        //Debug.Log($"Instantiating status for player {config.playerIndex} on {config.team}");
 
 
         // Instantiate player status and parent it to the position transform
@@ -144,19 +142,33 @@ public class PlayerSpawner : MonoBehaviour
         instantiatedPlayer.transform.Find("Indicator").GetComponent<SpriteRenderer>().color = config.playerColor;
     }
 
-    private Vector2 GetPlayerStatusPosition ( PlayerConfig config, int statusPositionIndex )
+    private Vector2 GetPlayerStatusPosition ( PlayerConfig config )
     {
-        List<Vector2> statusPositions = config.team == PlayerConfigData.Team.TeamA ? teamAStatusPositions : teamBStatusPositions;
-        if (statusPositionIndex >= 0 && statusPositionIndex < statusPositions.Count)
+        int index;
+        List<Vector2> statusPositions;
+
+        if (config.team == PlayerConfigData.Team.TeamA)
         {
-            return statusPositions[statusPositionIndex];
+            statusPositions = teamAStatusPositions;
+            index = teamAPlayerCount % statusPositions.Count;
+            teamAPlayerCount++;
         }
-        else
+        else // Team B
         {
-            Debug.LogError($"Player status position index {statusPositionIndex} out of range for team {config.team}.");
-            return Vector2.zero; // Default to zero if out of range
+            statusPositions = teamBStatusPositions;
+            index = teamBPlayerCount % statusPositions.Count;
+            teamBPlayerCount++;
         }
+
+        if (statusPositions.Count == 0)
+        {
+            Debug.LogError("No status positions defined for team: " + config.team);
+            return Vector2.zero;
+        }
+
+        return statusPositions[index];
     }
+
 
 
     private Transform GetParentGO ( PlayerConfig config )

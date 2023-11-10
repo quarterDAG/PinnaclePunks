@@ -3,6 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New PlayerStats", menuName = "Player/Stats")]
 public class PlayerStats : ScriptableObject
 {
+    public PlayerConfig playerConfig;
     public string playerName;
     public int kills;
     public int deaths;
@@ -19,5 +20,6 @@ public class PlayerStats : ScriptableObject
     public void RecordKill () => kills++;
     public void RecordDeath () => deaths++;
     public void RecordDamage ( int amount ) => damage += amount;
+    public void SetPlayerConfig ( PlayerConfig _playerConfig ) => playerConfig = _playerConfig;
 
 }

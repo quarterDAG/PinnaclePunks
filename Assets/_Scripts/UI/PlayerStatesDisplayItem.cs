@@ -9,6 +9,8 @@ public class PlayerStatsDisplayItem : MonoBehaviour
     public TextMeshProUGUI deathsText;
     public TextMeshProUGUI damageText;
 
+    public GameObject readyIcon;
+
     public void Setup ( PlayerStats stats, Color color )
     {
         playerNameText.text = stats.playerName;
@@ -21,6 +23,11 @@ public class PlayerStatsDisplayItem : MonoBehaviour
         killsText.color = color;
         deathsText.color = color;
         damageText.color = color;
+    }
+
+    public void SetReady ( bool isReady )
+    {
+        readyIcon.GetComponent<Image>().enabled = isReady;
     }
 
 }

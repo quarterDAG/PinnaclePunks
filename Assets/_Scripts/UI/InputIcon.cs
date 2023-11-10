@@ -53,7 +53,7 @@ public class InputIcon : MonoBehaviour
         Color _playerColor = GetUniquePlayerColor(_playerIndex);
         string _playerName = GetPlayerNameByColor(_playerIndex);
 
-        Debug.Log("Player Index: " + _playerIndex + "Player Name: " + _playerName);
+        //Debug.Log("Player Index: " + _playerIndex + "Player Name: " + _playerName);
 
         // Create the new PlayerConfig with the unique color and control scheme.
         PlayerConfig newPlayerConfig = new PlayerConfig

@@ -7,17 +7,17 @@ public class PlayerStatsManager : MonoBehaviour
 {
     public static PlayerStatsManager Instance { get; private set; }
 
-    private const int PointsPerKill = 10;
-    private const int PointsPerDeath = -5;
-    private const int PointsPerDamageUnit = 1;
+    public GameObject playerStatsPrefab;
+    public Transform statsPanel;
+    public TMPro.TextMeshProUGUI winningTeamAnnouncementText;
 
-    public GameObject playerStatsPrefab; // Your prefab
-    public Transform statsPanel; // Parent panel in the UI
-
-    // A list of PlayerStats ScriptableObjects
     public List<PlayerStats> allPlayerStats = new List<PlayerStats>();
+    public List<PlayerStatsDisplayItem> playerStatsDisplayItems = new List<PlayerStatsDisplayItem>();
 
     private Canvas canvas;
+
+    private HashSet<int> playersVotedForRematch = new HashSet<int>();
+
 
     private void Awake ()
     {
@@ -62,28 +62,6 @@ public class PlayerStatsManager : MonoBehaviour
         canvas.enabled = true;
     }
 
-    // Call this at the end of the match
-    public void DisplayStats ()
-    {
-        // Clear previous stats display
-        foreach (Transform child in statsPanel)
-        {
-            Destroy(child.gameObject);
-        }
-
-        // Create a new stats display for each player
-        foreach (PlayerStats stats in allPlayerStats)
-        {
-            GameObject statsItem = Instantiate(playerStatsPrefab, statsPanel);
-            PlayerStatsDisplayItem displayItem = statsItem.GetComponent<PlayerStatsDisplayItem>();
-
-            displayItem.Setup(stats, GetStatColor(stats));
-        }
-
-        CalculateScores();
-        Show();
-    }
-
     private Color GetStatColor ( PlayerStats playerStats )
     {
         switch (playerStats.playerName)
@@ -109,22 +87,21 @@ public class PlayerStatsManager : MonoBehaviour
             allPlayerStats[_playerIndex].damage += _damage;
     }
 
-    public void CalculateScores ()
-    {
-        foreach (PlayerStats playerStats in allPlayerStats)
-        {
-            int score = CalculatePlayerScore(playerStats);
-            Debug.Log("Player " + playerStats.playerName + " Score: " + score);
-            Debug.Log("Player: " + DetermineWinner().playerName + " is the winnder");
-        }
-    }
 
     private int CalculatePlayerScore ( PlayerStats stats )
     {
-        return (stats.kills * PointsPerKill) +
-               (stats.deaths * PointsPerDeath) +
-               (stats.damage * PointsPerDamageUnit);
+        // Check for zero deaths to avoid division by zero
+        if (stats.deaths == 0)
+        {
+            return stats.kills; // If no deaths, return kills as score
+        }
+        else
+        {
+            // Calculate K/D ratio and multiply by a factor, e.g., 100, for better readability
+            return (int)((float)stats.kills / stats.deaths * 100);
+        }
     }
+
 
     public PlayerStats DetermineWinner ()
     {
@@ -143,4 +120,140 @@ public class PlayerStatsManager : MonoBehaviour
 
         return winner;
     }
+
+    public void DisplayStats ()
+    {
+        SortPlayersByScore(); // Sort the players by score before displaying
+
+        // Clear previous stats display
+        foreach (Transform child in statsPanel)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // Create a new stats display for each player
+        foreach (PlayerStats stats in allPlayerStats)
+        {
+            GameObject statsItem = Instantiate(playerStatsPrefab, statsPanel);
+            PlayerStatsDisplayItem displayItem = statsItem.GetComponent<PlayerStatsDisplayItem>();
+            playerStatsDisplayItems.Add(displayItem);
+
+            displayItem.Setup(stats, GetStatColor(stats));
+        }
+
+        Show();
+
+    }
+
+
+    private void SortPlayersByScore ()
+    {
+        allPlayerStats.Sort(( player1, player2 ) =>
+            CalculatePlayerScore(player2).CompareTo(CalculatePlayerScore(player1)));
+    }
+
+    public PlayerConfigData.Team DetermineWinningTeam ()
+    {
+        int teamAScore = 0;
+        int teamBScore = 0;
+
+        foreach (PlayerStats playerStats in allPlayerStats)
+        {
+            int playerScore = CalculatePlayerScore(playerStats);
+
+            if (playerStats.playerConfig.team == PlayerConfigData.Team.TeamA)
+            {
+                teamAScore += playerScore;
+            }
+            else if (playerStats.playerConfig.team == PlayerConfigData.Team.TeamB)
+            {
+                teamBScore += playerScore;
+            }
+        }
+
+        // Determine the winning team based on the total scores
+        if (teamAScore > teamBScore)
+        {
+            return PlayerConfigData.Team.TeamA;
+        }
+        else if (teamBScore > teamAScore)
+        {
+            return PlayerConfigData.Team.TeamB;
+        }
+        else
+        {
+            return PlayerConfigData.Team.Spectator; // Indicate a tie or no winner
+        }
+    }
+
+
+    public void EndMatch ()
+    {
+        DisplayStats();
+        PlayerConfigData.Team winningTeam = DetermineWinningTeam();
+
+        string teamName = FormatTeamName(winningTeam);
+        string announcementMessage = teamName == null ? "The match is a tie!" : teamName + " Wins!";
+
+        if (winningTeamAnnouncementText != null)
+        {
+            winningTeamAnnouncementText.text = announcementMessage;
+        }
+        else
+        {
+            Debug.LogError("WinningTeamAnnouncementText is not set in the inspector");
+        }
+    }
+
+    private string FormatTeamName ( PlayerConfigData.Team team )
+    {
+        switch (team)
+        {
+            case PlayerConfigData.Team.TeamA:
+                return "Team A";
+            case PlayerConfigData.Team.TeamB:
+                return "Team B";
+            default:
+                return null; // For tie or Spectator
+        }
+    }
+
+
+    public void VoteForRematch ( int playerIndex )
+    {
+        if(canvas.enabled == false) return;
+
+        if (!playersVotedForRematch.Contains(playerIndex))
+        {
+            playersVotedForRematch.Add(playerIndex);
+            UpdateReadyIcon(playerIndex, true);
+
+            if (playersVotedForRematch.Count == allPlayerStats.Count)
+            {
+                // All players voted for a rematch
+                StartCoroutine(RestartMatch());
+            }
+        }
+    }
+
+    private void UpdateReadyIcon ( int playerIndex, bool isReady )
+    {
+        // Assume you have a way to get the corresponding PlayerStatsDisplayItem for each player index
+        PlayerStatsDisplayItem displayItem = playerStatsDisplayItems[playerIndex];
+        if (displayItem != null)
+        {
+            displayItem.SetReady(isReady);
+        }
+    }
+
+    private IEnumerator RestartMatch ()
+    {
+        // Add logic to restart the match
+        yield return new WaitForSeconds(1); // Waiting time before restarting
+        Debug.Log("REMATCH!!!!!!!!!!");
+        // Reset game state and start a new match
+    }
+
+
+
 }
