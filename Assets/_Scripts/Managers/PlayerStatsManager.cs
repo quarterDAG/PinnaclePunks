@@ -7,6 +7,9 @@ public class PlayerStatsManager : MonoBehaviour
 {
     public static PlayerStatsManager Instance { get; private set; }
 
+    private const int PointsPerKill = 10;
+    private const int PointsPerDeath = -5;
+    private const int PointsPerDamageUnit = 1;
 
     public GameObject playerStatsPrefab; // Your prefab
     public Transform statsPanel; // Parent panel in the UI
@@ -77,6 +80,7 @@ public class PlayerStatsManager : MonoBehaviour
             displayItem.Setup(stats, GetStatColor(stats));
         }
 
+        CalculateScores();
         Show();
     }
 
@@ -103,5 +107,40 @@ public class PlayerStatsManager : MonoBehaviour
     {
         if (_playerIndex >= 0) // (-1 = Shot by a monster)
             allPlayerStats[_playerIndex].damage += _damage;
+    }
+
+    public void CalculateScores ()
+    {
+        foreach (PlayerStats playerStats in allPlayerStats)
+        {
+            int score = CalculatePlayerScore(playerStats);
+            Debug.Log("Player " + playerStats.playerName + " Score: " + score);
+            Debug.Log("Player: " + DetermineWinner().playerName + " is the winnder");
+        }
+    }
+
+    private int CalculatePlayerScore ( PlayerStats stats )
+    {
+        return (stats.kills * PointsPerKill) +
+               (stats.deaths * PointsPerDeath) +
+               (stats.damage * PointsPerDamageUnit);
+    }
+
+    public PlayerStats DetermineWinner ()
+    {
+        PlayerStats winner = null;
+        int highestScore = int.MinValue;
+
+        foreach (PlayerStats playerStats in allPlayerStats)
+        {
+            int score = CalculatePlayerScore(playerStats);
+            if (score > highestScore)
+            {
+                highestScore = score;
+                winner = playerStats;
+            }
+        }
+
+        return winner;
     }
 }

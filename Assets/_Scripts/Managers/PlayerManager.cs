@@ -132,7 +132,7 @@ public class PlayerManager : MonoBehaviour
         // Set up other player components
         instantiatedPlayer.GetComponent<InputManager>().UpdateCurrentControlScheme(config.controlScheme.ToString());
         cameraManager.AddPlayerToCinemachineTargetGroup(instantiatedPlayer.transform);
-        SetupPlayerTag(config, instantiatedPlayer);
+        //SetupPlayerTag(config, instantiatedPlayer);
         instantiatedPlayer.GetComponentInChildren<PlayerMonsterSpawner>().ConfigMonsterSpawner();
 
         cameraManager.AddPlayerCameraToPlayerCameras(instantiatedPlayer);
@@ -142,21 +142,7 @@ public class PlayerManager : MonoBehaviour
     }
 
 
-    private void SetupPlayerTag ( PlayerConfig config, PlayerInput instantiatedPlayer )
-    {
-        string tag = config.team.ToString();
-        instantiatedPlayer.gameObject.tag = tag;
-        SetTagRecursively(instantiatedPlayer.gameObject.transform, tag);
-    }
-
-    void SetTagRecursively ( Transform parent, string tag )
-    {
-        parent.gameObject.tag = tag;
-        foreach (Transform child in parent)
-        {
-            SetTagRecursively(child, tag); // Recursive call for all children
-        }
-    }
+ 
 
 
 }
