@@ -9,7 +9,16 @@ public class TimeManager : MonoBehaviour
 
     public bool isSlowMotionActive;
 
+    [SerializeField] private Bar slowmotionBarA;
+    [SerializeField] private Bar slowmotionBarB;
+
+
     private void Awake ()
+    {
+        Singleton();
+    }
+
+    private void Singleton ()
     {
         if (Instance == null)
         {
@@ -27,7 +36,8 @@ public class TimeManager : MonoBehaviour
         if (slowMotionRequestCount > 0)
         {
             isSlowMotionActive = true;
-        } else
+        }
+        else
         {
             isSlowMotionActive = false;
         }
@@ -67,5 +77,14 @@ public class TimeManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         Time.fixedDeltaTime = 0.02f; // This is the default value for fixedDeltaTime in Unity.
+    }
+
+    public void AssignBarToSMController ( PlayerConfig config, SlowmotionController slowmotionController )
+    {
+        if (config.team == PlayerConfigData.Team.TeamA)
+            slowmotionController.SetSMBar(slowmotionBarA);
+        else // Team B
+            slowmotionController.SetSMBar(slowmotionBarB);
+
     }
 }

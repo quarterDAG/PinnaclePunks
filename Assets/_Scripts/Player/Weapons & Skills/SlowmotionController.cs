@@ -19,16 +19,15 @@ public class SlowmotionController : MonoBehaviour
         inputManager = GetComponent<InputManager>();
     }
 
-    private void Start ()
+ /*   private void Start ()
     {
         FindAndAssignSMBar();
     }
-
+*/
     void Update ()
     {
         if (inputManager.IsSlowmotionPressed)
         {
-            Debug.Log(gameObject.name + " is pressing the slow motion button. Triggering slow motion.");
             TimeManager.Instance.RequestSlowMotion();  // Force trigger slow motion for testing
         }
         else
@@ -39,7 +38,7 @@ public class SlowmotionController : MonoBehaviour
         HandleSlowMotion();
     }
 
-
+/*
     private void FindAndAssignSMBar ()
     {
         Bar[] allBars = FindObjectsOfType<Bar>();
@@ -57,6 +56,11 @@ public class SlowmotionController : MonoBehaviour
             }
 
         }
+    }*/
+
+    public void SetSMBar(Bar _smBar)
+    {
+       slowmotionBar = _smBar;
     }
 
 

@@ -17,15 +17,12 @@ public class Monster : MonoBehaviour, ICharacter
     [SerializeField] private Gradient bulletGradient;
     [SerializeField] private LayerMask obstacleLayers;
 
-    //private string damageThisTag = "Player";
-
     [SerializeField] private int damage = 1;
     [SerializeField] float attackRange = 5f; // Range within which the enemy will start shooting
     [SerializeField] float fireRate = 1f; // How often the enemy shoots
     [SerializeField] Transform firePoint; // Point from where the bullet will be shot
 
     private List<Transform> players = new List<Transform>(); // List of all players
-    private Transform targetPlayer; // The player currently being targeted
     private float timeToFire = 0;
 
     private SkeletonMecanim skeletonMecanim;
@@ -36,6 +33,10 @@ public class Monster : MonoBehaviour, ICharacter
     public event Action OnDeath;
 
     [SerializeField] private string tagToAttack;
+
+    private Transform closestPlayer;
+    private float checkPlayerInterval = 1.0f; // Check every second
+    private float lastCheckTime = 0;
 
 
     [System.Serializable]
@@ -55,8 +56,26 @@ public class Monster : MonoBehaviour, ICharacter
     private void Update ()
     {
         if (IsDead) return;
-        SearchPlayersFromEnemyTeam();
-        ShootClosesestPlayer();
+
+        if (Time.time >= lastCheckTime + checkPlayerInterval)
+        {
+            lastCheckTime = Time.time;
+            SearchPlayersFromEnemyTeam();
+            closestPlayer = GetClosestPlayer();
+        }
+
+        if (closestPlayer != null)
+        {
+            HandleFlip();
+            HandleRotation();
+
+            float distanceToPlayer = Vector3.Distance(transform.position, closestPlayer.position);
+            if (distanceToPlayer <= attackRange && Time.time >= timeToFire)
+            {
+                timeToFire = Time.time + 1 / fireRate;
+                Shoot();
+            }
+        }
     }
 
     private void SearchPlayersFromEnemyTeam ()
@@ -75,29 +94,6 @@ public class Monster : MonoBehaviour, ICharacter
             }
         }
     }
-
-    private void ShootClosesestPlayer ()
-    {
-        targetPlayer = GetClosestPlayer();
-
-        if (targetPlayer != null)
-        {
-            HandleFlip();
-            HandleRotation();
-
-            float distanceToPlayer = Vector3.Distance(transform.position, targetPlayer.position);
-            if (distanceToPlayer <= attackRange)
-            {
-                if (Time.time >= timeToFire)
-                {
-                    timeToFire = Time.time + 1 / fireRate;
-                    Shoot();
-                }
-            }
-        }
-    }
-
-
 
     Transform GetClosestPlayer ()
     {
@@ -142,14 +138,14 @@ public class Monster : MonoBehaviour, ICharacter
 
     private void HandleFlip ()
     {
-        if (GetClosestPlayer().position.x > transform.position.x && transform.localScale.x < 0)
+        if (closestPlayer.position.x > transform.position.x && transform.localScale.x < 0)
         {
             Vector3 newScale = transform.localScale;
             newScale.x *= -1;
             transform.localScale = newScale;
             isFlipped = false;
         }
-        else if (GetClosestPlayer().position.x < transform.position.x && transform.localScale.x > 0)
+        else if (closestPlayer.position.x < transform.position.x && transform.localScale.x > 0)
         {
             Vector3 newScale = transform.localScale;
             newScale.x *= -1;
@@ -162,7 +158,7 @@ public class Monster : MonoBehaviour, ICharacter
     private void HandleRotation ()
     {
 
-        Vector2 playerPosition = targetPlayer.position;
+        Vector2 playerPosition = closestPlayer.position;
         Vector2 weaponPosition = new Vector2(transform.position.x, transform.position.y);
         Vector2 difference = playerPosition - weaponPosition;
 

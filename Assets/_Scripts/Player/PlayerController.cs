@@ -68,6 +68,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     {
         playerConfig = _playerConfig;
         teamTag = playerConfig.team.ToString();
+        Debug.Log(teamTag);
 
         SetTagRecursively(transform, teamTag);
     }

@@ -5356,7 +5356,7 @@ GameObject:
   - component: {fileID: 356896745}
   - component: {fileID: 356896744}
   m_Layer: 5
-  m_Name: SM Bar - Team A
+  m_Name: SM Bar - Team B
   m_TagString: TeamA
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38134,6 +38134,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba50e7db1adc9a41b254b3f5e9675a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1169798072
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1169798074}
+  - component: {fileID: 1169798073}
+  m_Layer: 0
+  m_Name: Monsters Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1169798073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1169798072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93f48541a39a62d4a8573b93a6cbb009, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterList: []
+--- !u!4 &1169798074
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1169798072}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1206467068
 GameObject:
   m_ObjectHideFlags: 0
@@ -67810,6 +67855,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slowdownFactor: 0.05
   isSlowMotionActive: 0
+  slowmotionBarA: {fileID: 67067887}
+  slowmotionBarB: {fileID: 356896744}
 --- !u!4 &2049960160
 Transform:
   m_ObjectHideFlags: 0
@@ -68611,6 +68658,7 @@ SceneRoots:
   - {fileID: 2068035492692552113}
   - {fileID: 856197753}
   - {fileID: 936389117}
+  - {fileID: 1169798074}
   - {fileID: 1310122505}
   - {fileID: 2048012002}
   - {fileID: 551256759}

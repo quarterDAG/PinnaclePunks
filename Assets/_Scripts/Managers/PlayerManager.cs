@@ -70,6 +70,9 @@ public class PlayerManager : MonoBehaviour
 
     private void SetupPlayer ( PlayerConfig config, PlayerInput instantiatedPlayer )
     {
+        instantiatedPlayer.GetComponent<PlayerController>().SetPlayerConfig(config);
+        instantiatedPlayer.gameObject.tag = config.team.ToString();
+        
         instantiatedPlayer.GetComponent<InputManager>().UpdateCurrentControlScheme(config.controlScheme.ToString());
         cameraManager.AddPlayerToCinemachineTargetGroup(instantiatedPlayer.transform);
         instantiatedPlayer.GetComponentInChildren<PlayerMonsterSpawner>().ConfigMonsterSpawner();
@@ -78,6 +81,9 @@ public class PlayerManager : MonoBehaviour
 
         // Instantiate player status component
         playerSpawner.InstantiatePlayerStatusComponent(config, instantiatedPlayer);
+
+        SlowmotionController slowmotionController = instantiatedPlayer.GetComponentInChildren<SlowmotionController>();
+        TimeManager.Instance.AssignBarToSMController(config, slowmotionController);
     }
 
     #region Getters & Setters

@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
         ResetInventories();
         ResetPlayerSpawner();
         ResetCameraManager();
+        ResetMonsterList();
         InitializePlayers();
 
         ClearManagerAssignments();
@@ -99,6 +100,11 @@ public class GameManager : MonoBehaviour
     private void InitializePlayers ()
     {
         PlayerManager.Instance.InitializePlayers();
+    }
+
+    private void ResetMonsterList ()
+    {
+        MonstersManager.Instance.ResetMonsterList();
     }
 
 

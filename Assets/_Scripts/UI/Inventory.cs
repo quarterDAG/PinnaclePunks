@@ -197,7 +197,7 @@ public class Inventory : MonoBehaviour
         {
             MonsterInventoryItem item = monsterInventory[i];
 
-            item.count = 1;
+            item.count = 3;
 
             // Update the UI elements for the item
             item.countText.text = item.count.ToString();
@@ -211,13 +211,6 @@ public class Inventory : MonoBehaviour
             monsterInventory[selectedIndex].button.image.color = defaultColor;
         }
         selectedIndex = 0;
-
-        /*      // Optionally, update the selected monster in the spawner, if necessary
-              if (inventoryOwners.Length > 0)
-              {
-                  PlayerMonsterSpawner owner = inventoryOwners[0]; // Example: Resetting for the first owner
-                  owner.SetSelectedMonster(monsterInventory[selectedIndex].monsterPrefab);
-              }*/
     }
 
 }

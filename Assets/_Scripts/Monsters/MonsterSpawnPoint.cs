@@ -12,8 +12,9 @@ public class MonsterSpawnPoint : MonoBehaviour
             currentEnemyInstance = Instantiate(enemyPrefab, transform.position, transform.rotation) as Monster;
             currentEnemyInstance.OnDeath += HandleEnemyDeath;
             currentEnemyInstance.SetTagToAttack(TagToAttack);
-            currentEnemyInstance.gameObject.tag = playerMonsterSpawner.gameObject.tag; 
+            currentEnemyInstance.gameObject.tag = playerMonsterSpawner.gameObject.tag;
             playerMonsterSpawner.UpdateInventory();
+            MonstersManager.Instance.AddMonster(currentEnemyInstance);
         }
         else
         {

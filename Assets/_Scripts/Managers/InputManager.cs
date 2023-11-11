@@ -25,6 +25,11 @@ public class InputManager : MonoBehaviour
     public bool IsSpawnMonsterPressed { get; private set; }
 
 
+    private void Start ()
+    {
+        InputSystem.settings.maxEventBytesPerUpdate = 0;
+    }
+
     private void Update ()
     {
         //DisableDuplicateGamepads();
@@ -43,17 +48,17 @@ public class InputManager : MonoBehaviour
         {
             if (gamepad is UnityEngine.InputSystem.DualShock.DualShockGamepad) // Check if it's a DualShock gamepad.
             {
-              
+
                 InputSystem.DisableDevice(gamepad);
 
-               /* foreach (var item in Gamepad.all)
-                {
-                    // Check if another gamepad is detected at almost the same time.
-                    if ((item is UnityEngine.InputSystem.XInput.XInputController) && (Math.Abs(item.lastUpdateTime - gamepad.lastUpdateTime) < 0.1))
-                    {
-                        //Debug.Log($"DualShock gamepad detected and a copy of XInput was active at almost the same time. Disabling XInput device. `{gamepad}`; `{item}`");
-                    }
-                }*/
+                /* foreach (var item in Gamepad.all)
+                 {
+                     // Check if another gamepad is detected at almost the same time.
+                     if ((item is UnityEngine.InputSystem.XInput.XInputController) && (Math.Abs(item.lastUpdateTime - gamepad.lastUpdateTime) < 0.1))
+                     {
+                         //Debug.Log($"DualShock gamepad detected and a copy of XInput was active at almost the same time. Disabling XInput device. `{gamepad}`; `{item}`");
+                     }
+                 }*/
             }
         }
     }

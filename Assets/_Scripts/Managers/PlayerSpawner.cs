@@ -34,7 +34,6 @@ public class PlayerSpawner : MonoBehaviour
 
     public PlayerInput InstantiatePlayer ( PlayerConfig config, int playerCount )
     {
-
         Transform spawnPoint = GetSpawnPoint(config);
 
         if (config.team == PlayerConfigData.Team.TeamA)
@@ -67,8 +66,6 @@ public class PlayerSpawner : MonoBehaviour
 
         // Assign player's respawn point
         instantiatedPlayer.GetComponent<PlayerController>().AssignRespawn(spawnPoint);
-
-        instantiatedPlayer.GetComponent<PlayerController>().SetPlayerConfig(config);
 
         return instantiatedPlayer;
     }
@@ -103,8 +100,6 @@ public class PlayerSpawner : MonoBehaviour
         Vector2 statusPosition = GetPlayerStatusPosition(config);
 
         Transform parentGO = GetParentGO(config);
-
-        //Debug.Log($"Instantiating status for player {config.playerIndex} on {config.team}");
 
         // Instantiate player status and parent it to the position transform
         GameObject playerStatusGO = Instantiate(playerStatusPrefab, parentGO, false);
