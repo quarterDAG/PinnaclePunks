@@ -30,37 +30,11 @@ public class InputManager : MonoBehaviour
         InputSystem.settings.maxEventBytesPerUpdate = 0;
     }
 
-    private void Update ()
-    {
-        //DisableDuplicateGamepads();
-    }
 
     private void LateUpdate ()
     {
         InventoryInput = Vector2.zero;
-        IsRopeShootPressed = false;
-
-    }
-
-    private void DisableDuplicateGamepads ()
-    {
-        foreach (var gamepad in Gamepad.all)
-        {
-            if (gamepad is UnityEngine.InputSystem.DualShock.DualShockGamepad) // Check if it's a DualShock gamepad.
-            {
-
-                InputSystem.DisableDevice(gamepad);
-
-                /* foreach (var item in Gamepad.all)
-                 {
-                     // Check if another gamepad is detected at almost the same time.
-                     if ((item is UnityEngine.InputSystem.XInput.XInputController) && (Math.Abs(item.lastUpdateTime - gamepad.lastUpdateTime) < 0.1))
-                     {
-                         //Debug.Log($"DualShock gamepad detected and a copy of XInput was active at almost the same time. Disabling XInput device. `{gamepad}`; `{item}`");
-                     }
-                 }*/
-            }
-        }
+        //IsRopeShootPressed = false;
     }
 
 
@@ -128,10 +102,15 @@ public class InputManager : MonoBehaviour
 
     public void OnRopeShoot ( InputAction.CallbackContext context )
     {
-        if (context.performed && !IsRopeShootPressed)
+        if (context.performed)
         {
-            IsRopeShootPressed = true;
+            IsRopeShootPressed = true;          
         }
+        else if (context.canceled)
+        {
+            IsRopeShootPressed = false;
+        }
+
     }
 
     public void OnDash ( InputAction.CallbackContext context )

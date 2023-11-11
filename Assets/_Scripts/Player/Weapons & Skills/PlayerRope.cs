@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerRope : MonoBehaviour
@@ -22,6 +23,9 @@ public class PlayerRope : MonoBehaviour
 
     private InputManager inputManager;
 
+    private float ropeShootCooldown = 1.0f;
+    private float lastRopeShootTime;
+
     private void Awake ()
     {
         playerController = GetComponent<PlayerController>();
@@ -32,21 +36,21 @@ public class PlayerRope : MonoBehaviour
     {
         if (playerController.isDead) return;
 
-        if (inputManager.IsRopeShootPressed)
-        {
-            ShootRope();
-        }
+            if (inputManager.IsRopeShootPressed)
+            {
+                if (currentRope == null)
+                {
+                    ShootRope();
+                    lastRopeShootTime = Time.time;
 
-        if (IsRopeConnected())
-            HandleSwing();
+
+                }
+                if (IsRopeConnected())
+                    HandleSwing();
+            }
+            else
+                DestroyCurrentRope();
     }
-/*
-    private void HandleRope ()
-    {
-    
-        //inputManager.ResetRope();
-    }*/
-
 
     private void ShootRope ()
     {

@@ -20,6 +20,8 @@ public class Rope : MonoBehaviour
     private bool inAir = true;
     private float timeInAir = 0f;
 
+    [SerializeField] private GameObject trail;
+
 
     private void Update ()
     {
@@ -77,6 +79,8 @@ public class Rope : MonoBehaviour
 
     void GenerateRope ()
     {
+        Destroy(trail);
+        
         Rigidbody2D previousRG = hook;
 
         // Get the LineRenderer component once
