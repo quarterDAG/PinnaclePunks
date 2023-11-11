@@ -26,13 +26,10 @@ public class PlayerSpawner : MonoBehaviour
     private int teamAPlayerCount = 0;
     private int teamBPlayerCount = 0;
 
-
-
     private void Start ()
     {
         PlayerManager.Instance.SetPlayerSpawner(this);
         PlayerManager.Instance.InitializePlayers();
-
     }
 
     public PlayerInput InstantiatePlayer ( PlayerConfig config, int playerCount )
@@ -76,8 +73,6 @@ public class PlayerSpawner : MonoBehaviour
         return instantiatedPlayer;
     }
 
-
-
     private Transform GetSpawnPoint ( PlayerConfig config )
     {
         Transform spawnPoint = null;
@@ -105,16 +100,14 @@ public class PlayerSpawner : MonoBehaviour
 
     public void InstantiatePlayerStatusComponent ( PlayerConfig config, PlayerInput instantiatedPlayer )
     {
-
         Vector2 statusPosition = GetPlayerStatusPosition(config);
 
         Transform parentGO = GetParentGO(config);
 
         //Debug.Log($"Instantiating status for player {config.playerIndex} on {config.team}");
 
-
         // Instantiate player status and parent it to the position transform
-        GameObject playerStatusGO = Instantiate(playerStatusPrefab, parentGO.position, Quaternion.identity);
+        GameObject playerStatusGO = Instantiate(playerStatusPrefab, parentGO, false);
         Bar hpBar = playerStatusGO.GetComponentInChildren<Bar>();
 
         // Ensure the GameObject is active before trying to modify RectTransform properties
@@ -169,10 +162,51 @@ public class PlayerSpawner : MonoBehaviour
         return statusPositions[index];
     }
 
-
-
     private Transform GetParentGO ( PlayerConfig config )
     {
         return config.team == PlayerConfigData.Team.TeamA ? teamAStatusParent : teamBStatusParent;
     }
+
+    #region Reset 
+    public void ResetPlayerSpawner ()
+    {
+        // Reset spawn indices
+        teamASpawnIndex = 0;
+        teamBSpawnIndex = 0;
+
+        // Reset player counts
+        teamAPlayerCount = 0;
+        teamBPlayerCount = 0;
+
+        // Optional: Handle existing players and their status components
+        // This might involve deactivating or destroying them
+        ResetPlayersAndStatuses();
+    }
+
+    private void ResetPlayersAndStatuses ()
+    {
+        // Assuming all players are child objects of 'playersParent'
+        foreach (Transform child in playersParent.transform)
+        {
+            // Here you can choose to deactivate or destroy the players
+            // Deactivate: child.gameObject.SetActive(false);
+             Destroy(child.gameObject);
+        }
+
+        // Reset player status components for both teams
+        ResetStatusComponents(teamAStatusParent);
+        ResetStatusComponents(teamBStatusParent);
+    }
+
+    private void ResetStatusComponents ( Transform statusParent )
+    {
+        foreach (Transform child in statusParent)
+        {
+            // Similar to players, deactivate or destroy status components
+            // Deactivate: child.gameObject.SetActive(false);
+            Destroy(child.gameObject);
+        }
+    }
+
+    #endregion
 }

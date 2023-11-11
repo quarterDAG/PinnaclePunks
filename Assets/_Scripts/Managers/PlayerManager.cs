@@ -8,14 +8,11 @@ using static PlayerConfigData;
 
 public class PlayerManager : MonoBehaviour
 {
-
     public static PlayerManager Instance { get; private set; }
     [SerializeField] PlayerConfigData playerConfigData;
 
     private PlayerSpawner playerSpawner;
     private CameraManager cameraManager;
-
-
 
     [Header("Players Settings")]
     public List<PlayerConfig> playerConfigs;
@@ -27,7 +24,6 @@ public class PlayerManager : MonoBehaviour
     {
         Singleton();
         playerConfigs = new List<PlayerConfig>();
-
     }
 
     private void Singleton ()
@@ -42,61 +38,6 @@ public class PlayerManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-
-    #region Getters & Setters
-
-    public int GetUniquePlayerIndex ()
-    {
-        int newIndex = 0;
-
-        // Loop through existing configs to find an unused index.
-        while (playerConfigs.Any(p => p.playerIndex == newIndex))
-        {
-            newIndex++;
-        }
-        return newIndex;
-    }
-
-
-    public List<PlayerConfig> GetPlayerConfigList ()
-    {
-        return playerConfigs;
-    }
-
-    public PlayerConfig GetPlayerConfig ( int playerIndex )
-    {
-        return playerConfigs.FirstOrDefault(pc => pc.playerIndex == playerIndex);
-    }
-
-
-    public void SetPlayerSpawner ( PlayerSpawner _playerSpawner )
-    {
-        playerSpawner = _playerSpawner;
-    }
-
-    public void SetCameraManager ( CameraManager _cameraManager )
-    {
-        cameraManager = _cameraManager;
-    }
-    public void SetTeam ( int playerIndex, Team team )
-    {
-        PlayerConfig playerConfig = playerConfigs[playerIndex];
-        playerConfig.team = team;
-        playerConfigs[playerIndex] = playerConfig;
-    }
-
-    public void SetPlayerState ( int playerIndex, PlayerState playerState )
-    {
-        PlayerConfig playerConfig = playerConfigs[playerIndex];
-        playerConfig.playerState = playerState;
-        playerConfigs[playerIndex] = playerConfig;
-    }
-
-
-
-    #endregion
-
 
     public void InitializePlayers ()
     {
@@ -123,19 +64,14 @@ public class PlayerManager : MonoBehaviour
                     PlayerStatsManager.Instance.allPlayerStats[config.playerIndex].SetPlayerConfig(config);
                     playerCount++;
                 }
-
             }
-
-
         }
     }
 
     private void SetupPlayer ( PlayerConfig config, PlayerInput instantiatedPlayer )
     {
-        // Set up other player components
         instantiatedPlayer.GetComponent<InputManager>().UpdateCurrentControlScheme(config.controlScheme.ToString());
         cameraManager.AddPlayerToCinemachineTargetGroup(instantiatedPlayer.transform);
-        //SetupPlayerTag(config, instantiatedPlayer);
         instantiatedPlayer.GetComponentInChildren<PlayerMonsterSpawner>().ConfigMonsterSpawner();
 
         cameraManager.AddPlayerCameraToPlayerCameras(instantiatedPlayer);
@@ -144,8 +80,52 @@ public class PlayerManager : MonoBehaviour
         playerSpawner.InstantiatePlayerStatusComponent(config, instantiatedPlayer);
     }
 
+    #region Getters & Setters
 
- 
+    public int GetUniquePlayerIndex ()
+    {
+        int newIndex = 0;
 
+        // Loop through existing configs to find an unused index.
+        while (playerConfigs.Any(p => p.playerIndex == newIndex))
+        {
+            newIndex++;
+        }
+        return newIndex;
+    }
+
+    public List<PlayerConfig> GetPlayerConfigList ()
+    {
+        return playerConfigs;
+    }
+
+    public PlayerConfig GetPlayerConfig ( int playerIndex )
+    {
+        return playerConfigs.FirstOrDefault(pc => pc.playerIndex == playerIndex);
+    }
+
+    public void SetPlayerSpawner ( PlayerSpawner _playerSpawner )
+    {
+        playerSpawner = _playerSpawner;
+    }
+
+    public void SetCameraManager ( CameraManager _cameraManager )
+    {
+        cameraManager = _cameraManager;
+    }
+    public void SetTeam ( int playerIndex, Team team )
+    {
+        PlayerConfig playerConfig = playerConfigs[playerIndex];
+        playerConfig.team = team;
+        playerConfigs[playerIndex] = playerConfig;
+    }
+
+    public void SetPlayerState ( int playerIndex, PlayerState playerState )
+    {
+        PlayerConfig playerConfig = playerConfigs[playerIndex];
+        playerConfig.playerState = playerState;
+        playerConfigs[playerIndex] = playerConfig;
+    }
+    #endregion
 
 }

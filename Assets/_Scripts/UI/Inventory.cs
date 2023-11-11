@@ -190,4 +190,34 @@ public class Inventory : MonoBehaviour
 
     }
 
+    public void ResetInventory ()
+    {
+        // Reset each item in the inventory
+        for (int i = 0; i < monsterInventory.Count; i++)
+        {
+            MonsterInventoryItem item = monsterInventory[i];
+
+            item.count = 1;
+
+            // Update the UI elements for the item
+            item.countText.text = item.count.ToString();
+            item.button.interactable = true;
+            item.button.image.color = defaultColor;
+        }
+
+        // Reset the selected index
+        if (selectedIndex != -1 && selectedIndex < monsterInventory.Count)
+        {
+            monsterInventory[selectedIndex].button.image.color = defaultColor;
+        }
+        selectedIndex = 0;
+
+        /*      // Optionally, update the selected monster in the spawner, if necessary
+              if (inventoryOwners.Length > 0)
+              {
+                  PlayerMonsterSpawner owner = inventoryOwners[0]; // Example: Resetting for the first owner
+                  owner.SetSelectedMonster(monsterInventory[selectedIndex].monsterPrefab);
+              }*/
+    }
+
 }

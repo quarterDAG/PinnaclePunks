@@ -19,7 +19,7 @@ public class CameraManager : MonoBehaviour
 
     private void Update ()
     {
-            CheckPlayersProximity();
+        CheckPlayersProximity();
     }
 
     public void AddPlayerToCinemachineTargetGroup ( Transform playerTransform )
@@ -73,6 +73,20 @@ public class CameraManager : MonoBehaviour
         dividerCanvas.enabled = !allPlayersClose;
     }
 
+    #region Reset
+    public void ResetCameraManager ()
+    {
+        playerCameras.Clear();
+        ResetCinemachineTargetGroup();
+        dividerCanvas.enabled = true;
+    }
 
-
+    private void ResetCinemachineTargetGroup ()
+    {
+        while (cinemachineTargetGroup.m_Targets.Length > 0)
+        {
+            cinemachineTargetGroup.RemoveMember(cinemachineTargetGroup.m_Targets[0].target);
+        }
+    }
+    #endregion
 }

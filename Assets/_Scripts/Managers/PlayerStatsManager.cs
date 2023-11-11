@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ public class PlayerStatsManager : MonoBehaviour
     private Canvas canvas;
 
     private HashSet<int> playersVotedForRematch = new HashSet<int>();
-
+    [SerializeField] private CountdownUI countdownUI;
 
     private void Awake ()
     {
@@ -25,15 +26,6 @@ public class PlayerStatsManager : MonoBehaviour
         canvas = GetComponent<Canvas>();
         Hide();
     }
-
-    private void OnDestroy ()
-    {
-        foreach (PlayerStats playerStats in allPlayerStats)
-        {
-            playerStats.ResetStats();
-        }
-    }
-
     private void Singleton ()
     {
         if (Instance == null)
@@ -47,6 +39,19 @@ public class PlayerStatsManager : MonoBehaviour
         }
     }
 
+    private void OnDestroy ()
+    {
+        ResetAllStats();
+    }
+
+    private void ResetAllStats ()
+    {
+        foreach (PlayerStats playerStats in allPlayerStats)
+        {
+            playerStats.ResetStats();
+        }
+    }
+
     public void UpdatePlayerStats ( PlayerStats playerStats, int playerIndex )
     {
         allPlayerStats.Insert(playerIndex, playerStats);
@@ -55,11 +60,13 @@ public class PlayerStatsManager : MonoBehaviour
     public void Hide ()
     {
         canvas.enabled = false;
+        winningTeamAnnouncementText.enabled = false;
     }
 
     public void Show ()
     {
         canvas.enabled = true;
+        winningTeamAnnouncementText.enabled = true;
     }
 
     private Color GetStatColor ( PlayerStats playerStats )
@@ -80,28 +87,27 @@ public class PlayerStatsManager : MonoBehaviour
         }
     }
 
-
     public void AddDamageToPlayerState ( int _damage, int _playerIndex )
     {
         if (_playerIndex >= 0) // (-1 = Shot by a monster)
             allPlayerStats[_playerIndex].damage += _damage;
     }
 
-
     private int CalculatePlayerScore ( PlayerStats stats )
     {
-        // Check for zero deaths to avoid division by zero
-        if (stats.deaths == 0)
+        if (stats.kills > 0)
         {
-            return stats.kills; // If no deaths, return kills as score
+            // If there are kills, calculate K/D ratio and multiply by a factor for readability
+            return stats.deaths == 0 ? stats.kills * 100 : (int)((float)stats.kills / stats.deaths * 100);
         }
         else
         {
-            // Calculate K/D ratio and multiply by a factor, e.g., 100, for better readability
-            return (int)((float)stats.kills / stats.deaths * 100);
+            // If there are no kills, use the inverse of deaths as the score
+            // Fewer deaths result in a higher score
+            // Adding 1 to avoid division by zero and to ensure a player with 0 deaths gets the highest score
+            return 1000 / (stats.deaths + 1);
         }
     }
-
 
     public PlayerStats DetermineWinner ()
     {
@@ -145,7 +151,6 @@ public class PlayerStatsManager : MonoBehaviour
 
     }
 
-
     private void SortPlayersByScore ()
     {
         allPlayerStats.Sort(( player1, player2 ) =>
@@ -186,7 +191,6 @@ public class PlayerStatsManager : MonoBehaviour
         }
     }
 
-
     public void EndMatch ()
     {
         DisplayStats();
@@ -218,10 +222,9 @@ public class PlayerStatsManager : MonoBehaviour
         }
     }
 
-
     public void VoteForRematch ( int playerIndex )
     {
-        if(canvas.enabled == false) return;
+        if (canvas.enabled == false) return;
 
         if (!playersVotedForRematch.Contains(playerIndex))
         {
@@ -231,14 +234,13 @@ public class PlayerStatsManager : MonoBehaviour
             if (playersVotedForRematch.Count == allPlayerStats.Count)
             {
                 // All players voted for a rematch
-                StartCoroutine(RestartMatch());
+                RestartMatch();
             }
         }
     }
 
     private void UpdateReadyIcon ( int playerIndex, bool isReady )
     {
-        // Assume you have a way to get the corresponding PlayerStatsDisplayItem for each player index
         PlayerStatsDisplayItem displayItem = playerStatsDisplayItems[playerIndex];
         if (displayItem != null)
         {
@@ -246,14 +248,38 @@ public class PlayerStatsManager : MonoBehaviour
         }
     }
 
-    private IEnumerator RestartMatch ()
+    #region Rematch & Reset
+    private async void RestartMatch ()
     {
-        // Add logic to restart the match
-        yield return new WaitForSeconds(1); // Waiting time before restarting
-        Debug.Log("REMATCH!!!!!!!!!!");
-        // Reset game state and start a new match
+        winningTeamAnnouncementText.enabled = false;
+        countdownUI.SetCountdownTime(5);
+        countdownUI.StartTimer();
+
+        await Task.Delay(5000);
+
+        Hide();       
+        ResetAllStats();
+        ResetVotes();
+
+        GameManager.Instance.Rematch();
+
     }
 
+    private void ResetVotes ()
+    {
+        playersVotedForRematch.Clear();
+        playerStatsDisplayItems.Clear();
 
+        // Reset the ready status on each player's stats display
+        foreach (var displayItem in playerStatsDisplayItems)
+        {
+            if (displayItem != null)
+            {
+                displayItem.SetReady(false);
+            }
+        }
+    }
+
+    #endregion
 
 }

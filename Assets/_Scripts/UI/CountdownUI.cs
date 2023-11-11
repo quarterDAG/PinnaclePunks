@@ -13,19 +13,16 @@ public class CountdownUI : MonoBehaviour
 
     private Animator animator;
 
-    public float timeRemaining = 3f;
-    public bool timerIsRunning = false;
-    private float initialTime; // Store the initial countdown time to reset it later
+    [SerializeField] private float timeRemaining = 3f;
+    [SerializeField] private bool timerIsRunning = false;
+    private float initialTime;
 
     public delegate void CountdownFinished ();
     public event CountdownFinished OnCountdownFinished;
 
-
-
     private void Awake ()
     {
         animator = GetComponent<Animator>();
-
     }
 
     private void Start ()
@@ -69,6 +66,11 @@ public class CountdownUI : MonoBehaviour
             StopTimer();
             OnCountdownFinished?.Invoke();
         }
+    }
+
+    public void SetCountdownTime ( int _timeRemaining )
+    {
+        timeRemaining = _timeRemaining;
     }
 
     public void StartTimer ()

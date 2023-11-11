@@ -11,6 +11,8 @@ public class LivesManager : MonoBehaviour
         // Initialize lives (assuming 3 for this example)
         lives = hearts.Length;
         UpdateHeartsUI();
+
+        //GameManager.Instance.AddLivesManager(this);
     }
 
     // Call this method whenever the player loses a life
@@ -29,19 +31,25 @@ public class LivesManager : MonoBehaviour
         }
     }
 
-    // Call this method to update the UI hearts
     private void UpdateHeartsUI ()
     {
         for (int i = 0; i < hearts.Length; i++)
         {
-            if (i < lives)
+            if (hearts[i] != null) // Check if the Image component is not null
             {
-                hearts[i].enabled = true; // Show heart
+                hearts[i].enabled = i < lives;
             }
             else
             {
-                hearts[i].enabled = false; // Hide heart
+                Debug.LogWarning("Heart image at index " + i + " is missing or destroyed.");
             }
         }
+    }
+
+
+    public void ResetLives ()
+    {
+        lives = hearts.Length;
+        UpdateHeartsUI();
     }
 }

@@ -52,6 +52,13 @@ public class Monster : MonoBehaviour, ICharacter
         skeletonMecanim = GetComponent<SkeletonMecanim>();
     }
 
+    private void Update ()
+    {
+        if (IsDead) return;
+        SearchPlayersFromEnemyTeam();
+        ShootClosesestPlayer();
+    }
+
     private void SearchPlayersFromEnemyTeam ()
     {
         GameObject[] otherTeamObjects = new GameObject[0];
@@ -69,13 +76,7 @@ public class Monster : MonoBehaviour, ICharacter
         }
     }
 
-    private void Update ()
-    {
-        if (IsDead) return;
-        SearchPlayerAndShoot();
-    }
-
-    private void SearchPlayerAndShoot ()
+    private void ShootClosesestPlayer ()
     {
         targetPlayer = GetClosestPlayer();
 
@@ -94,6 +95,49 @@ public class Monster : MonoBehaviour, ICharacter
                 }
             }
         }
+    }
+
+
+
+    Transform GetClosestPlayer ()
+    {
+        Transform closestPlayer = null;
+        float closestDistance = float.MaxValue;
+
+        foreach (Transform player in players)
+        {
+
+            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+            if (distanceToPlayer < closestDistance && ClearPathToPlayer(player))
+            {
+                closestDistance = distanceToPlayer;
+                closestPlayer = player;
+                Debug.Log(closestPlayer);
+            }
+
+        }
+
+        return closestPlayer;
+    }
+
+    bool ClearPathToPlayer ( Transform player )
+    {
+        Vector2 directionToPlayer = (player.position - firePoint.position).normalized;
+        float distanceToPlayer = Vector3.Distance(firePoint.position, player.position);
+
+        RaycastHit2D hit = Physics2D.Raycast(firePoint.position, directionToPlayer, distanceToPlayer, obstacleLayers);
+
+        // If the raycast hit something in the obstacle layers before reaching the player, return false.
+        if (hit.collider != null)
+        {
+            // If the raycast hits the player before hitting an obstacle, then there's a clear path.
+            if (hit.collider.transform == player)
+            {
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 
     private void HandleFlip ()
@@ -148,46 +192,6 @@ public class Monster : MonoBehaviour, ICharacter
     }
 
 
-    Transform GetClosestPlayer ()
-    {
-        Transform closestPlayer = null;
-        float closestDistance = float.MaxValue;
-
-        foreach (Transform player in players)
-        {
-
-            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-            if (distanceToPlayer < closestDistance && ClearPathToPlayer(player))
-            {
-                closestDistance = distanceToPlayer;
-                closestPlayer = player;
-                Debug.Log(closestPlayer);
-            }
-
-        }
-
-        return closestPlayer;
-    }
-
-    bool ClearPathToPlayer ( Transform player )
-    {
-        Vector2 directionToPlayer = (player.position - firePoint.position).normalized;
-        float distanceToPlayer = Vector3.Distance(firePoint.position, player.position);
-
-        RaycastHit2D hit = Physics2D.Raycast(firePoint.position, directionToPlayer, distanceToPlayer, obstacleLayers);
-
-        // If the raycast hit something in the obstacle layers before reaching the player, return false.
-        if (hit.collider != null)
-        {
-            // If the raycast hits the player before hitting an obstacle, then there's a clear path.
-            if (hit.collider.transform == player)
-            {
-                return true;
-            }
-            return false;
-        }
-        return true;
-    }
 
     public void TakeDamage ( int damage, int shooterIndex )
     {
@@ -248,8 +252,6 @@ public class Monster : MonoBehaviour, ICharacter
     public void SetTagToAttack ( string _tagToAttack )
     {
         tagToAttack = _tagToAttack;
-        SearchPlayersFromEnemyTeam();
-
     }
 
 }
