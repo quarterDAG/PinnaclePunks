@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
@@ -14,6 +15,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private FrameInput _frameInput;
     private Vector2 _frameVelocity;
     private bool _cachedQueryStartInColliders;
+    private Vector2 _colOffsetDefault;
 
     #region Interface
 
@@ -55,12 +57,13 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     {
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
-        playerRope = GetComponent<PlayerRope>();
+        playerRope = GetComponentInChildren<PlayerRope>();
         playerAnimator = GetComponentInChildren<PlayerAnimator>();
         respawnCountdownUI = GetComponentInChildren<CountdownUI>();
         inputManager = GetComponent<InputManager>();
 
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
+        _colOffsetDefault = _col.offset;
     }
 
 
@@ -126,6 +129,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         }
 
     }
+
+
 
     private void FixedUpdate ()
     {
@@ -237,16 +242,12 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private float _frameLeftGrounded = float.MinValue;
     private bool _grounded;
 
-    private void CheckCollisions ()
+    private async void CheckCollisions ()
     {
         Physics2D.queriesStartInColliders = false;
 
         // Ground and Ceiling
         bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
-        bool ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _stats.GrounderDistance, ~_stats.PlayerLayer);
-
-        // Hit a Ceiling
-        if (ceilingHit) _frameVelocity.y = Mathf.Min(0, _frameVelocity.y);
 
         // Landed on the Ground
         if (!_grounded && groundHit)
@@ -257,7 +258,12 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             _endedJumpEarly = false;
             GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
 
+
             playerAnimator.JumpAnimation(false);
+            await Task.Delay(3);
+            //_col.offset = _colOffsetDefault;
+            StartCoroutine(MoveColliderCoroutine(_colOffsetDefault, 0.01f)); // 10 milliseconds = 0.01 seconds
+
         }
         // Left the Ground
         else if (_grounded && !groundHit /*&& !playerRope.IsRopeConnected()*/)
@@ -292,12 +298,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && _rb.velocity.y > 0)
         {
             _endedJumpEarly = true;
-            inputManager.ResetJump(false, true);
-        }
-
-        if (_endedJumpEarly || _grounded && _frameInput.JumpHeld)
-        {
-            inputManager.ResetJump(false, false);
         }
 
         if (!_jumpToConsume && !HasBufferedJump) return;
@@ -305,13 +305,10 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         if (_grounded || CanUseCoyote || OnRope)
         {
             ExecuteJump();
-            inputManager.ResetJump(false, true);
         }
 
         _jumpToConsume = false;
     }
-
-
 
     private void ExecuteJump ()
     {
@@ -320,6 +317,9 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         _bufferedJumpUsable = false;
         _coyoteUsable = false;
         _frameVelocity.y = _stats.JumpPower;
+        _col.offset = new Vector2(_col.offset.x, _col.offset.y + 1.2f);
+
+
 
         if (playerRope.IsRopeConnected())
         {
@@ -328,6 +328,22 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         playerAnimator.JumpAnimation(true);
         Jumped?.Invoke();
+    }
+
+    // Coroutine for moving the collider
+    private IEnumerator MoveColliderCoroutine ( Vector2 targetOffset, float duration )
+    {
+        float time = 0;
+        Vector2 initialOffset = _col.offset;
+
+        while (time < duration)
+        {
+            _col.offset = Vector2.Lerp(initialOffset, targetOffset, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        _col.offset = targetOffset; // Ensure the final position is set accurately
     }
 
     #endregion
@@ -347,6 +363,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         }
     }
 
+
+
     #endregion
 
     #region Gravity
@@ -364,6 +382,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, -_stats.MaxFallSpeed, inAirGravity * Time.fixedDeltaTime);
         }
     }
+
 
     #endregion
 

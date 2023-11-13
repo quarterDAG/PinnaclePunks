@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
         ResetLives();
         ResetInventories();
         ResetPlayerSpawner();
-        ResetCameraManager();
+        //ResetCameraManager();
         ResetMonsterList();
         InitializePlayers();
 

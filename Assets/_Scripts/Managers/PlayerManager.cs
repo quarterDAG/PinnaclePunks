@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEditor;
-using UnityEngine.UI;
 using System.Linq;
 using static PlayerConfigData;
 
@@ -49,7 +47,6 @@ public class PlayerManager : MonoBehaviour
             if (config.team == Team.Spectator)
             {
                 playerConfigData.RemovePlayerConfig(config);
-                //playerCount--;
                 return;
             }
             else
@@ -76,8 +73,6 @@ public class PlayerManager : MonoBehaviour
         instantiatedPlayer.GetComponent<InputManager>().UpdateCurrentControlScheme(config.controlScheme.ToString());
         cameraManager.AddPlayerToCinemachineTargetGroup(instantiatedPlayer.transform);
         instantiatedPlayer.GetComponentInChildren<PlayerMonsterSpawner>().ConfigMonsterSpawner();
-
-        cameraManager.AddPlayerCameraToPlayerCameras(instantiatedPlayer);
 
         // Instantiate player status component
         playerSpawner.InstantiatePlayerStatusComponent(config, instantiatedPlayer);

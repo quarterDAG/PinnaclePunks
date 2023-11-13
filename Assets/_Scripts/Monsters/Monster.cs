@@ -236,10 +236,10 @@ public class Monster : MonoBehaviour, ICharacter
     {
         animator.SetBool("IsShooting", true);
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        MoveTrail moveTrail = bullet.GetComponent<MoveTrail>();
-        moveTrail.SetTagToDamage(tagToAttack);
-        moveTrail.SetBulletGradient(bulletGradient);
-        moveTrail.SetDamage(damage);
+        Projectile projectile = bullet.GetComponent<Projectile>();
+        projectile.SetTagToDamage(tagToAttack);
+        projectile.SetBulletGradient(bulletGradient);
+        projectile.SetDamage(damage);
         int animationDelay = (int)fireRate * 100;
         await Task.Delay(animationDelay);
         animator.SetBool("IsShooting", false);

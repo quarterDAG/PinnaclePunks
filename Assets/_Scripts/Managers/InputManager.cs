@@ -17,7 +17,7 @@ public class InputManager : MonoBehaviour
     public bool IsJumpHeld { get; private set; }
     #endregion
 
-    public bool IsShootPressed { get; private set; }
+    public bool IsAttackPressed { get; private set; }
     public bool IsRopeShootPressed { get; private set; }
     public bool IsDashPressed { get; private set; }
     public bool IsSlowmotionPressed { get; private set; }
@@ -28,13 +28,14 @@ public class InputManager : MonoBehaviour
     private void Start ()
     {
         InputSystem.settings.maxEventBytesPerUpdate = 0;
+
+  
     }
 
 
     private void LateUpdate ()
     {
         InventoryInput = Vector2.zero;
-        //IsRopeShootPressed = false;
     }
 
 
@@ -61,32 +62,45 @@ public class InputManager : MonoBehaviour
         InputAim = context.ReadValue<Vector2>();
     }
 
+
     public void OnJump ( InputAction.CallbackContext context )
     {
-        if (context.started)
+        float value = context.ReadValue<float>();
+        float releaseThreshold = 0.1f; // Set a threshold for detecting release
+
+        if (value > releaseThreshold)
         {
-            IsJumpPressed = true;
+            if (!IsJumpHeld)
+            {
+                // The button is pressed, set IsJumpPressed to true
+                IsJumpPressed = true;
+                IsJumpHeld = true;
+            }
         }
-        if (context.performed)
+        else
         {
-            IsJumpHeld = true;
-        }
-        else if (context.canceled)
-        {
+            // The button is released (or nearly released), set IsJumpPressed to false
             IsJumpPressed = false;
             IsJumpHeld = false;
         }
     }
 
-    public void OnShoot ( InputAction.CallbackContext context )
+
+
+
+    public void OnAttack ( InputAction.CallbackContext context )
     {
         if (!context.performed)
         {
-            IsShootPressed = false;
+            IsAttackPressed = false;
             return;
         }
 
-        IsShootPressed = true;
+        if (context.performed)
+            IsAttackPressed = true;
+
+        if (context.canceled)
+            IsAttackPressed = false;
     }
 
     public void OnSlowmotion ( InputAction.CallbackContext context )
@@ -102,11 +116,12 @@ public class InputManager : MonoBehaviour
 
     public void OnRopeShoot ( InputAction.CallbackContext context )
     {
-        if (context.performed)
+        if (context.ReadValue<float>() != 0)
         {
-            IsRopeShootPressed = true;          
+            IsRopeShootPressed = true;
+            IsJumpPressed = false;
         }
-        else if (context.canceled)
+        else
         {
             IsRopeShootPressed = false;
         }

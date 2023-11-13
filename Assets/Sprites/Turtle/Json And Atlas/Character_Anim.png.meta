@@ -1,0 +1,1385 @@
+fileFormatVersion: 2
+guid: 417bbec4f97e6a94999908099bc548c0
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 0
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: -0.5
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 0
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Images/10_Idle
+      rect:
+        serializedVersion: 2
+        x: 738
+        y: 167
+        width: 224
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f1fe6db9185e14b0800000000000000
+      internalID: -5467836030005612041
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/11_Jump
+      rect:
+        serializedVersion: 2
+        x: 799
+        y: 167
+        width: 224
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1abc25c5ba3a78e30800000000000000
+      internalID: 4505749908591135649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/12_Roll
+      rect:
+        serializedVersion: 2
+        x: 860
+        y: 167
+        width: 224
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46702d0dd0b3e6f80800000000000000
+      internalID: -8111480948323645596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/13_Swimp
+      rect:
+        serializedVersion: 2
+        x: 921
+        y: 167
+        width: 224
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2bd4d5144e66142b0800000000000000
+      internalID: -5602083330936975950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/14_SwimpGetHit
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 228
+        width: 224
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1230d3dc74ea3dd0800000000000000
+      internalID: -2505439017897545185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/15_Throw
+      rect:
+        serializedVersion: 2
+        x: 982
+        y: 167
+        width: 224
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 209654f721134efb0800000000000000
+      internalID: -4619513362260858622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/16_Walk
+      rect:
+        serializedVersion: 2
+        x: 1043
+        y: 167
+        width: 224
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4b11b46454129440800000000000000
+      internalID: 4941034093877992271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/1_Celebrate
+      rect:
+        serializedVersion: 2
+        x: 1104
+        y: 167
+        width: 224
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b8a5607a06aeb920800000000000000
+      internalID: 3008024164895664313
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/2_Climb
+      rect:
+        serializedVersion: 2
+        x: 1165
+        y: 167
+        width: 224
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e08a9ca5181748270800000000000000
+      internalID: 8251845217637476366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/3_Die
+      rect:
+        serializedVersion: 2
+        x: 1193
+        y: 393
+        width: 224
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06a1248d927694a30800000000000000
+      internalID: 4200001556919229024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/4_Fall
+      rect:
+        serializedVersion: 2
+        x: 1226
+        y: 167
+        width: 224
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18bc4f258e4726b40800000000000000
+      internalID: 5432032641735248769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/5_Fly
+      rect:
+        serializedVersion: 2
+        x: 1254
+        y: 393
+        width: 224
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1816eee14f8f33660800000000000000
+      internalID: 7364503543055540609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/6_FlyGetHit
+      rect:
+        serializedVersion: 2
+        x: 1287
+        y: 167
+        width: 224
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12289220b6d3ef940800000000000000
+      internalID: 5331766538660315681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/7_Get-Hit
+      rect:
+        serializedVersion: 2
+        x: 1315
+        y: 393
+        width: 224
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f714e5f03293686a0800000000000000
+      internalID: -6447402993789812353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/8_Glide
+      rect:
+        serializedVersion: 2
+        x: 1348
+        y: 167
+        width: 224
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51dab3b54cb3db5a0800000000000000
+      internalID: -6503976572322861803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/9_HamerHit
+      rect:
+        serializedVersion: 2
+        x: 1376
+        y: 393
+        width: 224
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 332b6314993cbba20800000000000000
+      internalID: 3079269833229382195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/BackFoot01
+      rect:
+        serializedVersion: 2
+        x: 721
+        y: 251
+        width: 53
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51bece3e54c47b5a0800000000000000
+      internalID: -6505647273652983019
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/BackFoot02
+      rect:
+        serializedVersion: 2
+        x: 817
+        y: 228
+        width: 53
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eac9c16a5fe47a1a0800000000000000
+      internalID: -6798378295531627346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/BagWithGun
+      rect:
+        serializedVersion: 2
+        x: 1437
+        y: 207
+        width: 119
+        height: 141
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aaf0b61242a8bfd90800000000000000
+      internalID: -7062899702816370774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Body
+      rect:
+        serializedVersion: 2
+        x: 166
+        y: 337
+        width: 96
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 541af5c7eb63a1910800000000000000
+      internalID: 1808818392101003589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Body02
+      rect:
+        serializedVersion: 2
+        x: 744
+        y: 317
+        width: 140
+        height: 177
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8463da1cd0567ce0800000000000000
+      internalID: -1407848927233612657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Bubble01
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 337
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8843fe732a267d4a0800000000000000
+      internalID: -6568673082633931640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Bubble02
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 337
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d43cd385c5082b10800000000000000
+      internalID: 1956820383971423444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Bubble03
+      rect:
+        serializedVersion: 2
+        x: 1437
+        y: 350
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ff482faf046a4540800000000000000
+      internalID: 4992913155419557872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Bubble04
+      rect:
+        serializedVersion: 2
+        x: 1549
+        y: 2
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 614f2dd4bda73e5a0800000000000000
+      internalID: -6493211155416026090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Bubble05
+      rect:
+        serializedVersion: 2
+        x: 1549
+        y: 104
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db2322e3f99cce780800000000000000
+      internalID: -8652319098306153795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Eye1
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 434
+        width: 54
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dfed6b17f916aaef0800000000000000
+      internalID: -96157104599539971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Eye2
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 251
+        width: 54
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be7cc5a8a84b49f60800000000000000
+      internalID: 8040249741883000811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Eye4
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 443
+        width: 54
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f33b07b56fb66be0800000000000000
+      internalID: -1484288583588432906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Hammer
+      rect:
+        serializedVersion: 2
+        x: 399
+        y: 195
+        width: 328
+        height: 135
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c3bf449cce6adaf0800000000000000
+      internalID: -370862194364009533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/HandLeft
+      rect:
+        serializedVersion: 2
+        x: 872
+        y: 195
+        width: 60
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 009f9aca5bb498110800000000000000
+      internalID: 1263624414112119040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/HandLeft2
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 229
+        width: 72
+        height: 94
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd0c20d00a59f9eb0800000000000000
+      internalID: -4710882170560659235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/HandRight
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 410
+        width: 57
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eec34ada6eeade6e0800000000000000
+      internalID: -1806595569726767890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Handback01
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 439
+        width: 98
+        height: 65
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bc0ffe4d0f04a250800000000000000
+      internalID: 5954901157124967608
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Handback02
+      rect:
+        serializedVersion: 2
+        x: 367
+        y: 439
+        width: 98
+        height: 65
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 505d8c4e3a9937360800000000000000
+      internalID: 7166240361273677061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Head01
+      rect:
+        serializedVersion: 2
+        x: 618
+        y: 326
+        width: 124
+        height: 184
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14e6946727aa90e20800000000000000
+      internalID: 3317370009122598465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Head06
+      rect:
+        serializedVersion: 2
+        x: 1038
+        y: 289
+        width: 126
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e711c012b555c930800000000000000
+      internalID: 4162827653847521257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/JetPack01
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 2
+        width: 200
+        height: 247
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c546d40717ff01470800000000000000
+      internalID: 8363465370707518556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Jetpack02
+      rect:
+        serializedVersion: 2
+        x: 166
+        y: 2
+        width: 231
+        height: 333
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f50770f68ca077d20800000000000000
+      internalID: 3276099109907820639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/LeftJackets
+      rect:
+        serializedVersion: 2
+        x: 592
+        y: 251
+        width: 31
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3116618b61f296760800000000000000
+      internalID: 7451538833085456659
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/LeftLeg01
+      rect:
+        serializedVersion: 2
+        x: 1271
+        y: 457
+        width: 48
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c70ff3901fa04df0800000000000000
+      internalID: -197965897866999865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/LeftThigh
+      rect:
+        serializedVersion: 2
+        x: 1318
+        y: 454
+        width: 43
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8915e1eb18cb2b700800000000000000
+      internalID: 554712969546453400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Mouth1
+      rect:
+        serializedVersion: 2
+        x: 1166
+        y: 319
+        width: 53
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d93c46ac071bd9d40800000000000000
+      internalID: 5592821410254078877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Mouth2
+      rect:
+        serializedVersion: 2
+        x: 1409
+        y: 167
+        width: 59
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a0c72e908636e710800000000000000
+      internalID: 1722123833552912548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Mouth3
+      rect:
+        serializedVersion: 2
+        x: 1449
+        y: 176
+        width: 58
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2d8fb264b60d7090800000000000000
+      internalID: -8035258788338496214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/RightJackets
+      rect:
+        serializedVersion: 2
+        x: 776
+        y: 228
+        width: 39
+        height: 85
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6120a243e12291280800000000000000
+      internalID: -9072182461241621994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/RightLeg01
+      rect:
+        serializedVersion: 2
+        x: 1166
+        y: 454
+        width: 53
+        height: 53
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3626a90fb822a2190800000000000000
+      internalID: -7986533004755705245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/RightLeg02
+      rect:
+        serializedVersion: 2
+        x: 1221
+        y: 456
+        width: 50
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 558bfc5cb8229cae0800000000000000
+      internalID: -1528652614801049515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/RightThigh01
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 454
+        width: 40
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: beacb02e4014be300800000000000000
+      internalID: 282390890868886251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/RightThigh02
+      rect:
+        serializedVersion: 2
+        x: 1363
+        y: 454
+        width: 43
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8936ea6ae2317cc10800000000000000
+      internalID: 2073647244513272728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Splat01
+      rect:
+        serializedVersion: 2
+        x: 886
+        y: 359
+        width: 219
+        height: 150
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e8e75cd68a9c8470800000000000000
+      internalID: 8398257309152176356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Splat02
+      rect:
+        serializedVersion: 2
+        x: 1409
+        y: 6
+        width: 142
+        height: 138
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd12546a03277c040800000000000000
+      internalID: 4667825092066353627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/StairSample
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 2
+        width: 162
+        height: 449
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63eb70af7226f86b0800000000000000
+      internalID: -5291903113298985418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/Tails
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 478
+        width: 55
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc25005f0c402f280800000000000000
+      internalID: -9011134677624270133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/bag4
+      rect:
+        serializedVersion: 2
+        x: 1539
+        y: 396
+        width: 134
+        height: 88
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26cf42d15c1bf81a0800000000000000
+      internalID: -6805025051777893278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Images/finger
+      rect:
+        serializedVersion: 2
+        x: 468
+        y: 332
+        width: 148
+        height: 177
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fb520c74562488c0800000000000000
+      internalID: -3998028424898520072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Images/10_Idle: -5467836030005612041
+      Images/11_Jump: 4505749908591135649
+      Images/12_Roll: -8111480948323645596
+      Images/13_Swimp: -5602083330936975950
+      Images/14_SwimpGetHit: -2505439017897545185
+      Images/15_Throw: -4619513362260858622
+      Images/16_Walk: 4941034093877992271
+      Images/1_Celebrate: 3008024164895664313
+      Images/2_Climb: 8251845217637476366
+      Images/3_Die: 4200001556919229024
+      Images/4_Fall: 5432032641735248769
+      Images/5_Fly: 7364503543055540609
+      Images/6_FlyGetHit: 5331766538660315681
+      Images/7_Get-Hit: -6447402993789812353
+      Images/8_Glide: -6503976572322861803
+      Images/9_HamerHit: 3079269833229382195
+      Images/BackFoot01: -6505647273652983019
+      Images/BackFoot02: -6798378295531627346
+      Images/BagWithGun: -7062899702816370774
+      Images/Body: 1808818392101003589
+      Images/Body02: -1407848927233612657
+      Images/Bubble01: -6568673082633931640
+      Images/Bubble02: 1956820383971423444
+      Images/Bubble03: 4992913155419557872
+      Images/Bubble04: -6493211155416026090
+      Images/Bubble05: -8652319098306153795
+      Images/Eye1: -96157104599539971
+      Images/Eye2: 8040249741883000811
+      Images/Eye4: -1484288583588432906
+      Images/Hammer: -370862194364009533
+      Images/HandLeft: 1263624414112119040
+      Images/HandLeft2: -4710882170560659235
+      Images/HandRight: -1806595569726767890
+      Images/Handback01: 5954901157124967608
+      Images/Handback02: 7166240361273677061
+      Images/Head01: 3317370009122598465
+      Images/Head06: 4162827653847521257
+      Images/JetPack01: 8363465370707518556
+      Images/Jetpack02: 3276099109907820639
+      Images/LeftJackets: 7451538833085456659
+      Images/LeftLeg01: -197965897866999865
+      Images/LeftThigh: 554712969546453400
+      Images/Mouth1: 5592821410254078877
+      Images/Mouth2: 1722123833552912548
+      Images/Mouth3: -8035258788338496214
+      Images/RightJackets: -9072182461241621994
+      Images/RightLeg01: -7986533004755705245
+      Images/RightLeg02: -1528652614801049515
+      Images/RightThigh01: 282390890868886251
+      Images/RightThigh02: 2073647244513272728
+      Images/Splat01: 8398257309152176356
+      Images/Splat02: 4667825092066353627
+      Images/StairSample: -5291903113298985418
+      Images/Tails: -9011134677624270133
+      Images/bag4: -6805025051777893278
+      Images/finger: -3998028424898520072
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
