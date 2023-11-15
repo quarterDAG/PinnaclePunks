@@ -9,6 +9,7 @@ public class PlayerManager : MonoBehaviour
     public static PlayerManager Instance { get; private set; }
     [SerializeField] PlayerConfigData playerConfigData;
 
+    private HeroSelectManager heroSelectManager;
     private PlayerSpawner playerSpawner;
     private CameraManager cameraManager;
 
@@ -34,6 +35,38 @@ public class PlayerManager : MonoBehaviour
         else if (Instance != this)
         {
             Destroy(gameObject);
+        }
+    }
+
+
+    public void InitializeSelectors ()
+    {
+        playerCount = 0;
+
+        foreach (var config in playerConfigs)
+        {
+
+            if (config.team == Team.Spectator)
+            {
+                playerConfigData.RemovePlayerConfig(config);
+                return;
+            }
+            else
+            {
+                var instantiatedSelector = heroSelectManager.InstantiateSelector(config, playerCount);
+                if (instantiatedSelector != null)
+                {
+                    // Set up the player components that are specific to PlayerManager's responsibilities
+                    //SetupPlayer(config, instantiatedPlayer);
+
+                    instantiatedSelector.GetComponent<InputManager>().UpdateCurrentControlScheme(config.controlScheme.ToString());
+
+
+                    // Create a reference to the config in the player stats (mainly to access the team when calculating the score)
+                    PlayerStatsManager.Instance.allPlayerStats[config.playerIndex].SetPlayerConfig(config);
+                    playerCount++;
+                }
+            }
         }
     }
 
@@ -105,6 +138,10 @@ public class PlayerManager : MonoBehaviour
         return playerConfigs.FirstOrDefault(pc => pc.playerIndex == playerIndex);
     }
 
+    public void SetHeroSelectManager(HeroSelectManager manager)
+    {
+        heroSelectManager = manager;
+    }
     public void SetPlayerSpawner ( PlayerSpawner _playerSpawner )
     {
         playerSpawner = _playerSpawner;

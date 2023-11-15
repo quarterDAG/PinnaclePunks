@@ -10193,12 +10193,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseAim: {fileID: 6231824700150868758}
   ropePrefab: {fileID: 3043977089762269659, guid: 3c9c9799b6a069d4c969a9c455d3de70, type: 3}
-  ropeSpawnRate: 10
   firePoint: {fileID: 8237473891179616149}
   lineRenderer: {fileID: 2483302351212852573}
   distanceFromChainEnd: 1.5
   joint: {fileID: 6786938023795512149}
-  swingForce: 200
+  swingForce: 400
 --- !u!120 &2483302351212852573
 LineRenderer:
   serializedVersion: 2
@@ -20415,6 +20414,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dashSpeed: 10
   dashDuration: 0.2
+  isDamage: 0
+  damageableLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  damage: 0
 --- !u!114 &5721426548412157444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20517,7 +20521,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6875853117583122160}
         m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
-        m_MethodName: OnRopeShoot
+        m_MethodName: OnSecondary
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -20621,7 +20625,7 @@ MonoBehaviour:
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
-  m_Camera: {fileID: 4418503077228935213}
+  m_Camera: {fileID: 0}
 --- !u!50 &2079246341268384381
 Rigidbody2D:
   serializedVersion: 4

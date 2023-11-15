@@ -13,7 +13,7 @@ public class PlayerSpawner : MonoBehaviour
 
 
     [Header("Prefab & Parent Settings")]
-    public GameObject playerPrefab;
+    public List<GameObject> playerPrefabs;
     public GameObject playersParent;
 
     [Header("Player Status")]
@@ -25,6 +25,9 @@ public class PlayerSpawner : MonoBehaviour
 
     private int teamAPlayerCount = 0;
     private int teamBPlayerCount = 0;
+
+    // TEMPORARY
+    public int selectedPlayer;
 
     private void Start ()
     {
@@ -54,7 +57,7 @@ public class PlayerSpawner : MonoBehaviour
 
         // Instantiate player at the spawn point
         PlayerInput instantiatedPlayer = PlayerInput.Instantiate(
-            playerPrefab,
+            playerPrefabs[selectedPlayer],
             controlScheme: config.controlScheme.ToString(),
             pairWithDevice: config.inputDevice,
             playerIndex: playerCount

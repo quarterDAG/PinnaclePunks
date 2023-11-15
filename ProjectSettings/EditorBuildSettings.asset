@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Team Select.unity
     guid: 776159fa7466e54478ca11a419942040
   - enabled: 1
+    path: Assets/Scenes/HeroSelect.unity
+    guid: 9938d70ba7a93f0408abb99dad67914f
+  - enabled: 1
     path: Assets/Scenes/GameScene.unity
     guid: f7c500cd411422e4d8565e36aa38f6d2
   m_configObjects:

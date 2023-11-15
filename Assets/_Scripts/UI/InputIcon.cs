@@ -38,7 +38,7 @@ public class InputIcon : MonoBehaviour
         if (inputManager.IsJumpPressed && playerConfig.team != PlayerConfigData.Team.Spectator)
             SetPlayerStateReady();
 
-        if (inputManager.IsRopeShootPressed)
+        if (inputManager.IsSecondaryPressed)
             SetPlayerStateChoosingTeam();
 
     }

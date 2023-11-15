@@ -14,7 +14,7 @@ public class Hammer : MonoBehaviour, IWeapon
     private int ownerIndex;
 
     private bool canAttack = true;
-    private float attackCooldown = 1f;
+    [SerializeField] private float attackCooldown = 0.5f;
     private float nextAttackTime = 0f;
     private InputManager inputManager;
 
@@ -27,6 +27,7 @@ public class Hammer : MonoBehaviour, IWeapon
     private void Start ()
     {
         ownerIndex = playerController.playerConfig.playerIndex;
+        damageThisTag = (gameObject.tag == "TeamA") ? "TeamB" : "TeamA";
     }
 
     void Update ()
@@ -49,9 +50,9 @@ public class Hammer : MonoBehaviour, IWeapon
     private async void Attack ()
     {
         playerAnimator.HammerAnimation(true);
-        await Task.Delay(500);
+        await Task.Delay(350);
         PerformHit();
-        Invoke("EndAttackAnimation", 1f); // End the animation after 1 second
+        playerAnimator.HammerAnimation(false);
     }
 
     private void PerformHit ()
@@ -67,11 +68,6 @@ public class Hammer : MonoBehaviour, IWeapon
                 enemy.GetComponent<ICharacter>().TakeDamage(damage, ownerIndex);
             }
         }
-    }
-
-    private void EndAttackAnimation ()
-    {
-        playerAnimator.HammerAnimation(false);
     }
 
     public void CanUse ( bool _canUse )

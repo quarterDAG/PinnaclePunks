@@ -11,6 +11,7 @@ TagManager:
   - EnemySpawn
   - TeamA
   - TeamB
+  - Platform
   layers:
   - Default
   - TransparentFX

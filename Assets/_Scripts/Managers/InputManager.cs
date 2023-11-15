@@ -1,9 +1,5 @@
-using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System;
-using UnityEngine.Windows;
-using System.Threading.Tasks;
 using static PlayerConfigData;
 
 public class InputManager : MonoBehaviour
@@ -18,7 +14,7 @@ public class InputManager : MonoBehaviour
     #endregion
 
     public bool IsAttackPressed { get; private set; }
-    public bool IsRopeShootPressed { get; private set; }
+    public bool IsSecondaryPressed { get; private set; }
     public bool IsDashPressed { get; private set; }
     public bool IsSlowmotionPressed { get; private set; }
     public Vector2 InventoryInput { get; private set; }
@@ -114,16 +110,16 @@ public class InputManager : MonoBehaviour
         IsSlowmotionPressed = true;
     }
 
-    public void OnRopeShoot ( InputAction.CallbackContext context )
+    public void OnSecondary ( InputAction.CallbackContext context )
     {
         if (context.ReadValue<float>() != 0)
         {
-            IsRopeShootPressed = true;
+            IsSecondaryPressed = true;
             IsJumpPressed = false;
         }
         else
         {
-            IsRopeShootPressed = false;
+            IsSecondaryPressed = false;
         }
 
     }

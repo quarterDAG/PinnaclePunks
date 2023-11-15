@@ -19,6 +19,8 @@ public class TeamSelectionController : MonoBehaviour
 
     [SerializeField] private CountdownUI countdownUI;
 
+    [SerializeField] private string nextScene = "HeroSelect";
+
     private void Start ()
     {
         countdownUI.OnCountdownFinished += StartGame;
@@ -145,7 +147,7 @@ public class TeamSelectionController : MonoBehaviour
     {
 
         //Start Button
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene(nextScene);
     }
 
 

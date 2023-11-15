@@ -23,6 +23,15 @@ public class DashSkill : MonoBehaviour
 
     private float lastClickTime;
 
+    [Header("Players Settings")]
+    [SerializeField] private bool isDamage;
+    [SerializeField] private LayerMask damageableLayers;
+    [SerializeField] private int damage;
+    private int playerIndex;
+
+
+
+
     private void Start ()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -30,6 +39,8 @@ public class DashSkill : MonoBehaviour
         weapon = GetComponentInChildren<IWeapon>();
         playerController = GetComponent<PlayerController>();
         inputManager = GetComponent<InputManager>();
+
+        playerIndex = playerController.playerConfig.playerIndex;
     }
 
     private void Update ()
@@ -110,6 +121,14 @@ public class DashSkill : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float normalizedTime = Mathf.Clamp(elapsed / duration, 0, 1);
+            Vector2 nextPosition = Vector2.Lerp(start, end, normalizedTime);
+
+
+            if (isDamage)
+            {
+                CheckForCollisions(nextPosition);
+            }
+
             rb.position = Vector2.Lerp(start, end, normalizedTime);
             yield return null;
         }
@@ -121,7 +140,18 @@ public class DashSkill : MonoBehaviour
         playerAnimator.DashAnimation(false);
     }
 
-
+    private void CheckForCollisions ( Vector2 nextPosition )
+    {
+        // Check for collisions with a small area around the next position
+        Collider2D[] hits = Physics2D.OverlapCircleAll(nextPosition, 0.1f, damageableLayers);
+        foreach (var hit in hits)
+        {
+            if (hit.gameObject != gameObject) // Prevent self damage
+            {
+                hit.GetComponent<ICharacter>()?.TakeDamage(damage, playerIndex);
+            }
+        }
+    }
 
 
 }

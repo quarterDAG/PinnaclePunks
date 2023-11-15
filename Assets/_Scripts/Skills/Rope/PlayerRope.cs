@@ -31,7 +31,7 @@ public class PlayerRope : MonoBehaviour
     {
         if (playerController.isDead) return;
 
-        if (inputManager.IsRopeShootPressed)
+        if (inputManager.IsSecondaryPressed)
         {
             if (currentRope == null)
             {

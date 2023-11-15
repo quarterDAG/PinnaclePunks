@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private Vector2 _frameVelocity;
     private bool _cachedQueryStartInColliders;
     private Vector2 _colOffsetDefault;
+    private float _currentSpeed;
+    private Coroutine speedModifierCoroutine;
 
     #region Interface
 
@@ -40,6 +42,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     [SerializeField] private Bar hpBar;
 
     [SerializeField] private bool canMove = true;
+    private float originalGravityScale;
 
     private PlayerAnimator playerAnimator;
     public bool isDead { get; private set; }
@@ -64,6 +67,10 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         _colOffsetDefault = _col.offset;
+
+        _currentSpeed = _stats.MaxSpeed;
+        originalGravityScale = _rb.gravityScale;
+
     }
 
 
@@ -139,11 +146,12 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         HandleJump();
         HandleDirection();
 
-        if (!playerRope.IsRopeConnected())
+        if (!OnRope())
         {
             HandleGravity();
             ApplyMovement();
         }
+
     }
 
     private void LateUpdate ()
@@ -165,7 +173,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             playerAnimator.GetHitAnimation();
             stats.Health -= damage;
             hpBar.UpdateValue(-damage);
-            playerRope.DestroyCurrentRope();
+            playerRope?.DestroyCurrentRope();
 
             if (TimeManager.Instance.isSlowMotionActive)
             {
@@ -193,7 +201,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         if (killerIndex >= 0)
             PlayerStatsManager.Instance.allPlayerStats[killerIndex].RecordKill();
 
-        playerRope.DestroyCurrentRope();
+        playerRope?.DestroyCurrentRope();
         playerAnimator.DeathAnimation(true);
         canMove = false;
 
@@ -266,7 +274,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         }
         // Left the Ground
-        else if (_grounded && !groundHit /*&& !playerRope.IsRopeConnected()*/)
+        else if (_grounded && !groundHit)
         {
             _grounded = false;
             _frameLeftGrounded = _time;
@@ -290,8 +298,13 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private bool HasBufferedJump => _bufferedJumpUsable && _time < _timeJumpWasPressed + _stats.JumpBuffer;
     private bool CanUseCoyote => _coyoteUsable && !_grounded && _time < _frameLeftGrounded + _stats.CoyoteTime;
 
-    private bool OnRope => playerRope.IsRopeConnected();
-
+    private bool OnRope ()
+    {
+        if (playerRope != null)
+            return playerRope.IsRopeConnected();
+        else
+            return false;
+    }
 
     private void HandleJump ()
     {
@@ -302,7 +315,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         if (!_jumpToConsume && !HasBufferedJump) return;
 
-        if (_grounded || CanUseCoyote || OnRope)
+        if (_grounded || CanUseCoyote || OnRope())
         {
             ExecuteJump();
         }
@@ -320,11 +333,9 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         _col.offset = new Vector2(_col.offset.x, _col.offset.y + 1.2f);
 
 
-
-        if (playerRope.IsRopeConnected())
-        {
+        if (OnRope())
             playerRope.DestroyCurrentRope();
-        }
+
 
         playerAnimator.JumpAnimation(true);
         Jumped?.Invoke();
@@ -359,7 +370,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         }
         else
         {
-            _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * _stats.MaxSpeed, _stats.Acceleration * Time.fixedDeltaTime);
+            _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * _currentSpeed, _stats.Acceleration * Time.fixedDeltaTime);
         }
     }
 
@@ -383,6 +394,41 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         }
     }
 
+    public void ApplySpeedModifier ( float modifier, float newGravityScale, float duration )
+    {
+        // If there's an ongoing speed modifier, remove it first
+        if (speedModifierCoroutine != null)
+        {
+            StopCoroutine(speedModifierCoroutine);
+            _currentSpeed = _stats.MaxSpeed; // Reset speed to base before applying new modifier
+        }
+
+        speedModifierCoroutine = StartCoroutine(SpeedModifierCoroutine(modifier, newGravityScale, duration ));
+    }
+
+    private IEnumerator SpeedModifierCoroutine ( float speedModifier, float newGravityScale,  float duration  )
+    {
+        _currentSpeed *= speedModifier; 
+        _rb.gravityScale = newGravityScale;
+
+        yield return new WaitForSeconds(duration);
+
+        _currentSpeed = _stats.MaxSpeed; // Reset to original speed after duration
+        speedModifierCoroutine = null; // Clear the reference to the coroutine
+    }
+
+
+    public void RemoveSpeedModifier ()
+    {
+        if (speedModifierCoroutine != null)
+        {
+            StopCoroutine(speedModifierCoroutine); // Stop the coroutine
+            speedModifierCoroutine = null;
+        }
+
+        _currentSpeed = _stats.MaxSpeed;
+        _rb.gravityScale = originalGravityScale;
+    }
 
     #endregion
 

@@ -133,6 +133,12 @@ public class PlayerAnimator : MonoBehaviour
         animator.SetBool("IsShooting", _isShooting);
     }
 
+    public void ThrowAnimation(bool _isThrowing)
+    {
+        animator.SetBool("IsThrowing", _isThrowing);
+
+    }
+
     public void HammerAnimation ( bool _isHammering )
     {
         animator.SetBool("IsHammering", _isHammering);

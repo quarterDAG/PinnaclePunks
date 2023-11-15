@@ -12,31 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 232f3081751c6bc40b7daa9eaa998593, type: 3}
   m_Name: PlayerConfigData
   m_EditorClassIdentifier: 
-  playerConfigs:
-  - playerIndex: 0
-    colorName: Red
-    playerColor: {r: 1, g: 0, b: 0, a: 1}
-    team: 2
-    controlScheme: 0
-    playerState: 0
-  - playerIndex: 1
-    colorName: Blue
-    playerColor: {r: 0.09019608, g: 0, b: 1, a: 1}
-    team: 2
-    controlScheme: 0
-    playerState: 0
-  - playerIndex: 2
-    colorName: Green
-    playerColor: {r: 0.011764707, g: 1, b: 0, a: 1}
-    team: 2
-    controlScheme: 0
-    playerState: 0
-  - playerIndex: 3
-    colorName: Yellow
-    playerColor: {r: 0.9058824, g: 1, b: 0, a: 1}
-    team: 2
-    controlScheme: 0
-    playerState: 0
+  playerConfigs: []
   playerColors:
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 0.09040928, g: 0, b: 1, a: 1}
