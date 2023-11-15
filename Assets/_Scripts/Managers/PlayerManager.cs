@@ -102,7 +102,7 @@ public class PlayerManager : MonoBehaviour
     {
         instantiatedPlayer.GetComponent<PlayerController>().SetPlayerConfig(config);
         instantiatedPlayer.gameObject.tag = config.team.ToString();
-        
+
         instantiatedPlayer.GetComponent<InputManager>().UpdateCurrentControlScheme(config.controlScheme.ToString());
         cameraManager.AddPlayerToCinemachineTargetGroup(instantiatedPlayer.transform);
         instantiatedPlayer.GetComponentInChildren<PlayerMonsterSpawner>().ConfigMonsterSpawner();
@@ -138,7 +138,7 @@ public class PlayerManager : MonoBehaviour
         return playerConfigs.FirstOrDefault(pc => pc.playerIndex == playerIndex);
     }
 
-    public void SetHeroSelectManager(HeroSelectManager manager)
+    public void SetHeroSelectManager ( HeroSelectManager manager )
     {
         heroSelectManager = manager;
     }
@@ -163,6 +163,25 @@ public class PlayerManager : MonoBehaviour
         PlayerConfig playerConfig = playerConfigs[playerIndex];
         playerConfig.playerState = playerState;
         playerConfigs[playerIndex] = playerConfig;
+    }
+
+    public void SetAllPlayerState ( PlayerState playerState )
+    {
+        for (int i = 0; i < playerConfigs.Count; i++)
+        {
+            SetPlayerState(i, playerState);
+        }
+    }
+
+    public void SetPlayerSelectedHero ( int _selectedHero, PlayerConfig config )
+    {
+        var configCopy = playerConfigs[config.playerIndex];
+        configCopy.selectedPlayer = _selectedHero;
+        configCopy.playerState = PlayerState.Ready;
+        playerConfigs[config.playerIndex] = configCopy;
+
+        if (heroSelectManager.AreAllPlayersReady())
+            heroSelectManager.StartGame();
     }
     #endregion
 

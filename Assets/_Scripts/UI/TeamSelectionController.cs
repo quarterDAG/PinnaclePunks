@@ -105,7 +105,7 @@ public class TeamSelectionController : MonoBehaviour
 
         PlayerManager.Instance.SetPlayerState(playerIndex, PlayerState.Ready);
 
-        if(TwoPlayersAreReady())
+        if (TwoPlayersAreReady())
         {
             StartGameCountdown();
         }
@@ -133,20 +133,19 @@ public class TeamSelectionController : MonoBehaviour
         return readyPlayersCount >= 2;
     }
 
-    private void StartGameCountdown()
+    private void StartGameCountdown ()
     {
         countdownUI.StartTimer();
     }
 
-    private void StopGameCoundown()
+    private void StopGameCoundown ()
     {
         countdownUI.StopTimer();
     }
 
     public void StartGame ()
     {
-
-        //Start Button
+        PlayerManager.Instance.SetAllPlayerState(PlayerState.SelectingHero);
         SceneManager.LoadScene(nextScene);
     }
 

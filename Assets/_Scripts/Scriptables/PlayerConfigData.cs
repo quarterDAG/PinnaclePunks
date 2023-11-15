@@ -41,6 +41,7 @@ public class PlayerConfigData : ScriptableObject
     public enum PlayerState
     {
         ChoosingTeam,
+        SelectingHero,
         Ready,
         Playing
     }

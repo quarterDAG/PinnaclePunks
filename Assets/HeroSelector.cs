@@ -34,9 +34,10 @@ public class HeroSelector : MonoBehaviour
             // Select hero and set to ready
             if (inputManager.IsJumpPressed)
             {
-                SetHeroToStage(selectedHeroIndex);
                 isPlayerReady = true;
                 inputManager.ResetJump(false, false); // Reset jump to avoid repeated selection
+
+                PlayerManager.Instance.SetPlayerSelectedHero(selectedHeroIndex, playerConfig);
             }
         }
         else
@@ -73,19 +74,22 @@ public class HeroSelector : MonoBehaviour
 
     public void MoveSelectorToHero ( int heroIndex )
     {
+        // Update the selected hero index first
+        selectedHeroIndex = heroIndex;
+
         // Move the selector to the new hero avatar position
         transform.position = heroAvatars[heroIndex].transform.position;
+
+        // Notify the HeroSelectManager about the new selected index
+        heroSelectManager.UpdateSelectorAvatar(this, selectedHeroIndex, playerConfig.team);
     }
+
     public void GetHeroAvatarList ()
     {
         heroAvatars = heroSelectManager.GetTeamAvatarList(playerConfig.team);
     }
 
-    private void SetHeroToStage ( int heroIndex )
-    {
-        // Logic to display the selected hero on the Hero Stage
-        // This could involve animating the hero into the stage, displaying a "Ready" indicator, etc.
-    }
+
 
     public void SetPlayerConfig ( PlayerConfig config )
     {
@@ -101,5 +105,26 @@ public class HeroSelector : MonoBehaviour
     {
         frame = GetComponentInChildren<Image>();
         frame.color = config.playerColor;
+    }
+
+    public void UpdateVisual ( int count, bool isClockwise )
+    {
+        // Adjust the visual based on the count and the fill direction
+        if (count >= 2)
+        {
+            frame.fillMethod = Image.FillMethod.Radial360;
+            frame.fillAmount = 0.5f;
+            frame.fillClockwise = isClockwise;
+        }
+        else
+        {
+            frame.fillAmount = 1.0f;
+        }
+    }
+
+
+    public PlayerConfig GetHeroSelectorConfig ()
+    {
+        return playerConfig;
     }
 }

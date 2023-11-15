@@ -26,8 +26,6 @@ public class PlayerSpawner : MonoBehaviour
     private int teamAPlayerCount = 0;
     private int teamBPlayerCount = 0;
 
-    // TEMPORARY
-    public int selectedPlayer;
 
     private void Start ()
     {
@@ -54,10 +52,9 @@ public class PlayerSpawner : MonoBehaviour
             return null; // Return null if no spawn point is available
         }
 
-
         // Instantiate player at the spawn point
         PlayerInput instantiatedPlayer = PlayerInput.Instantiate(
-            playerPrefabs[selectedPlayer],
+            playerPrefabs[config.selectedPlayer],
             controlScheme: config.controlScheme.ToString(),
             pairWithDevice: config.inputDevice,
             playerIndex: playerCount
@@ -188,7 +185,7 @@ public class PlayerSpawner : MonoBehaviour
         {
             // Here you can choose to deactivate or destroy the players
             // Deactivate: child.gameObject.SetActive(false);
-             Destroy(child.gameObject);
+            Destroy(child.gameObject);
         }
 
         // Reset player status components for both teams

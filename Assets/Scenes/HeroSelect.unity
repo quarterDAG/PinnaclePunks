@@ -3554,6 +3554,15 @@ MonoBehaviour:
   teamAParent: {fileID: 304150754}
   teamBParent: {fileID: 1652083616}
   selectorPrefab: {fileID: 3450111750651732716, guid: 49df96f91d7def844b1347ba774caa13, type: 3}
+  heroImagesA:
+  - {fileID: 533564848}
+  - {fileID: 965569480}
+  heroImagesB:
+  - {fileID: 177482216}
+  - {fileID: 1376453306}
+  avatarSprites:
+  - {fileID: 21300000, guid: 2ec7c9ba7c14c414d9626eff8dc3e7ec, type: 3}
+  - {fileID: 21300000, guid: 217ee3fbc9220fe4ab2e8485c918a30b, type: 3}
 --- !u!1 &1184728308
 GameObject:
   m_ObjectHideFlags: 0
