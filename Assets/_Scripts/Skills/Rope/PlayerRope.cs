@@ -58,12 +58,13 @@ public class PlayerRope : MonoBehaviour
 
     private void ShootRope ()
     {
-            DestroyCurrentRope();
+        DestroyCurrentRope();
 
-            currentRope = Instantiate(ropePrefab, firePoint.position, firePoint.rotation);
-            currentRope.GetComponent<Rope>().SetPlayerRope(this);
 
-            lineRenderer.enabled = true;
+        currentRope = Instantiate(ropePrefab, firePoint.position, firePoint.rotation);
+        currentRope.GetComponent<Rope>().SetPlayerRope(this);
+
+        lineRenderer.enabled = true;
     }
 
     private void UpdateLineRenderer ()
@@ -80,6 +81,7 @@ public class PlayerRope : MonoBehaviour
     {
         if (currentRope)
         {
+
             Destroy(currentRope);
             currentRope = null;
             lineRenderer.enabled = false;
@@ -88,6 +90,7 @@ public class PlayerRope : MonoBehaviour
 
     private void HandleSwing ()
     {
+
         if (currentRope.transform.position.y > transform.position.y)
         {
             float vertical = inputManager.InputVelocity.y;

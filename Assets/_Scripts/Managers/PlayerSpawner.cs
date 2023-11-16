@@ -17,7 +17,7 @@ public class PlayerSpawner : MonoBehaviour
     public GameObject playersParent;
 
     [Header("Player Status")]
-    public GameObject playerStatusPrefab;
+    public GameObject playerAvatarPrefab;
     public Transform teamAStatusParent;
     public Transform teamBStatusParent;
     [SerializeField] private List<Vector2> teamAStatusPositions;
@@ -54,7 +54,7 @@ public class PlayerSpawner : MonoBehaviour
 
         // Instantiate player at the spawn point
         PlayerInput instantiatedPlayer = PlayerInput.Instantiate(
-            playerPrefabs[config.selectedPlayer],
+            playerPrefabs[config.selectedHero],
             controlScheme: config.controlScheme.ToString(),
             pairWithDevice: config.inputDevice,
             playerIndex: playerCount
@@ -95,15 +95,17 @@ public class PlayerSpawner : MonoBehaviour
         return spawnPoint;
     }
 
-    public void InstantiatePlayerStatusComponent ( PlayerConfig config, PlayerInput instantiatedPlayer )
+    public void InstantiateHeroAvatarComponent ( PlayerConfig config, PlayerInput instantiatedPlayer )
     {
         Vector2 statusPosition = GetPlayerStatusPosition(config);
 
         Transform parentGO = GetParentGO(config);
 
         // Instantiate player status and parent it to the position transform
-        GameObject playerStatusGO = Instantiate(playerStatusPrefab, parentGO, false);
+        GameObject playerStatusGO = Instantiate(playerAvatarPrefab, parentGO, false);
         Bar hpBar = playerStatusGO.GetComponentInChildren<Bar>();
+        HeroAvatarImageController heroAvatarImageController = playerStatusGO.GetComponentInChildren<HeroAvatarImageController>();
+        heroAvatarImageController.UpdateHeroImageAvatar(config);
 
         // Ensure the GameObject is active before trying to modify RectTransform properties
         playerStatusGO.SetActive(true);
@@ -112,7 +114,10 @@ public class PlayerSpawner : MonoBehaviour
         if (playerStatusGO.transform.childCount > 0)
         {
             RectTransform HPAvatar = playerStatusGO.transform.GetChild(0).GetComponent<RectTransform>();
-            HPAvatar.anchoredPosition = statusPosition; // Reset the anchored position to (0,0)
+            HPAvatar.anchoredPosition = statusPosition;
+
+            if (config.team == PlayerConfigData.Team.TeamB)
+                HPAvatar.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
         }
 
         // Link player status to the player

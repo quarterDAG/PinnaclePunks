@@ -107,7 +107,7 @@ public class PlayerManager : MonoBehaviour
         instantiatedPlayer.GetComponentInChildren<PlayerMonsterSpawner>().ConfigMonsterSpawner();
 
         // Instantiate player status component
-        playerSpawner.InstantiatePlayerStatusComponent(config, instantiatedPlayer);
+        playerSpawner.InstantiateHeroAvatarComponent(config, instantiatedPlayer);
 
         SlowmotionController slowmotionController = instantiatedPlayer.GetComponentInChildren<SlowmotionController>();
         TimeManager.Instance.AssignBarToSMController(config, slowmotionController);
@@ -175,7 +175,7 @@ public class PlayerManager : MonoBehaviour
     public void SetPlayerSelectedHero ( int _selectedHero, PlayerConfig config )
     {
         var configCopy = playerConfigs[config.playerIndex];
-        configCopy.selectedPlayer = _selectedHero;
+        configCopy.selectedHero = _selectedHero;
         configCopy.playerState = PlayerState.Ready;
         playerConfigs[config.playerIndex] = configCopy;
 

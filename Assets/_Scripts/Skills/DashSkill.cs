@@ -19,9 +19,6 @@ public class DashSkill : MonoBehaviour
     private IWeapon weapon;
     private Rigidbody2D rb;
 
-    private int lastTapDirection = 0; // -1 for left, 1 for right
-
-    private float lastClickTime;
 
     [Header("Damage Settings")]
     [SerializeField] private bool isDamage;
@@ -63,18 +60,9 @@ public class DashSkill : MonoBehaviour
             inputManager.ResetDash(); // Reset the dash press state
         }
 
-        if (inputManager.currentControlScheme == "Keyboard")
-        {
-            HandleKeyboardDash();
-        }
+
     }
 
-    private void HandleKeyboardDash ()
-    {
-        lastDashTime = Time.time; // Set the dash time after a successful dash
-        Dash(inputManager.InputVelocity);
-        lastClickTime = 0;
-    }
 
 
     private Vector2 GetDashDirectionForGamepad ()

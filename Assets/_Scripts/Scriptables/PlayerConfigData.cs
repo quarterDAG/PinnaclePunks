@@ -16,7 +16,7 @@ public struct PlayerConfig
     public ControlScheme controlScheme;
     public PlayerState playerState;
     public InputDevice inputDevice;
-    public int selectedPlayer;
+    public int selectedHero;
 }
 
 [CreateAssetMenu(fileName = "PlayerConfigData", menuName = "Player/Player Config Data", order = 1)]

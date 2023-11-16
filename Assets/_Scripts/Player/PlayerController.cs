@@ -39,9 +39,9 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private float _time;
 
     private PlayerRope playerRope;
-    [SerializeField] private Bar hpBar;
+    private Bar hpBar;
 
-    [SerializeField] private bool canMove = true;
+    private bool canMove = true;
     private float originalGravityScale;
 
     private PlayerAnimator playerAnimator;
