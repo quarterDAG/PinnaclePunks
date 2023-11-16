@@ -180,7 +180,7 @@ public class PlayerManager : MonoBehaviour
         playerConfigs[config.playerIndex] = configCopy;
 
         if (heroSelectManager.AreAllPlayersReady())
-            heroSelectManager.StartGame();
+            heroSelectManager.StartCountdownTimer();
     }
     #endregion
 

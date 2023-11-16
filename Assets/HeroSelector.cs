@@ -19,7 +19,7 @@ public class HeroSelector : MonoBehaviour
 
     void Start ()
     {
-        selectedHeroIndex = 0; // Default to the first hero
+        selectedHeroIndex = 0; 
         isPlayerReady = false;
     }
 
@@ -36,6 +36,8 @@ public class HeroSelector : MonoBehaviour
             {
                 isPlayerReady = true;
                 inputManager.ResetJump(false, false); // Reset jump to avoid repeated selection
+
+                heroSelectManager.UpdateReadyIcon(this, true);
 
                 PlayerManager.Instance.SetPlayerSelectedHero(selectedHeroIndex, playerConfig);
             }

@@ -23,12 +23,14 @@ public class DashSkill : MonoBehaviour
 
     private float lastClickTime;
 
-    [Header("Players Settings")]
+    [Header("Damage Settings")]
     [SerializeField] private bool isDamage;
     [SerializeField] private LayerMask damageableLayers;
     [SerializeField] private int damage;
     private int playerIndex;
+    private string teamTag;
 
+    [SerializeField] private bool yAxisActivated;
 
 
 
@@ -41,6 +43,7 @@ public class DashSkill : MonoBehaviour
         inputManager = GetComponent<InputManager>();
 
         playerIndex = playerController.playerConfig.playerIndex;
+        teamTag = gameObject.tag;
     }
 
     private void Update ()
@@ -68,43 +71,28 @@ public class DashSkill : MonoBehaviour
 
     private void HandleKeyboardDash ()
     {
-        if (inputManager.InputVelocity.x != 0)
-        {
-            int currentTapDirection = (int)Mathf.Sign(inputManager.InputVelocity.x);
-
-            if (currentTapDirection != 0)
-            {
-                float timeSinceLastTap = Time.time - lastClickTime;
-
-                if (timeSinceLastTap <= DOUBLE_CLICK_TIME && currentTapDirection == lastTapDirection)
-                {
-                    lastDashTime = Time.time; // Set the dash time after a successful dash
-                    Dash(currentTapDirection);
-                    lastClickTime = 0;
-                    lastTapDirection = 0; // Reset the last tap direction after a successful dash
-                }
-                else
-                {
-                    lastClickTime = Time.time;
-                    lastTapDirection = currentTapDirection;
-                }
-            }
-        }
+        lastDashTime = Time.time; // Set the dash time after a successful dash
+        Dash(inputManager.InputVelocity);
+        lastClickTime = 0;
     }
 
 
-    private int GetDashDirectionForGamepad ()
+    private Vector2 GetDashDirectionForGamepad ()
     {
         // Assuming the dash direction is determined by the horizontal axis of the gamepad's left stick
-        float gamepadDirection = inputManager.InputVelocity.x;
-        return (int)Mathf.Sign(gamepadDirection);
+        Vector2 gamepadDirection = inputManager.InputVelocity;
+        return gamepadDirection;
     }
 
 
-    private void Dash ( int direction )
+    private void Dash ( Vector2 direction )
     {
         Vector2 startDashPosition = rb.position;
-        Vector2 targetDashPosition = new Vector2(rb.position.x + (dashSpeed * direction), rb.position.y);
+        Vector2 targetDashPosition = new Vector2(rb.position.x + (dashSpeed * direction.x), rb.position.y);
+
+        if (yAxisActivated)
+            targetDashPosition = new Vector2(rb.position.x + (dashSpeed * direction.x), rb.position.y + (dashSpeed * direction.y)); ;
+
         StartCoroutine(DashMovementCoroutine(startDashPosition, targetDashPosition, dashDuration));
     }
 
@@ -135,7 +123,7 @@ public class DashSkill : MonoBehaviour
 
         rb.position = end;
 
-        gameObject.tag = "Player";
+        gameObject.tag = teamTag;
         weapon.CanUse(true);
         playerAnimator.DashAnimation(false);
     }

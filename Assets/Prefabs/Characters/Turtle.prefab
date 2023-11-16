@@ -20286,13 +20286,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d089ccb2aa14bea4da9ef95e0e9383a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dashSpeed: 10
+  dashSpeed: 20
   dashDuration: 0.2
   isDamage: 1
   damageableLayers:
     serializedVersion: 2
     m_Bits: 768
   damage: 20
+  yAxisActivated: 1
 --- !u!114 &5721426548412157444
 MonoBehaviour:
   m_ObjectHideFlags: 0

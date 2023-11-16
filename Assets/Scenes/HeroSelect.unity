@@ -517,6 +517,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3079371092035592697, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 3236778408374624396, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
       propertyPath: m_Name
       value: Hero Stage (1)
@@ -546,6 +550,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2341591859814453927, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
   m_PrefabInstance: {fileID: 334346771}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &334346774 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7279900491131694877, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
+  m_PrefabInstance: {fileID: 334346771}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &357110814
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -554,6 +569,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1652083616}
     m_Modifications:
+    - target: {fileID: 1899943055412388329, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3991931050634509542, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1992,6 +2011,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2341591859814453927, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
   m_PrefabInstance: {fileID: 706547079}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &706547082 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7279900491131694877, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
+  m_PrefabInstance: {fileID: 706547079}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &751169590
 GameObject:
   m_ObjectHideFlags: 0
@@ -2683,11 +2713,19 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3079371092035592697, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 3236778408374624396, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
       propertyPath: m_Name
       value: Hero Stage
       objectReference: {fileID: 0}
     - target: {fileID: 3418895093056905215, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7279900491131694877, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
@@ -2704,6 +2742,17 @@ RectTransform:
 --- !u!114 &942947458 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3418895093056905215, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
+  m_PrefabInstance: {fileID: 942947456}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &942947459 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7279900491131694877, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
   m_PrefabInstance: {fileID: 942947456}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -3006,9 +3055,12 @@ MonoBehaviour:
   heroImagesB:
   - {fileID: 942947458}
   - {fileID: 334346772}
-  avatarSprites:
-  - {fileID: 21300000, guid: 2ec7c9ba7c14c414d9626eff8dc3e7ec, type: 3}
-  - {fileID: 21300000, guid: 217ee3fbc9220fe4ab2e8485c918a30b, type: 3}
+  readyIconsA:
+  - {fileID: 1207229282}
+  - {fileID: 706547082}
+  readyIconsB:
+  - {fileID: 942947459}
+  - {fileID: 334346774}
 --- !u!1 &1184728308
 GameObject:
   m_ObjectHideFlags: 0
@@ -3018,9 +3070,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1184728309}
-  - component: {fileID: 1184728312}
   - component: {fileID: 1184728310}
-  - component: {fileID: 1184728313}
+  - component: {fileID: 1184728312}
   m_Layer: 5
   m_Name: TeamA Hero Select
   m_TagString: TeamA
@@ -3089,18 +3140,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1184728313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1184728308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e67dc987890aee4b92e4933c560b8da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1188586997
 GameObject:
   m_ObjectHideFlags: 0
@@ -3348,6 +3387,17 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1207229282 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7279900491131694877, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
+  m_PrefabInstance: {fileID: 1207229279}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -7159,6 +7209,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 304150754}
     m_Modifications:
+    - target: {fileID: 1899943055412388329, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3991931050634509542, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

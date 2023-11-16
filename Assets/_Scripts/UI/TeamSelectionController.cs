@@ -23,12 +23,12 @@ public class TeamSelectionController : MonoBehaviour
 
     private void Start ()
     {
-        countdownUI.OnCountdownFinished += StartGame;
+        countdownUI.OnCountdownFinished += NextScene;
     }
 
     private void OnDestroy ()
     {
-        countdownUI.OnCountdownFinished -= StartGame;
+        countdownUI.OnCountdownFinished -= NextScene;
     }
 
 
@@ -143,7 +143,7 @@ public class TeamSelectionController : MonoBehaviour
         countdownUI.StopTimer();
     }
 
-    public void StartGame ()
+    public void NextScene ()
     {
         PlayerManager.Instance.SetAllPlayerState(PlayerState.SelectingHero);
         SceneManager.LoadScene(nextScene);

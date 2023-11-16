@@ -23,7 +23,7 @@ public class HeroSelectManager : MonoBehaviour
     public Transform teamBParent;
 
 
-    [Header("Prefab & Parent Settings")]
+    [Header("Prefab")]
     public GameObject selectorPrefab;
 
     private Dictionary<HeroSelector, int> selectorAvatarMapTeamA = new Dictionary<HeroSelector, int>();
@@ -33,10 +33,32 @@ public class HeroSelectManager : MonoBehaviour
     [SerializeField] private List<Image> heroImagesA;
     [SerializeField] private List<Image> heroImagesB;
 
+    [Header("Ready Icons")]
+    [SerializeField] private List<Image> readyIconsA;
+    [SerializeField] private List<Image> readyIconsB;
+
+    private Dictionary<HeroSelector, int> teamAPlayerIndices = new Dictionary<HeroSelector, int>();
+    private Dictionary<HeroSelector, int> teamBPlayerIndices = new Dictionary<HeroSelector, int>();
+
+
+    private CountdownUI countdownUI;
+
+    private void Awake ()
+    {
+        countdownUI = GetComponentInChildren<CountdownUI>();
+        countdownUI.OnCountdownFinished += StartGame;
+
+    }
+
     private void Start ()
     {
         PlayerManager.Instance.SetHeroSelectManager(this);
         PlayerManager.Instance.InitializeSelectors();
+    }
+
+    private void OnDestroy ()
+    {
+        countdownUI.OnCountdownFinished -= StartGame;
     }
 
     public PlayerInput InstantiateSelector ( PlayerConfig config, int playerCount )
@@ -83,11 +105,18 @@ public class HeroSelectManager : MonoBehaviour
 
     public void RegisterSelector ( HeroSelector selector )
     {
-        int nextAvailableIndex = FindNextAvailableAvatarIndex(selector.GetHeroSelectorConfig().team);
-        GetSelectorMap(selector.GetHeroSelectorConfig().team)[selector] = nextAvailableIndex;
+        var team = selector.GetHeroSelectorConfig().team;
+        int nextAvailableIndex = FindNextAvailableAvatarIndex(team);
+        GetSelectorMap(team)[selector] = nextAvailableIndex;
+
+        // Assign team-specific index
+        var playerIndices = team == PlayerConfigData.Team.TeamA ? teamAPlayerIndices : teamBPlayerIndices;
+        playerIndices[selector] = playerIndices.Count; // Assign the next index in the team
+
         selector.MoveSelectorToHero(nextAvailableIndex);
         UpdateHeroVisuals();
     }
+
 
     public void UpdateSelectorAvatar ( HeroSelector selector, int avatarIndex, PlayerConfigData.Team team )
     {
@@ -230,6 +259,21 @@ public class HeroSelectManager : MonoBehaviour
         return -1; // Return -1 if no avatars are available
     }
 
+    public void UpdateReadyIcon ( HeroSelector selector, bool isReady )
+    {
+        var team = selector.GetHeroSelectorConfig().team;
+        var playerIndices = team == PlayerConfigData.Team.TeamA ? teamAPlayerIndices : teamBPlayerIndices;
+
+        if (playerIndices.TryGetValue(selector, out int teamPlayerIndex))
+        {
+            List<Image> readyIcons = team == PlayerConfigData.Team.TeamA ? readyIconsA : readyIconsB;
+            if (teamPlayerIndex >= 0 && teamPlayerIndex < readyIcons.Count)
+            {
+                readyIcons[teamPlayerIndex].enabled = isReady;
+            }
+        }
+    }
+
     public bool AreAllPlayersReady ()
     {
         List<PlayerConfig> playerConfigList = PlayerManager.Instance.GetPlayerConfigList();
@@ -242,6 +286,11 @@ public class HeroSelectManager : MonoBehaviour
             }
         }
         return true; // All players are ready
+    }
+
+    public void StartCountdownTimer()
+    {
+        countdownUI.StartTimer();
     }
 
     public void StartGame ()
