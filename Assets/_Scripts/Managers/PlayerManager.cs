@@ -38,7 +38,6 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-
     public void InitializeSelectors ()
     {
         playerCount = 0;

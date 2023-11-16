@@ -1771,7 +1771,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Match starts in:'
+  m_text: 'Select Hero in:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1735a298050f2f242805519eb986cd37, type: 2}
   m_sharedMaterial: {fileID: -3767609246322294839, guid: 1735a298050f2f242805519eb986cd37, type: 2}
@@ -2388,7 +2388,6 @@ RectTransform:
   m_Children:
   - {fileID: 520087164}
   - {fileID: 1184728309}
-  - {fileID: 919302738}
   - {fileID: 1991335191}
   - {fileID: 358006046}
   - {fileID: 1922285471}
@@ -2396,6 +2395,7 @@ RectTransform:
   - {fileID: 1693473246}
   - {fileID: 616040846}
   - {fileID: 722313599}
+  - {fileID: 919302738}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

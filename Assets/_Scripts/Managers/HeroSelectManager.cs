@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -11,6 +13,12 @@ public class HeroSelectManager : MonoBehaviour
     private int teamASpawnIndex = 0;
     private int teamBSpawnIndex = 0;
 
+    private Dictionary<PlayerConfigData.Team, int> teamPlayerCounts = new Dictionary<PlayerConfigData.Team, int>
+    {
+        { PlayerConfigData.Team.TeamA, 0 },
+        { PlayerConfigData.Team.TeamB, 0 }
+    };
+
     public Transform teamAParent;
     public Transform teamBParent;
 
@@ -21,13 +29,9 @@ public class HeroSelectManager : MonoBehaviour
     private Dictionary<HeroSelector, int> selectorAvatarMapTeamA = new Dictionary<HeroSelector, int>();
     private Dictionary<HeroSelector, int> selectorAvatarMapTeamB = new Dictionary<HeroSelector, int>();
 
-    [Header("Hero Avatars")]
+    [Header("Hero Images")]
     [SerializeField] private List<Image> heroImagesA;
     [SerializeField] private List<Image> heroImagesB;
-
-    [Header("Hero Sprites")]
-    [SerializeField] private List<Sprite> avatarSprites;
-
 
     private void Start ()
     {
@@ -35,20 +39,11 @@ public class HeroSelectManager : MonoBehaviour
         PlayerManager.Instance.InitializeSelectors();
     }
 
-
-
     public PlayerInput InstantiateSelector ( PlayerConfig config, int playerCount )
     {
         Transform spawnPoint = GetSpawnPoint(config);
 
-        if (config.team == PlayerConfigData.Team.TeamA)
-        {
-            teamASpawnIndex++;
-        }
-        else if (config.team == PlayerConfigData.Team.TeamB)
-        {
-            teamBSpawnIndex++;
-        }
+        teamPlayerCounts[config.team]++;
 
         if (spawnPoint == null)
         {
@@ -64,8 +59,6 @@ public class HeroSelectManager : MonoBehaviour
             pairWithDevice: config.inputDevice,
             playerIndex: playerCount
         );
-
-        //PlayerManager.Instance.SetPlayerState(config.playerIndex, PlayerConfigData.PlayerState.SelectingHero);
 
         // Set the instantiated player's position and rotation
         instantiatedPlayer.transform.position = spawnPoint.position;
@@ -123,29 +116,45 @@ public class HeroSelectManager : MonoBehaviour
         var selectorMap = GetSelectorMap(team);
         List<Image> heroImages = team == PlayerConfigData.Team.TeamA ? heroImagesA : heroImagesB;
 
-        // Assume all images to be reset to default or disabled
-        foreach (var image in heroImages)
-        {
-            image.enabled = false; // Hide the image if no avatar is selected
-        }
+        int teamPlayerIndex = 0;
 
-        // Update images based on the current selection
         foreach (var pair in selectorMap)
         {
             HeroSelector selector = pair.Key;
             int avatarIndex = pair.Value;
 
-            if (avatarIndex >= 0 && avatarIndex < avatarSprites.Count)
+            if (avatarIndex >= 0)
             {
-                Sprite selectedSprite = avatarSprites[avatarIndex];
-                Image playerImage = heroImages[selector.GetHeroSelectorConfig().playerIndex]; // Assuming each player has a fixed image slot
+                Image playerImage = heroImages[teamPlayerIndex % heroImages.Count];
+                Animator animator = playerImage.GetComponent<Animator>();
+                AspectRatioFitter aspectRatioFitter = playerImage.GetComponent<AspectRatioFitter>();
+
+                // Temporarily disable Animator and AspectRatioFitter
+                if (animator != null) animator.enabled = false;
+
+                // Reset animator bools and set the correct animation state
+                animator.SetBool("IsArchy", avatarIndex == 0);
+                animator.SetBool("IsTurtle", avatarIndex == 1);
+
+                // Force native size
+                StartCoroutine(SetImageToNativeSizeNextFrame(playerImage));
+
+                // Re-enable Animator and AspectRatioFitter
+                if (animator != null) animator.enabled = true;
 
                 playerImage.enabled = true;
-                playerImage.sprite = selectedSprite;
+                teamPlayerIndex++;
             }
         }
     }
+    private IEnumerator SetImageToNativeSizeNextFrame ( Image image )
+    {
+        // Wait until the end of the frame
+        yield return new WaitForEndOfFrame();
 
+        // Apply SetNativeSize
+        image.SetNativeSize();
+    }
 
     private void ResetVisuals ( Dictionary<HeroSelector, int> selectorMap )
     {
