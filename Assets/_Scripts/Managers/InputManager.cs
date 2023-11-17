@@ -1,10 +1,13 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static PlayerConfigData;
+
 
 public class InputManager : MonoBehaviour
 {
-    public string currentControlScheme { get; private set; } = "Gamepad"; //Default
+
+    public Gamepad currentGamepad;
+
     public Vector2 InputVelocity { get; private set; }
     public Vector2 InputAim { get; private set; }
 
@@ -21,13 +24,6 @@ public class InputManager : MonoBehaviour
     public bool IsSpawnMonsterPressed { get; private set; }
 
 
-    private void Start ()
-    {
-        InputSystem.settings.maxEventBytesPerUpdate = 0;
-
-  
-    }
-
 
     private void LateUpdate ()
     {
@@ -35,13 +31,13 @@ public class InputManager : MonoBehaviour
     }
 
 
-    public void UpdateCurrentControlScheme ( string controlScheme )
-    {
-        currentControlScheme = controlScheme;
-    }
-
     public void OnMovementChanged ( InputAction.CallbackContext context )
     {
+        if (context.control.device is Gamepad gamepad)
+        {
+            currentGamepad = gamepad;
+        }
+
         if (!context.performed)
         {
             return;
@@ -80,8 +76,6 @@ public class InputManager : MonoBehaviour
             IsJumpHeld = false;
         }
     }
-
-
 
 
     public void OnAttack ( InputAction.CallbackContext context )
@@ -164,24 +158,19 @@ public class InputManager : MonoBehaviour
         IsJumpHeld = isJumpHeld;
     }
 
-    public ControlScheme GetCurrentControlScheme ( InputDevice lastDevice )
+
+    public void StartVibration ( float intensity, float duration )
     {
+        currentGamepad.SetMotorSpeeds(intensity, intensity); // Set both motors to the same speed
 
-        if (lastDevice is Gamepad)
-        {
-            return ControlScheme.Gamepad;
-        }
-        else if (lastDevice is Mouse)
-        {
-            return ControlScheme.Keyboard;
-        }
-        else if (lastDevice is Keyboard)
-        {
-            return ControlScheme.Keyboard;
-        }
-        else
-            return ControlScheme.Gamepad;
-        // Add more checks for other device types if needed.
-
+        StartCoroutine(StopVibration(duration));
     }
+
+    IEnumerator StopVibration ( float duration )
+    {
+        yield return new WaitForSeconds(duration);
+
+        currentGamepad.ResetHaptics();
+    }
+
 }

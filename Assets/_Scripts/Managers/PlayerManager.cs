@@ -54,13 +54,7 @@ public class PlayerManager : MonoBehaviour
             {
                 var instantiatedSelector = heroSelectManager.InstantiateSelector(config, playerCount);
                 if (instantiatedSelector != null)
-                {
-                    // Set up the player components that are specific to PlayerManager's responsibilities
-                    //SetupPlayer(config, instantiatedPlayer);
-
-                    instantiatedSelector.GetComponent<InputManager>().UpdateCurrentControlScheme(config.controlScheme.ToString());
-
-
+                {                   
                     // Create a reference to the config in the player stats (mainly to access the team when calculating the score)
                     PlayerStatsManager.Instance.allPlayerStats[config.playerIndex].SetPlayerConfig(config);
                     playerCount++;
@@ -102,16 +96,44 @@ public class PlayerManager : MonoBehaviour
         instantiatedPlayer.GetComponent<PlayerController>().SetPlayerConfig(config);
         instantiatedPlayer.gameObject.tag = config.team.ToString();
 
-        instantiatedPlayer.GetComponent<InputManager>().UpdateCurrentControlScheme(config.controlScheme.ToString());
         cameraManager.AddPlayerToCinemachineTargetGroup(instantiatedPlayer.transform);
         instantiatedPlayer.GetComponentInChildren<PlayerMonsterSpawner>().ConfigMonsterSpawner();
 
-        // Instantiate player status component
+        instantiatedPlayer.GetComponentInChildren<PlayerParticlesAndAudio>().SetColor(config.playerColor);
+
+        // Instantiate Avatar component
         playerSpawner.InstantiateHeroAvatarComponent(config, instantiatedPlayer);
 
         SlowmotionController slowmotionController = instantiatedPlayer.GetComponentInChildren<SlowmotionController>();
         TimeManager.Instance.AssignBarToSMController(config, slowmotionController);
+
+
     }
+
+    public void ResetPlayerConfigs ()
+    {
+ /*       // Reset each player's configuration to a default state
+        foreach (var config in playerConfigs)
+        {
+            ResetPlayerConfig(config);
+        }*/
+
+        // Clear the list of player configurations
+        playerConfigs.Clear();
+
+        // Reset the player count
+        playerCount = 0;
+    }
+
+    private void ResetPlayerConfig ( PlayerConfig config )
+    {
+        config.team = Team.Spectator;
+        config.playerIndex = 0;
+        config.playerState = PlayerState.ChoosingTeam;
+        config.selectedHero = 0; 
+                               
+    }
+
 
     #region Getters & Setters
 

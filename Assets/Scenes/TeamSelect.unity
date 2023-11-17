@@ -3710,6 +3710,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1789131636}
     m_Modifications:
+    - target: {fileID: 734002866572014470, guid: 76a05d9b7264f5346ae1c9110f92b8d3, type: 3}
+      propertyPath: timeRemaining
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 798444043100061370, guid: 76a05d9b7264f5346ae1c9110f92b8d3, type: 3}
       propertyPath: m_text
       value: 5

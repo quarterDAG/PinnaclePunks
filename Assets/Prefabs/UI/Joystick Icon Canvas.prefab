@@ -133,7 +133,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1247941865052248757}
         m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
-        m_MethodName: OnRopeShoot
+        m_MethodName: OnSecondary
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -197,7 +197,7 @@ MonoBehaviour:
     team: 0
     controlScheme: 0
     playerState: 0
-    selectedPlayer: 0
+    selectedHero: 0
   speed: 1500
   playerConfigData: {fileID: 11400000, guid: d3e8662a30226a343a404490b291db19, type: 2}
   playerStats: {fileID: 0}

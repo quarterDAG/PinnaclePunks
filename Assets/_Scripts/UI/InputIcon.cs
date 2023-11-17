@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static PlayerConfigData;
 
 [RequireComponent(typeof(Collider2D))]
 public class InputIcon : MonoBehaviour
@@ -47,13 +48,11 @@ public class InputIcon : MonoBehaviour
     public void AddPlayerConfig ()
     {
         // Get the control scheme from the input manager, typically based on the last input received.
-        PlayerConfigData.ControlScheme controlScheme = inputManager.GetCurrentControlScheme(inputDevice);
         int _playerIndex = PlayerManager.Instance.GetUniquePlayerIndex();
 
         Color _playerColor = GetUniquePlayerColor(_playerIndex);
         string _playerName = GetPlayerNameByColor(_playerIndex);
 
-        //Debug.Log("Player Index: " + _playerIndex + "Player Name: " + _playerName);
 
         // Create the new PlayerConfig with the unique color and control scheme.
         PlayerConfig newPlayerConfig = new PlayerConfig
@@ -61,8 +60,8 @@ public class InputIcon : MonoBehaviour
             playerIndex = _playerIndex,
             playerName = _playerName,
             playerColor = _playerColor,
-            team = PlayerConfigData.Team.Spectator,
-            controlScheme = controlScheme,
+            team = Team.Spectator,
+            controlScheme = ControlScheme.Gamepad,
             inputDevice = inputDevice
         };
 
@@ -118,9 +117,9 @@ public class InputIcon : MonoBehaviour
 
     private void SetPlayerStateReady ()
     {
-        if (playerConfig.playerState != PlayerConfigData.PlayerState.Ready)
+        if (playerConfig.playerState != PlayerState.Ready)
         {
-            playerConfig.playerState = PlayerConfigData.PlayerState.Ready;
+            playerConfig.playerState = PlayerState.Ready;
             rb.velocity = Vector2.zero;
             teamSelectionController.SetPlayerTeam(playerConfig.playerIndex, playerConfig.team, transform);
             teamSelectionController.SetPlayerReady(playerConfig.playerIndex);
@@ -132,9 +131,9 @@ public class InputIcon : MonoBehaviour
 
     private void SetPlayerStateChoosingTeam ()
     {
-        if (playerConfig.playerState != PlayerConfigData.PlayerState.Playing)
+        if (playerConfig.playerState != PlayerState.Playing)
         {
-            playerConfig.playerState = PlayerConfigData.PlayerState.ChoosingTeam;
+            playerConfig.playerState = PlayerState.ChoosingTeam;
             teamSelectionController.SetPlayerChoosingTeam(playerConfig.playerIndex);
             readyIcon.enabled = false;
 
@@ -149,28 +148,28 @@ public class InputIcon : MonoBehaviour
         // Attempt to join TeamA.
         if (other.CompareTag("TeamA"))
         {
-            if (teamSelectionController.CanJoinTeam(PlayerConfigData.Team.TeamA))
+            if (teamSelectionController.CanJoinTeam(Team.TeamA))
             {
-                playerConfig.team = PlayerConfigData.Team.TeamA;
+                playerConfig.team = Team.TeamA;
             }
         }
         // Attempt to join TeamB.
         else if (other.CompareTag("TeamB"))
         {
-            teamSelectionController.CanJoinTeam(PlayerConfigData.Team.TeamB);
-            if (teamSelectionController.CanJoinTeam(PlayerConfigData.Team.TeamB))
+            teamSelectionController.CanJoinTeam(Team.TeamB);
+            if (teamSelectionController.CanJoinTeam(Team.TeamB))
             {
-                playerConfig.team = PlayerConfigData.Team.TeamB;
+                playerConfig.team = Team.TeamB;
             }
         }
     }
 
     private void OnTriggerExit2D ( Collider2D other )
     {
-        if ((other.CompareTag("TeamA") && playerConfig.team == PlayerConfigData.Team.TeamA) ||
-            (other.CompareTag("TeamB") && playerConfig.team == PlayerConfigData.Team.TeamB))
+        if ((other.CompareTag("TeamA") && playerConfig.team == Team.TeamA) ||
+            (other.CompareTag("TeamB") && playerConfig.team == Team.TeamB))
         {
-            playerConfig.team = PlayerConfigData.Team.Spectator;
+            playerConfig.team = Team.Spectator;
         }
     }
 

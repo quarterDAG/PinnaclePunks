@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
-using static Bar;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
@@ -16,6 +14,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private Vector2 _frameVelocity;
     private bool _cachedQueryStartInColliders;
     private Vector2 _colOffsetDefault;
+    private Vector2 _targetColOffset;
     private float _currentSpeed;
     private Coroutine speedModifierCoroutine;
 
@@ -24,6 +23,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     public Vector2 FrameInput => _frameInput.Move;
     public event Action<bool, float> GroundedChanged;
     public event Action Jumped;
+    public event Action Hit;
 
     [System.Serializable]
     public class PlayerStates
@@ -67,6 +67,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         _colOffsetDefault = _col.offset;
+        _targetColOffset = new Vector2(_colOffsetDefault.x, _colOffsetDefault.y + 1.2f);
 
         _currentSpeed = _stats.MaxSpeed;
         originalGravityScale = _rb.gravityScale;
@@ -170,6 +171,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         if (stats.Health > 0)
         {
+            Hit?.Invoke();
+            inputManager.StartVibration(0.5f, 0.5f);
             playerAnimator.GetHitAnimation();
             stats.Health -= damage;
             hpBar.UpdateValue(-damage);
@@ -269,8 +272,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
             playerAnimator.JumpAnimation(false);
             await Task.Delay(3);
-            //_col.offset = _colOffsetDefault;
-            StartCoroutine(MoveColliderCoroutine(_colOffsetDefault, 0.01f)); // 10 milliseconds = 0.01 seconds
+            _col.offset = _colOffsetDefault;
+            //StartCoroutine(MoveColliderCoroutine(_colOffsetDefault, 0.005f)); // 10 milliseconds = 0.01 seconds
 
         }
         // Left the Ground
@@ -330,8 +333,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         _bufferedJumpUsable = false;
         _coyoteUsable = false;
         _frameVelocity.y = _stats.JumpPower;
-        _col.offset = new Vector2(_col.offset.x, _col.offset.y + 1.2f);
 
+        StartCoroutine(MoveColliderCoroutine(_targetColOffset, 0.5f));
 
         if (OnRope())
             playerRope.DestroyCurrentRope();
@@ -341,20 +344,34 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         Jumped?.Invoke();
     }
 
-    // Coroutine for moving the collider
     private IEnumerator MoveColliderCoroutine ( Vector2 targetOffset, float duration )
     {
+        float halfDuration = duration / 2f;
         float time = 0;
         Vector2 initialOffset = _col.offset;
 
-        while (time < duration)
+        // First, move to the target offset
+        while (time < halfDuration)
         {
-            _col.offset = Vector2.Lerp(initialOffset, targetOffset, time / duration);
+            _col.offset = Vector2.Lerp(initialOffset, targetOffset, time / halfDuration);
             time += Time.deltaTime;
             yield return null;
         }
 
-        _col.offset = targetOffset; // Ensure the final position is set accurately
+        // Ensure the collider reaches the target exactly
+        _col.offset = targetOffset;
+
+        // Reset time and move back to the original offset
+        time = 0;
+        while (time < halfDuration)
+        {
+            _col.offset = Vector2.Lerp(targetOffset, initialOffset, time / halfDuration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure the collider returns to its original position exactly
+        _col.offset = initialOffset;
     }
 
     #endregion
@@ -403,12 +420,12 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             _currentSpeed = _stats.MaxSpeed; // Reset speed to base before applying new modifier
         }
 
-        speedModifierCoroutine = StartCoroutine(SpeedModifierCoroutine(modifier, newGravityScale, duration ));
+        speedModifierCoroutine = StartCoroutine(SpeedModifierCoroutine(modifier, newGravityScale, duration));
     }
 
-    private IEnumerator SpeedModifierCoroutine ( float speedModifier, float newGravityScale,  float duration  )
+    private IEnumerator SpeedModifierCoroutine ( float speedModifier, float newGravityScale, float duration )
     {
-        _currentSpeed *= speedModifier; 
+        _currentSpeed *= speedModifier;
         _rb.gravityScale = newGravityScale;
 
         yield return new WaitForSeconds(duration);
@@ -454,5 +471,6 @@ public interface IPlayerController
     public event Action<bool, float> GroundedChanged;
 
     public event Action Jumped;
+    public event Action Hit;
     public Vector2 FrameInput { get; }
 }

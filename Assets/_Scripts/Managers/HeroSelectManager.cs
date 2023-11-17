@@ -272,6 +272,11 @@ public class HeroSelectManager : MonoBehaviour
                 readyIcons[teamPlayerIndex].enabled = isReady;
             }
         }
+
+        if (!isReady)
+        {
+            StopCountdownTimer();
+        }
     }
 
     public bool AreAllPlayersReady ()
@@ -288,9 +293,34 @@ public class HeroSelectManager : MonoBehaviour
         return true; // All players are ready
     }
 
-    public void StartCountdownTimer()
+    public bool AreAllPlayersSelecting ()
+    {
+        List<PlayerConfig> playerConfigList = PlayerManager.Instance.GetPlayerConfigList();
+
+        foreach (var playerConfig in playerConfigList)
+        {
+            if (playerConfig.playerState != PlayerConfigData.PlayerState.SelectingHero)
+            {
+                return false; // If any player is not selcting hero
+            }
+        }
+        return true; // All players are selcting hero
+    }
+
+    public void StartCountdownTimer ()
     {
         countdownUI.StartTimer();
+    }
+
+    public void StopCountdownTimer ()
+    {
+        countdownUI.StopTimer();
+    }
+
+    public void PreviousScene ()
+    {
+        PlayerManager.Instance.ResetPlayerConfigs();
+        UnityEngine.SceneManagement.SceneManager.LoadScene("TeamSelect");
     }
 
     public void StartGame ()

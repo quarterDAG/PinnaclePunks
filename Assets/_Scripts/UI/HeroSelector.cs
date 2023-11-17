@@ -9,7 +9,8 @@ public class HeroSelector : MonoBehaviour
     public List<Transform> heroAvatars; // Array of hero avatars
 
     [SerializeField] private int selectedHeroIndex; // Index of the currently selected hero
-    private bool isPlayerReady; // Flag to check if the player is ready
+    private bool isPlayerReady;
+    private bool secondaryButtonReleased = true;
 
     private HeroSelectManager heroSelectManager;
 
@@ -19,10 +20,8 @@ public class HeroSelector : MonoBehaviour
 
     void Start ()
     {
-        selectedHeroIndex = 0; 
-        isPlayerReady = false;
+        selectedHeroIndex = 0;
     }
-
 
     void Update ()
     {
@@ -34,23 +33,44 @@ public class HeroSelector : MonoBehaviour
             // Select hero and set to ready
             if (inputManager.IsJumpPressed)
             {
-                isPlayerReady = true;
-                inputManager.ResetJump(false, false); // Reset jump to avoid repeated selection
+                JumpButtonPressed();
+            }
 
-                heroSelectManager.UpdateReadyIcon(this, true);
-
-                PlayerManager.Instance.SetPlayerSelectedHero(selectedHeroIndex, playerConfig);
+            if (inputManager.IsSecondaryPressed && secondaryButtonReleased)
+            {
+                secondaryButtonReleased = false;
+                if (heroSelectManager.AreAllPlayersSelecting())
+                    heroSelectManager.PreviousScene();
             }
         }
         else
         {
-            // Cancel ready state
-            if (inputManager.IsSecondaryPressed)
+            if (inputManager.IsSecondaryPressed && secondaryButtonReleased)
             {
+                secondaryButtonReleased = false;
                 isPlayerReady = false;
+                heroSelectManager.UpdateReadyIcon(this, false);
+                PlayerManager.Instance.SetPlayerState(playerConfig.playerIndex, PlayerConfigData.PlayerState.SelectingHero);
+
                 // Additional logic for deselection can be added here
             }
         }
+
+        // Reset the flag if the secondary button is not being pressed
+        if (!inputManager.IsSecondaryPressed)
+        {
+            secondaryButtonReleased = true;
+        }
+    }
+
+    private void JumpButtonPressed ()
+    {
+        isPlayerReady = true;
+        inputManager.ResetJump(false, false); // Reset jump to avoid repeated selection
+
+        heroSelectManager.UpdateReadyIcon(this, true);
+
+        PlayerManager.Instance.SetPlayerSelectedHero(selectedHeroIndex, playerConfig);
     }
 
     private void HandleHeroNavigation ()

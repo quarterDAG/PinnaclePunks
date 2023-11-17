@@ -1,5 +1,4 @@
 using UnityEngine;
-using static PlayerManager;
 
 public class MouseAim : MonoBehaviour
 {
@@ -31,15 +30,7 @@ public class MouseAim : MonoBehaviour
 
     private void HandleAim ()
     {
-        switch (inputManager.currentControlScheme)
-        {
-            case "Gamepad":
-                UpdateAimWithGamepad();
-                break;
-            case "Keyboard":
-                UpdateAimWithMouse();
-                break;
-        }
+        UpdateAimWithGamepad();
 
         // Apply the last known position to the transform and update the color
         transform.position = (Vector2)player.position + aimDirection * maxAimDistance;
@@ -54,12 +45,6 @@ public class MouseAim : MonoBehaviour
             // Normalize the input and use it to set the new aim direction
             aimDirection = gamepadInput;
         }
-    }
-
-    private void UpdateAimWithMouse ()
-    {
-        Vector2 mousePosition = sceneCamera.ScreenToWorldPoint(inputManager.InputAim);
-        aimDirection = (mousePosition - (Vector2)player.position).normalized;
     }
 
 
