@@ -457,6 +457,24 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         if (_stats == null) Debug.LogWarning("Please assign a ScriptableStats asset to the Player Controller's Stats slot", this);
     }
 #endif
+
+
+    #region Power Ups
+
+    public void IncreaseHealth ( int _hp )
+    {
+        if (stats.Health < stats.MaxHealth)
+        {
+            if (stats.Health + _hp >= stats.MaxHealth)
+                stats.Health = stats.MaxHealth;
+            else
+                stats.Health += _hp;
+
+            hpBar.UpdateValue(+_hp);
+        }
+    }
+
+    #endregion
 }
 
 public struct FrameInput

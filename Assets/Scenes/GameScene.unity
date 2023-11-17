@@ -66613,6 +66613,14 @@ PrefabInstance:
       propertyPath: pointB
       value: 
       objectReference: {fileID: 1669468288}
+    - target: {fileID: 534475561218506263, guid: cd80158c237bfa448922073237eaf6e6, type: 3}
+      propertyPath: dropPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 534475561218506263, guid: cd80158c237bfa448922073237eaf6e6, type: 3}
+      propertyPath: dropPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 5520698518967202777, guid: e39025ff2e45dad47ba0168ecb238003, type: 3}
     - target: {fileID: 1325180805113987160, guid: cd80158c237bfa448922073237eaf6e6, type: 3}
       propertyPath: m_Mesh
       value: 
