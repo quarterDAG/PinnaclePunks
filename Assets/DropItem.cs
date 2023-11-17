@@ -1,23 +1,30 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class DropItem : MonoBehaviour
 {
-    public enum DropType { HP, SM, Other, Count } // Add other drop types as needed
+    public enum DropType { HP, SM, Count } // Add other drop types as needed
     public DropType dropType;
     public int effectAmount; // The amount of effect (like HP to add, SM to add, etc.)
     public float selfDestructTime = 5f; // Time in seconds after which the item self-destructs
 
-    private SpriteRenderer spriteRenderer;
+    [SerializeField] private SpriteRenderer itemSpriteRenderer;
+    private Animator animator;
+    private ParticleSystem ps;
+
+    [SerializeField] private List<Sprite> itemSpriteList = new List<Sprite>();
 
     private void Start ()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+        ps = GetComponentInChildren<ParticleSystem>();
 
         ChooseRandomDropType();
         Destroy(gameObject, selfDestructTime); // Schedule the destruction
 
     }
-    private void OnTriggerEnter2D ( Collider2D other )
+    private async void OnTriggerEnter2D ( Collider2D other )
     {
         // Assuming the player has a tag "Player"
         if (other.CompareTag("TeamA") || other.CompareTag("TeamB"))
@@ -26,7 +33,10 @@ public class DropItem : MonoBehaviour
 
             if (player != null)
             {
+                animator.SetBool("Pop", true);
+                ps.Play();
                 ApplyEffect(player);
+                await Task.Delay(500);
                 Destroy(gameObject); // Destroy the drop item after applying its effect
 
             }
@@ -36,9 +46,14 @@ public class DropItem : MonoBehaviour
     private void ChooseRandomDropType ()
     {
         dropType = (DropType)Random.Range(0, (int)DropType.Count);
-        if(dropType == DropType.HP)
+        if (dropType == DropType.HP)
         {
-            spriteRenderer.color = Color.blue;
+            itemSpriteRenderer.sprite = itemSpriteList[0];
+        }
+
+        if (dropType == DropType.SM)
+        {
+            itemSpriteRenderer.sprite = itemSpriteList[1];
         }
     }
 
@@ -55,9 +70,7 @@ public class DropItem : MonoBehaviour
                 // Increase player's stamina
                 //player.GetComponent<PlayerController>().IncreaseStamina(effectAmount);
                 break;
-            case DropType.Other:
-                // Handle other types of drops
-                break;
+
             default:
                 break;
         }
