@@ -2276,6 +2276,7 @@ MonoBehaviour:
   inventoryList: []
   playerSpawner: {fileID: 0}
   cameraManager: {fileID: 0}
+  smBarList: []
 --- !u!4 &1119935323
 Transform:
   m_ObjectHideFlags: 0

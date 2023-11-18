@@ -18,14 +18,6 @@ public class Bar : MonoBehaviour
 
     public BarType barType;
 
-
-
-    private void Start ()
-    {
-        UpdatePercentageText(); // Set the initial percentage text
-    }
-
-
     public void UpdateFillUI ( float currentFillValue )
     {
         // Calculate fill amount based on current health
@@ -37,7 +29,6 @@ public class Bar : MonoBehaviour
         float normalizedValue = currentValue / maxValue;
 
         fillImage.fillAmount = normalizedValue;
-        UpdatePercentageText();
     }
 
     public void UpdateValue ( float amount )
@@ -49,15 +40,12 @@ public class Bar : MonoBehaviour
         float normalizedValue = currentValue / maxValue;
 
         fillImage.fillAmount = normalizedValue;
-        UpdatePercentageText();
     }
 
-    private void UpdatePercentageText ()
+    public void ResetBar ()
     {
-        if (percentageText != null)
-            percentageText.text = $"{(currentValue / maxValue) * 100:0}%"; // The ":0" ensures no decimal places
+        UpdateValue(maxValue);
     }
-
 
     public bool IsEmpty ()
     {

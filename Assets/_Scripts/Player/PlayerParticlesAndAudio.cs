@@ -16,7 +16,6 @@ public class PlayerParticlesAndAudio : MonoBehaviour
     private AudioSource _source;
     private IPlayerController _player;
     private bool _grounded;
-    private ParticleSystem.MinMaxGradient _currentGradient;
 
     private void Awake ()
     {

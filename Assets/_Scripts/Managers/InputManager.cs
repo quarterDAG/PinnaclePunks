@@ -161,9 +161,12 @@ public class InputManager : MonoBehaviour
 
     public void StartVibration ( float intensity, float duration )
     {
-        currentGamepad.SetMotorSpeeds(intensity, intensity); // Set both motors to the same speed
+        if (currentGamepad != null)
+        {
+            currentGamepad.SetMotorSpeeds(intensity, intensity); // Set both motors to the same speed
 
-        StartCoroutine(StopVibration(duration));
+            StartCoroutine(StopVibration(duration));
+        }
     }
 
     IEnumerator StopVibration ( float duration )

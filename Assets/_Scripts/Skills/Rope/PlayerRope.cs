@@ -17,14 +17,17 @@ public class PlayerRope : MonoBehaviour
     [SerializeField] private HingeJoint2D joint;
 
     [SerializeField] private float swingForce = 100f;
+    [SerializeField] private float ropeSMCost = 10f;
 
     private InputManager inputManager;
+    private SlowmotionController slowmotionController;
 
     private void Awake ()
     {
         player = transform.parent;
         playerController = player.GetComponent<PlayerController>();
         inputManager = player.GetComponent<InputManager>();
+        slowmotionController = player.GetComponent<SlowmotionController>();
     }
 
     private void Update ()
@@ -60,7 +63,9 @@ public class PlayerRope : MonoBehaviour
     {
         DestroyCurrentRope();
 
+        if (slowmotionController.slowmotionBar.IsEmpty()) { return; }
 
+        slowmotionController.UpdateSMBar(-ropeSMCost);
         currentRope = Instantiate(ropePrefab, firePoint.position, firePoint.rotation);
         currentRope.GetComponent<Rope>().SetPlayerRope(this);
 

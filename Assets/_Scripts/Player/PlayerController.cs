@@ -212,7 +212,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
 
         livesManager.LoseLife();
-        lives--; // Reduce life by 1
+        lives--;
 
         if (lives > 0)
         {
@@ -463,15 +463,10 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     public void IncreaseHealth ( int _hp )
     {
-        if (stats.Health < stats.MaxHealth)
-        {
-            if (stats.Health + _hp >= stats.MaxHealth)
-                stats.Health = stats.MaxHealth;
-            else
-                stats.Health += _hp;
+        stats.Health += _hp;
+        stats.Health = Mathf.Clamp(stats.Health, 0, stats.MaxHealth);
 
-            hpBar.UpdateValue(+_hp);
-        }
+        hpBar.UpdateValue(+_hp);
     }
 
     #endregion

@@ -5002,8 +5002,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 325566514627670839}
   - {fileID: 1192354526963447153}
@@ -5051,7 +5051,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 932340890, guid: 30021dd9f8f32bf4081db902d33027f7, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.3529412}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.15686275}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -5074,8 +5074,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dropType: 0
-  effectAmount: 30
-  selfDestructTime: 5
+  healAmount: 30
+  smAmount: 40
+  selfDestructTime: 8
   itemSpriteRenderer: {fileID: 5107019761578867540}
   itemSpriteList:
   - {fileID: -1150428061, guid: 8cd3edb838511744ebfd21ae5df8a669, type: 3}

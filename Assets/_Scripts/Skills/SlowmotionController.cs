@@ -19,11 +19,6 @@ public class SlowmotionController : MonoBehaviour
         inputManager = GetComponent<InputManager>();
     }
 
- /*   private void Start ()
-    {
-        FindAndAssignSMBar();
-    }
-*/
     void Update ()
     {
         if (inputManager.IsSlowmotionPressed)
@@ -37,26 +32,6 @@ public class SlowmotionController : MonoBehaviour
 
         HandleSlowMotion();
     }
-
-/*
-    private void FindAndAssignSMBar ()
-    {
-        Bar[] allBars = FindObjectsOfType<Bar>();
-
-        foreach (var bar in allBars)
-        {
-            if (bar.barType == BarType.Slowmotion)
-            {
-                if (bar.tag == gameObject.tag)
-                {
-                    slowmotionBar = bar;
-                    break;
-                }
-
-            }
-
-        }
-    }*/
 
     public void SetSMBar(Bar _smBar)
     {
@@ -82,9 +57,15 @@ public class SlowmotionController : MonoBehaviour
         // If slow motion is active, drain the bar
         if (TimeManager.Instance.isSlowMotionActive && isRequestingSlowMotion)
         {
-            slowmotionBar.UpdateValue(-slowMotionDrainRate * Time.unscaledDeltaTime); // Use unscaledDeltaTime to ensure the drain rate is consistent
+            UpdateSMBar(-slowMotionDrainRate * Time.unscaledDeltaTime); // Use unscaledDeltaTime to ensure the drain rate is consistent
         }
     }
 
+    public void UpdateSMBar(float _smValue)
+    {
+        slowmotionBar.UpdateValue(_smValue);
+    }
+
+  
 
 }

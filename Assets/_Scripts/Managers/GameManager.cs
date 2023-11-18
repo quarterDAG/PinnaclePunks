@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public List<Inventory> inventoryList = new List<Inventory>();
     public PlayerSpawner playerSpawner;
     public CameraManager cameraManager;
+    public List<Bar> smBarList = new List<Bar>();
 
 
     private void Awake ()
@@ -34,17 +35,17 @@ public class GameManager : MonoBehaviour
 
     public void Rematch ()
     {
-        AssignAllMaanger();
+        AssignAllManagers();
 
         ResetLives();
+        ResetSMBars();
         ResetInventories();
         ResetPlayerSpawner();
-        //ResetCameraManager();
         ResetMonsterList();
         InitializePlayers();
 
         ClearManagerAssignments();
-        AssignAllMaanger();
+        AssignAllManagers();
     }
 
     public void ClearManagerAssignments ()
@@ -55,12 +56,14 @@ public class GameManager : MonoBehaviour
         cameraManager = null;
     }
 
-    private void AssignAllMaanger ()
+    private void AssignAllManagers ()
     {
         livesManagerList.AddRange(FindObjectsOfType<LivesManager>());
+        smBarList.AddRange(FindObjectsOfType<Bar>());
         inventoryList.AddRange(FindObjectsOfType<Inventory>());
         playerSpawner = FindObjectOfType<PlayerSpawner>();
         cameraManager = FindObjectOfType<CameraManager>();
+
 
         if (playerSpawner == null)
             Debug.LogError("PlayerSpawner not found in the scene!");
@@ -76,6 +79,14 @@ public class GameManager : MonoBehaviour
         foreach (LivesManager livesManager in livesManagerList)
         {
             livesManager.ResetLives();
+        }
+    }
+
+    private void ResetSMBars ()
+    {
+        foreach (Bar smBar in smBarList)
+        {
+            smBar.ResetBar();
         }
     }
 

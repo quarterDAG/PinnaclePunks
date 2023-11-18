@@ -1,32 +1,59 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Collections;
 
 public class DropItem : MonoBehaviour
 {
     public enum DropType { HP, SM, Count } // Add other drop types as needed
     public DropType dropType;
-    public int effectAmount; // The amount of effect (like HP to add, SM to add, etc.)
+    public int healAmount = 30;
+    public float smAmount = 40f;
     public float selfDestructTime = 5f; // Time in seconds after which the item self-destructs
 
     [SerializeField] private SpriteRenderer itemSpriteRenderer;
     private Animator animator;
-    private ParticleSystem ps;
+    private ParticleSystem _ps;
 
     [SerializeField] private List<Sprite> itemSpriteList = new List<Sprite>();
 
     private void Start ()
     {
         animator = GetComponent<Animator>();
-        ps = GetComponentInChildren<ParticleSystem>();
+        _ps = GetComponentInChildren<ParticleSystem>();
 
         ChooseRandomDropType();
-        Destroy(gameObject, selfDestructTime); // Schedule the destruction
+
+        StartCoroutine(FadeOutEffect());
+
+
+        //Destroy(gameObject, selfDestructTime); // Schedule the destruction
 
     }
+
+    private IEnumerator FadeOutEffect ()
+    {
+        float elapsedTime = 0;
+        Color startColor = itemSpriteRenderer.color; // If using a SpriteRenderer
+        // Color startColor = renderer.material.color; // If using a MeshRenderer
+
+        while (elapsedTime < selfDestructTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / selfDestructTime);
+            itemSpriteRenderer.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
+            yield return null;
+        }
+
+        animator.SetBool("Pop", true);
+        yield return new WaitForSeconds(0.35f);
+
+        Destroy(gameObject);
+    }
+
+
     private async void OnTriggerEnter2D ( Collider2D other )
     {
-        // Assuming the player has a tag "Player"
         if (other.CompareTag("TeamA") || other.CompareTag("TeamB"))
         {
             PlayerController player = other.GetComponent<PlayerController>();
@@ -34,10 +61,10 @@ public class DropItem : MonoBehaviour
             if (player != null)
             {
                 animator.SetBool("Pop", true);
-                ps.Play();
+                _ps.Play();
                 ApplyEffect(player);
-                await Task.Delay(500);
-                Destroy(gameObject); // Destroy the drop item after applying its effect
+                await Task.Delay(350);
+                Destroy(gameObject);
 
             }
         }
@@ -49,12 +76,20 @@ public class DropItem : MonoBehaviour
         if (dropType == DropType.HP)
         {
             itemSpriteRenderer.sprite = itemSpriteList[0];
+            SetParticlesColor(Color.red);
         }
 
         if (dropType == DropType.SM)
         {
             itemSpriteRenderer.sprite = itemSpriteList[1];
+            SetParticlesColor(Color.blue);
         }
+    }
+
+    private void SetParticlesColor ( Color color )
+    {
+        var main = _ps.main;
+        main.startColor = color;
     }
 
     private void ApplyEffect ( PlayerController player )
@@ -64,11 +99,11 @@ public class DropItem : MonoBehaviour
         {
             case DropType.HP:
                 // Increase player's health
-                player.GetComponent<PlayerController>().IncreaseHealth(effectAmount);
+                player.IncreaseHealth(healAmount);
                 break;
             case DropType.SM:
                 // Increase player's stamina
-                //player.GetComponent<PlayerController>().IncreaseStamina(effectAmount);
+                player.GetComponent<SlowmotionController>().UpdateSMBar(smAmount);
                 break;
 
             default:
