@@ -10,6 +10,14 @@ public class SlowEffectArea : MonoBehaviour
 
     [SerializeField] private LayerMask playerLayer;
 
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip slime;
+
+    private void Awake ()
+    {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.PlayOneShot(slime);
+    }
 
     public void Setup ( float factor, float slowFactor, float duration, LayerMask layer )
     {

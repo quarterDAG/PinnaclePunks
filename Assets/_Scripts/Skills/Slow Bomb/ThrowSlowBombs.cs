@@ -21,9 +21,14 @@ public class ThrowSlowBombs : MonoBehaviour, IWeapon
     private bool canShoot = true;
     private InputManager inputManager;
 
+    private AudioSource audioSource;
+
+    [SerializeField] private AudioClip whoosh;
+
 
     void Awake ()
     {
+        audioSource = GetComponent<AudioSource>();
         playerController = GetComponentInParent<PlayerController>();
         inputManager = GetComponentInParent<InputManager>();
     }
@@ -67,6 +72,7 @@ public class ThrowSlowBombs : MonoBehaviour, IWeapon
     {
         if (Time.unscaledTime >= timeToSpawnEffect)
         {
+            audioSource.PlayOneShot(whoosh);
             playerAnimator.ThrowAnimation(true);
             await Task.Delay(500);
             CreateShot();

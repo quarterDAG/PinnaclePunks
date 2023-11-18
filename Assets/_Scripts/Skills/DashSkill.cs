@@ -29,10 +29,15 @@ public class DashSkill : MonoBehaviour
 
     [SerializeField] private bool yAxisActivated;
 
+    private AudioSource audioSource;
+
+    [SerializeField] private AudioClip dash;
+
 
 
     private void Start ()
     {
+        audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody2D>();
         playerAnimator = GetComponentInChildren<PlayerAnimator>();
         weapon = GetComponentInChildren<IWeapon>();
@@ -86,6 +91,7 @@ public class DashSkill : MonoBehaviour
 
     private IEnumerator DashMovementCoroutine ( Vector2 start, Vector2 end, float duration )
     {
+        audioSource.PlayOneShot(dash);
         playerAnimator.DashAnimation(true);
 
         gameObject.tag = "Dodge";

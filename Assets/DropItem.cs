@@ -7,8 +7,13 @@ public class DropItem : MonoBehaviour
 {
     public enum DropType { HP, SM, Count } // Add other drop types as needed
     public DropType dropType;
-    public int healAmount = 30;
-    public float smAmount = 40f;
+    public int healAmount = 100;
+    public float smAmount = 100f;
+
+    private int originalHealAmount;
+    private float originalSmAmount;
+
+
     public float selfDestructTime = 5f; // Time in seconds after which the item self-destructs
 
     [SerializeField] private SpriteRenderer itemSpriteRenderer;
@@ -17,12 +22,19 @@ public class DropItem : MonoBehaviour
 
     [SerializeField] private List<Sprite> itemSpriteList = new List<Sprite>();
 
+    private AudioSource audioSource;
+    [SerializeField] AudioClip bottleOpen;
+
     private void Start ()
     {
+        audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
         _ps = GetComponentInChildren<ParticleSystem>();
 
         ChooseRandomDropType();
+
+        originalHealAmount = healAmount;
+        originalSmAmount = smAmount;
 
         StartCoroutine(FadeOutEffect());
     }
@@ -30,14 +42,23 @@ public class DropItem : MonoBehaviour
     private IEnumerator FadeOutEffect ()
     {
         float elapsedTime = 0;
-        Color startColor = itemSpriteRenderer.color; // If using a SpriteRenderer
-        // Color startColor = renderer.material.color; // If using a MeshRenderer
 
         while (elapsedTime < selfDestructTime)
         {
             elapsedTime += Time.deltaTime;
             float alpha = Mathf.Lerp(1f, 0f, elapsedTime / selfDestructTime);
-            itemSpriteRenderer.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
+            itemSpriteRenderer.color = new Color(itemSpriteRenderer.color.r, itemSpriteRenderer.color.g, itemSpriteRenderer.color.b, alpha);
+
+            // Interpolating the value of the drop item
+            if (dropType == DropType.HP)
+            {
+                healAmount = (int)Mathf.Lerp(originalHealAmount, 0, elapsedTime / selfDestructTime);
+            }
+            else if (dropType == DropType.SM)
+            {
+                smAmount = Mathf.Lerp(originalSmAmount, 0, elapsedTime / selfDestructTime);
+            }
+
             yield return null;
         }
 
@@ -48,6 +69,7 @@ public class DropItem : MonoBehaviour
     }
 
 
+
     private async void OnTriggerEnter2D ( Collider2D other )
     {
         if (other.CompareTag("TeamA") || other.CompareTag("TeamB"))
@@ -56,6 +78,7 @@ public class DropItem : MonoBehaviour
 
             if (player != null)
             {
+                audioSource.PlayOneShot(bottleOpen);
                 animator.SetBool("Pop", true);
                 _ps.Play();
                 ApplyEffect(player);

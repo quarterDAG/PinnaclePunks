@@ -18,9 +18,13 @@ public class Rope : MonoBehaviour
     private bool inAir = true;
     private float timeInAir = 0f;
 
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip grapplingHook;
+
 
     private void Awake ()
     {
+        audioSource = GetComponent<AudioSource>();
         lineRenderer = GetComponent<LineRenderer>();
     }
     private void Update ()
@@ -71,6 +75,7 @@ public class Rope : MonoBehaviour
     {
         if (collision.CompareTag("Platform"))
         {
+            audioSource.PlayOneShot(grapplingHook);
             inAir = false;
             GenerateRope();
         }

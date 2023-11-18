@@ -13,6 +13,8 @@ public class PlayerParticlesAndAudio : MonoBehaviour
     [SerializeField]
     private AudioClip[] _footsteps;
 
+    [SerializeField] AudioClip jumpWhoosh;
+
     private AudioSource _source;
     private IPlayerController _player;
     private bool _grounded;
@@ -46,6 +48,7 @@ public class PlayerParticlesAndAudio : MonoBehaviour
     {
         if (_grounded) // Avoid coyote
         {
+            _source.PlayOneShot(jumpWhoosh);
             _jumpParticles.Play();
         }
     }

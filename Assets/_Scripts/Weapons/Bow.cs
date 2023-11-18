@@ -24,10 +24,14 @@ public class Bow : MonoBehaviour, IWeapon
     private InputManager inputManager;
 
     private int playerIndex;
+    private AudioSource audioSource;
+
+    [SerializeField] private AudioClip bowReleased;
 
 
     void Awake ()
     {
+        audioSource = GetComponent<AudioSource>();
         playerController = GetComponentInParent<PlayerController>();
         inputManager = GetComponentInParent<InputManager>();
     }
@@ -87,6 +91,7 @@ public class Bow : MonoBehaviour, IWeapon
         if (Time.unscaledTime >= timeToSpawnEffect)
         {
             playerAnimator.ShootAnimation(true);
+            audioSource.PlayOneShot(bowReleased);
             CreateShot();
             timeToSpawnEffect = Time.time + 1 / effectSpawnRate;
         }

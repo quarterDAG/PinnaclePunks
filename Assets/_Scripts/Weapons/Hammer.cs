@@ -18,8 +18,15 @@ public class Hammer : MonoBehaviour, IWeapon
     private float nextAttackTime = 0f;
     private InputManager inputManager;
 
+    private AudioSource audioSource;
+
+    [SerializeField] private AudioClip whoosh;
+    [SerializeField] private AudioClip hammerHit;
+
+
     void Awake ()
     {
+        audioSource = GetComponent<AudioSource>();
         playerController = GetComponentInParent<PlayerController>();
         inputManager = GetComponentInParent<InputManager>();
     }
@@ -50,7 +57,8 @@ public class Hammer : MonoBehaviour, IWeapon
     private async void Attack ()
     {
         playerAnimator.HammerAnimation(true);
-        await Task.Delay(350);
+        audioSource.PlayOneShot(whoosh);
+        await Task.Delay(250);
         PerformHit();
         playerAnimator.HammerAnimation(false);
     }
@@ -63,8 +71,8 @@ public class Hammer : MonoBehaviour, IWeapon
         {
             if (enemy.gameObject.CompareTag(damageThisTag) || enemy.gameObject.CompareTag("DropBat"))
             {
-                // Implement damage logic here
-                Debug.Log("Hit " + enemy.name);
+                audioSource.PlayOneShot(hammerHit);
+
                 enemy.GetComponent<ICharacter>().TakeDamage(damage, ownerIndex);
             }
         }
