@@ -21,7 +21,9 @@ public class InputManager : MonoBehaviour
     public bool IsDashPressed { get; private set; }
     public bool IsSlowmotionPressed { get; private set; }
     public Vector2 InventoryInput { get; private set; }
-    public bool IsSpawnMonsterPressed { get; private set; }
+    public bool IsSpawnMinionPressed { get; private set; }
+
+    public bool IsStartPressed { get; private set; }
 
 
 
@@ -136,16 +138,23 @@ public class InputManager : MonoBehaviour
         InventoryInput = context.ReadValue<Vector2>();
     }
 
-    public void OnSpawnMonster ( InputAction.CallbackContext context )
+    public void OnSpawnMinion ( InputAction.CallbackContext context )
     {
         if (!context.performed)
         {
-            IsSpawnMonsterPressed = false;
+            IsSpawnMinionPressed = false;
             return;
         }
 
-        IsSpawnMonsterPressed = true;
+        IsSpawnMinionPressed = true;
     }
+
+    public void OnStartPressed ( InputAction.CallbackContext context )
+    {
+        GameManager.Instance.PauseMenu(this);
+    }
+
+
 
     public void ResetDash ()
     {

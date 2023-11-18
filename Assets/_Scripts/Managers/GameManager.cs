@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,13 +12,20 @@ public class GameManager : MonoBehaviour
     public List<Inventory> inventoryList = new List<Inventory>();
     public PlayerSpawner playerSpawner;
     public CameraManager cameraManager;
+    public List<SlowmotionController> slowmotionControllerList;
     public List<Bar> smBarList = new List<Bar>();
+
+    public PauseMenuController pauseMenuController;
+
+    private bool isPauseActive;
+    private InputManager activePauseInputManager;
 
 
     private void Awake ()
     {
         Singleton();
     }
+
 
     private void Singleton ()
     {
@@ -32,11 +40,65 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void PauseMenu ( InputManager _inputManager )
+    {
+        if (!isPauseActive)
+        {
+            activePauseInputManager = _inputManager; // Store the reference
+
+            foreach (SlowmotionController slowmotionController in slowmotionControllerList)
+            {
+                slowmotionController.SetIsPauseActive(true);
+            }
+
+            pauseMenuController.SetInputManager(_inputManager);
+            pauseMenuController.ShowPauseMenu(_inputManager);
+            StopTime(true);
+        }
+        else
+        {
+            // Check if the _inputManager is the same instance that activated the pause
+            if (_inputManager == activePauseInputManager)
+            {
+                foreach (SlowmotionController slowmotionController in slowmotionControllerList)
+                {
+                    slowmotionController.SetIsPauseActive(false);
+                }
+
+                pauseMenuController.HidePauseMenu();
+
+                StopTime(false);
+
+                activePauseInputManager = null; // Reset the reference
+            }
+        }
+    }
+
+    public void StopTime ( bool _isPause )
+    {
+        if (_isPause)
+        {
+
+            Time.timeScale = 0f;
+
+            isPauseActive = true;
+
+        }
+        else
+        {
+            Time.timeScale = 1f;
+
+            isPauseActive = false;
+
+        }
+
+    }
 
     public void Rematch ()
     {
         AssignAllManagers();
 
+        ResetInputManager();
         ResetLives();
         ResetSMBars();
         ResetInventories();
@@ -46,12 +108,17 @@ public class GameManager : MonoBehaviour
 
         ClearManagerAssignments();
         AssignAllManagers();
+
+        isPauseActive = false;
     }
 
     public void ClearManagerAssignments ()
     {
         livesManagerList.Clear();
+        smBarList.Clear();
+        slowmotionControllerList.Clear();
         inventoryList.Clear();
+
         playerSpawner = null;
         cameraManager = null;
     }
@@ -59,7 +126,8 @@ public class GameManager : MonoBehaviour
     private void AssignAllManagers ()
     {
         livesManagerList.AddRange(FindObjectsOfType<LivesManager>());
-        smBarList.AddRange(FindObjectsOfType<Bar>());
+        //slowmotionControllerList.AddRange(FindObjectsOfType<SlowmotionController>());
+        //smBarList.AddRange(FindObjectsOfType<Bar>());
         inventoryList.AddRange(FindObjectsOfType<Inventory>());
         playerSpawner = FindObjectOfType<PlayerSpawner>();
         cameraManager = FindObjectOfType<CameraManager>();
@@ -71,6 +139,12 @@ public class GameManager : MonoBehaviour
             Debug.LogError("No LivesManager found in the scene!");
         if (inventoryList.Count == 0)
             Debug.LogError("No Inventory found in the scene!");
+
+    }
+
+    private void ResetInputManager ()
+    {
+        activePauseInputManager = null;
 
     }
 
@@ -103,11 +177,6 @@ public class GameManager : MonoBehaviour
         playerSpawner.ResetPlayerSpawner();
     }
 
-    private void ResetCameraManager ()
-    {
-        cameraManager.ResetCameraManager();
-    }
-
     private void InitializePlayers ()
     {
         PlayerManager.Instance.InitializePlayers();
@@ -115,7 +184,7 @@ public class GameManager : MonoBehaviour
 
     private void ResetMonsterList ()
     {
-        MonstersManager.Instance.ResetMonsterList();
+        MinionsManager.Instance.ResetMinionList();
     }
 
 
@@ -129,6 +198,21 @@ public class GameManager : MonoBehaviour
     public void AddLivesManager ( LivesManager _livesManager )
     {
         livesManagerList.Add(_livesManager);
+    }
+
+    public void AddSMController ( SlowmotionController _smController )
+    {
+        slowmotionControllerList.Add(_smController);
+    }
+
+    public void AddSMBar ( Bar _smBar )
+    {
+        smBarList.Add(_smBar);
+    }
+
+    public void SetPauseMenu(PauseMenuController _pmController)
+    {
+        pauseMenuController = _pmController;
     }
 
     #endregion

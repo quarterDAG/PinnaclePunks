@@ -8,7 +8,7 @@ using UnityEngine;
 using Unity.VisualScripting;
 using System;
 
-public class Monster : MonoBehaviour, ICharacter
+public class Minion : MonoBehaviour, ICharacter
 {
 
     [SerializeField] Bar hpBar;
@@ -40,12 +40,12 @@ public class Monster : MonoBehaviour, ICharacter
 
 
     [System.Serializable]
-    public class EnemyStates
+    public class MinionStates
     {
         public int Health = 99;
     }
 
-    public EnemyStates stats = new EnemyStates();
+    public MinionStates stats = new MinionStates();
 
     private void Start ()
     {
@@ -208,7 +208,7 @@ public class Monster : MonoBehaviour, ICharacter
         if (!IsDead)
         {
             animator.SetBool("IsDead", true);
-            OtherTeamInventory(tagToAttack).AddMonster();
+            OtherTeamInventory(tagToAttack).AddMinion();
             IsDead = true;
             OnDeath?.Invoke();
 

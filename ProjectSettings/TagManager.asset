@@ -12,6 +12,7 @@ TagManager:
   - TeamA
   - TeamB
   - Platform
+  - DropBat
   layers:
   - Default
   - TransparentFX

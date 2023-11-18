@@ -106,6 +106,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     private void Update ()
     {
+        if (Time.timeScale == 0) return;
+
         if (isDead) return;
 
         if (!canMove) return;
@@ -142,6 +144,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     private void FixedUpdate ()
     {
+        if (Time.timeScale == 0) return;
+
         CheckCollisions();
 
         HandleJump();

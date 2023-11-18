@@ -6,21 +6,21 @@ using UnityEngine.UI; // This is required for interacting with UI components
 
 public class Inventory : MonoBehaviour
 {
-    public PlayerMonsterSpawner[] inventoryOwners;
+    public PlayerMinionSpawner[] inventoryOwners;
     private InputManager[] inputManagers;
 
     // A struct to hold both the prefab and the count of each type
     [System.Serializable]
-    public struct MonsterInventoryItem
+    public struct MinionInventoryItem
     {
-        public Monster monsterPrefab;
+        public Minion minionPrefab;
         public int count;
         public Button button;
         public TextMeshProUGUI countText;
 
     }
 
-    public List<MonsterInventoryItem> monsterInventory;
+    public List<MinionInventoryItem> minionInventory;
 
     private Dictionary<Vector2, int> directionToIndexMapping;
 
@@ -42,7 +42,7 @@ public class Inventory : MonoBehaviour
             { Vector2.right, 3 }
         };
 
-        foreach (var item in monsterInventory)
+        foreach (var item in minionInventory)
         {
             item.button.image.color = defaultColor;
             item.countText.text = item.count.ToString();
@@ -51,16 +51,16 @@ public class Inventory : MonoBehaviour
     }
 
 
-    public void AddInventoryOwner ( PlayerMonsterSpawner newOwner )
+    public void AddInventoryOwner ( PlayerMinionSpawner newOwner )
     {
         if (inventoryOwners == null)
         {
-            inventoryOwners = new PlayerMonsterSpawner[1] { newOwner };
+            inventoryOwners = new PlayerMinionSpawner[1] { newOwner };
         }
         else
         {
             // Create a new array that is one element larger than the current one
-            PlayerMonsterSpawner[] newInventoryOwners = new PlayerMonsterSpawner[inventoryOwners.Length + 1];
+            PlayerMinionSpawner[] newInventoryOwners = new PlayerMinionSpawner[inventoryOwners.Length + 1];
             inventoryOwners.CopyTo(newInventoryOwners, 0);
             newInventoryOwners[inventoryOwners.Length] = newOwner;
             inventoryOwners = newInventoryOwners;
@@ -103,56 +103,56 @@ public class Inventory : MonoBehaviour
 
                 if (inputDirection != Vector2.zero)
                 {
-                    TrySelectMonsterWithDirection(inputDirection, inventoryOwners[i]);
+                    TrySelectMinionWithDirection(inputDirection, inventoryOwners[i]);
                 }
             }
         }
     }
 
 
-    private void TrySelectMonsterWithDirection ( Vector2 inputDirection, PlayerMonsterSpawner owner )
+    private void TrySelectMinionWithDirection ( Vector2 inputDirection, PlayerMinionSpawner owner )
     {
         Vector2 direction = inputDirection.normalized;
 
 
-        if (directionToIndexMapping.TryGetValue(direction, out int monsterIndex))
+        if (directionToIndexMapping.TryGetValue(direction, out int minionIndex))
         {
-            OnMonsterSelected(monsterIndex, owner);
+            OnMinionSelected(minionIndex, owner);
         }
     }
 
 
-    public void OnMonsterSelected ( int monsterIndex, PlayerMonsterSpawner owner )
+    public void OnMinionSelected ( int minionIndex, PlayerMinionSpawner owner )
     {
-        if (monsterIndex >= 0 && monsterIndex < monsterInventory.Count)
+        if (minionIndex >= 0 && minionIndex < minionInventory.Count)
         {
             // Change the previously selected button back to its default color
             if (selectedIndex != -1)
             {
-                MonsterInventoryItem previousItem = monsterInventory[selectedIndex];
+                MinionInventoryItem previousItem = minionInventory[selectedIndex];
                 previousItem.button.image.color = defaultColor;
             }
 
             // Update the selected index and change the button color to indicate selection
-            selectedIndex = monsterIndex;
-            MonsterInventoryItem selectedItem = monsterInventory[selectedIndex];
+            selectedIndex = minionIndex;
+            MinionInventoryItem selectedItem = minionInventory[selectedIndex];
             selectedItem.button.image.color = selectedColor;
 
             // Pass the monster prefab to the spawner without instantiating
-            owner.SetSelectedMonster(selectedItem.monsterPrefab);
+            owner.SetSelectedMinion(selectedItem.minionPrefab);
         }
         else
         {
-            Debug.LogError("Monster index out of range: " + monsterIndex);
+            Debug.LogError("Monster index out of range: " + minionIndex);
         }
     }
 
 
     public void UpdateInventoryAfterSpawn ()
     {
-        if (selectedIndex >= 0 && selectedIndex < monsterInventory.Count)
+        if (selectedIndex >= 0 && selectedIndex < minionInventory.Count)
         {
-            MonsterInventoryItem item = monsterInventory[selectedIndex];
+            MinionInventoryItem item = minionInventory[selectedIndex];
             item.count--;
 
             item.countText.text = item.count.ToString();
@@ -164,15 +164,15 @@ public class Inventory : MonoBehaviour
                 item.button.image.color = defaultColor;
             }
 
-            monsterInventory[selectedIndex] = item; // Update the inventory item
+            minionInventory[selectedIndex] = item; // Update the inventory item
         }
     }
 
-    public int GetSelectedMonsterAmount ( Monster selectedMonster )
+    public int GetSelectedMinionAmount ( Minion selectedMinion )
     {
-        foreach (var item in monsterInventory)
+        foreach (var item in minionInventory)
         {
-            if (item.monsterPrefab == selectedMonster)
+            if (item.minionPrefab == selectedMinion)
             {
                 return item.count;
             }
@@ -180,22 +180,22 @@ public class Inventory : MonoBehaviour
         return 0;
     }
 
-    public void AddMonster ()
+    public void AddMinion ()
     {
-        MonsterInventoryItem item = monsterInventory[0]; // because there is only one moster currently
+        MinionInventoryItem item = minionInventory[0]; // because there is only one moster currently
         item.count++;
         item.countText.text = item.count.ToString();
 
-        monsterInventory[selectedIndex] = item;
+        minionInventory[selectedIndex] = item;
 
     }
 
     public void ResetInventory ()
     {
         // Reset each item in the inventory
-        for (int i = 0; i < monsterInventory.Count; i++)
+        for (int i = 0; i < minionInventory.Count; i++)
         {
-            MonsterInventoryItem item = monsterInventory[i];
+            MinionInventoryItem item = minionInventory[i];
 
             item.count = 3;
 
@@ -206,9 +206,9 @@ public class Inventory : MonoBehaviour
         }
 
         // Reset the selected index
-        if (selectedIndex != -1 && selectedIndex < monsterInventory.Count)
+        if (selectedIndex != -1 && selectedIndex < minionInventory.Count)
         {
-            monsterInventory[selectedIndex].button.image.color = defaultColor;
+            minionInventory[selectedIndex].button.image.color = defaultColor;
         }
         selectedIndex = 0;
     }

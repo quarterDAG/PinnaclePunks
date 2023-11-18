@@ -52,6 +52,9 @@ public class PlayerStatsManager : MonoBehaviour
         }
     }
 
+    public void ClearAllStatsList()
+    { allPlayerStats.Clear(); }
+
     public void UpdatePlayerStats ( PlayerStats playerStats, int playerIndex )
     {
         allPlayerStats.Insert(playerIndex, playerStats);

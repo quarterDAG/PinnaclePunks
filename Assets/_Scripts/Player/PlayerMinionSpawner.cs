@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMonsterSpawner : MonoBehaviour
+public class PlayerMinionSpawner : MonoBehaviour
 {
-    private Monster selectedMonster;
+    private Minion selectedMinion;
     private Transform spawnPoint;
     private string tagToAttack;
     [SerializeField] private Inventory teamInventory;
@@ -19,17 +19,17 @@ public class PlayerMonsterSpawner : MonoBehaviour
 
     private void Update ()
     {
-        if (inputManager.IsSpawnMonsterPressed && spawnPoint != null && selectedMonster != null && tagToAttack != null)
+        if (inputManager.IsSpawnMinionPressed && spawnPoint != null && selectedMinion != null && tagToAttack != null)
         {
-            if (teamInventory.GetSelectedMonsterAmount(selectedMonster) <= 0) return;
-            spawnPoint.GetComponent<MonsterSpawnPoint>().SpawnMonster(selectedMonster, tagToAttack, this);
+            if (teamInventory.GetSelectedMinionAmount(selectedMinion) <= 0) return;
+            spawnPoint.GetComponent<MinionSpawnPoint>().SpawnMinion(selectedMinion, tagToAttack, this);
 
 
         }
     }
 
 
-    public void ConfigMonsterSpawner ()
+    public void ConfigMinionSpawner ()
     {
 
         tagToAttack = (gameObject.tag == "TeamA") ? "TeamB" : "TeamA";
@@ -72,8 +72,8 @@ public class PlayerMonsterSpawner : MonoBehaviour
         }
     }
 
-    public void SetSelectedMonster ( Monster monsterPrefab )
+    public void SetSelectedMinion ( Minion minionPrefab )
     {
-        selectedMonster = monsterPrefab;
+        selectedMinion = minionPrefab;
     }
 }

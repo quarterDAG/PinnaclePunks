@@ -69,7 +69,6 @@ public class PlayerParticlesAndAudio : MonoBehaviour
             _landParticles.transform.localScale = Vector3.one * Mathf.InverseLerp(0, 40, impact);
             _landParticles.Play();
 
-            Debug.Log("Land Particles");
         }
         else
         {

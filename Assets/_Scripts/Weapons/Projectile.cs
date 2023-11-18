@@ -28,7 +28,7 @@ public class Projectile : MonoBehaviour
     {
         // Check for damage tag and if the collision has an ICharacter component
 
-        if (collision.CompareTag(damageTag) && collision.GetComponent<ICharacter>() != null)
+        if ((collision.CompareTag(damageTag) || collision.CompareTag("DropBat")) && collision.GetComponent<ICharacter>() != null)
         {
             collision.GetComponent<ICharacter>().TakeDamage(bulletDamage, shotOwnerIndex);
 
@@ -36,7 +36,7 @@ public class Projectile : MonoBehaviour
 
             // Pushback effect
             Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
-            if (rb != null)
+            if (rb != null && collision.CompareTag(damageTag))
             {
                 Vector2 pushbackDirection = (collision.transform.position - transform.position).normalized;
                 rb.AddForce(pushbackDirection * pushbackForce);

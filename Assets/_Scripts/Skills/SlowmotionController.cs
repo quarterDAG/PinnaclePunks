@@ -11,31 +11,46 @@ public class SlowmotionController : MonoBehaviour
 
     private bool isRequestingSlowMotion = false;
 
-
     private InputManager inputManager;
+
+    private bool isPauseActive;
 
     private void Awake ()
     {
         inputManager = GetComponent<InputManager>();
     }
 
-    void Update ()
+    private void Start ()
     {
-        if (inputManager.IsSlowmotionPressed)
-        {
-            TimeManager.Instance.RequestSlowMotion();  // Force trigger slow motion for testing
-        }
-        else
-        {
-            TimeManager.Instance.CancelSlowMotionRequest(); // Force stop slow motion for testing
-        }
-
-        HandleSlowMotion();
+        GameManager.Instance.AddSMController(this);
     }
 
-    public void SetSMBar(Bar _smBar)
+    void Update ()
     {
-       slowmotionBar = _smBar;
+        if (!isPauseActive)
+        {
+            if (inputManager.IsSlowmotionPressed)
+            {
+                TimeManager.Instance.RequestSlowMotion();  // Force trigger slow motion for testing
+            }
+            else
+            {
+                TimeManager.Instance.CancelSlowMotionRequest(); // Force stop slow motion for testing
+            }
+
+            HandleSlowMotion();
+        }
+    }
+
+    public void SetIsPauseActive ( bool _isPauseActive )
+    {
+        isPauseActive = _isPauseActive;
+    }
+
+
+    public void SetSMBar ( Bar _smBar )
+    {
+        slowmotionBar = _smBar;
     }
 
 
@@ -61,11 +76,11 @@ public class SlowmotionController : MonoBehaviour
         }
     }
 
-    public void UpdateSMBar(float _smValue)
+    public void UpdateSMBar ( float _smValue )
     {
         slowmotionBar.UpdateValue(_smValue);
     }
 
-  
+
 
 }

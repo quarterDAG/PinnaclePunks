@@ -97,7 +97,7 @@ public class PlayerManager : MonoBehaviour
         instantiatedPlayer.gameObject.tag = config.team.ToString();
 
         cameraManager.AddPlayerToCinemachineTargetGroup(instantiatedPlayer.transform);
-        instantiatedPlayer.GetComponentInChildren<PlayerMonsterSpawner>().ConfigMonsterSpawner();
+        instantiatedPlayer.GetComponentInChildren<PlayerMinionSpawner>().ConfigMinionSpawner();
 
         instantiatedPlayer.GetComponentInChildren<PlayerParticlesAndAudio>().SetColor(config.playerColor);
 
@@ -106,32 +106,15 @@ public class PlayerManager : MonoBehaviour
 
         SlowmotionController slowmotionController = instantiatedPlayer.GetComponentInChildren<SlowmotionController>();
         TimeManager.Instance.AssignBarToSMController(config, slowmotionController);
-
-
     }
 
     public void ResetPlayerConfigs ()
     {
- /*       // Reset each player's configuration to a default state
-        foreach (var config in playerConfigs)
-        {
-            ResetPlayerConfig(config);
-        }*/
-
         // Clear the list of player configurations
         playerConfigs.Clear();
 
         // Reset the player count
         playerCount = 0;
-    }
-
-    private void ResetPlayerConfig ( PlayerConfig config )
-    {
-        config.team = Team.Spectator;
-        config.playerIndex = 0;
-        config.playerState = PlayerState.ChoosingTeam;
-        config.selectedHero = 0; 
-                               
     }
 
 

@@ -10200,6 +10200,7 @@ MonoBehaviour:
   distanceFromChainEnd: 1.5
   joint: {fileID: 6786938023795512149}
   swingForce: 400
+  ropeSMCost: 10
 --- !u!120 &2483302351212852573
 LineRenderer:
   serializedVersion: 2
@@ -20602,7 +20603,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6875853117583122160}
         m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
-        m_MethodName: OnSpawnMonster
+        m_MethodName: OnSpawnMinion
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -20615,13 +20616,29 @@ MonoBehaviour:
     m_ActionId: d051035f-0b44-4aa3-ba45-13345ce878b7
     m_ActionName: Player/New action
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6875853117583122160}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: OnStartPressed
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 2a877aa7-2293-461f-b1cb-e23fcb355fee
     m_ActionName: Player/Start[/DualShock4GamepadHID/start,/DualShock4GamepadHID1/start,/Keyboard/enter]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 5f5a399e-5c0c-4df3-b72d-0e44e02d6667
     m_ActionName: Player/Any Button
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1a086fac-4070-4d6f-b436-9dab38298fe6
+    m_ActionName: Player/New action
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player

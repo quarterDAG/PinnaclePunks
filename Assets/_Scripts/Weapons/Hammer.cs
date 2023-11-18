@@ -61,7 +61,7 @@ public class Hammer : MonoBehaviour, IWeapon
 
         foreach (Collider2D enemy in hitEnemies)
         {
-            if (enemy.gameObject.CompareTag(damageThisTag)) // Replace with the appropriate tag
+            if (enemy.gameObject.CompareTag(damageThisTag) || enemy.gameObject.CompareTag("DropBat"))
             {
                 // Implement damage logic here
                 Debug.Log("Hit " + enemy.name);

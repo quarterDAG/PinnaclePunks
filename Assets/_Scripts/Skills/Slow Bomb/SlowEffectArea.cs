@@ -27,14 +27,12 @@ public class SlowEffectArea : MonoBehaviour
     {
         float elapsedTime = 0;
         Color startColor = spriteRenderer.color; // If using a SpriteRenderer
-        // Color startColor = renderer.material.color; // If using a MeshRenderer
 
         while (elapsedTime < effectDuration)
         {
             elapsedTime += Time.deltaTime;
             float alpha = Mathf.Lerp(1f, 0f, elapsedTime / effectDuration);
             spriteRenderer.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
-            // renderer.material.color = new Color(startColor.r, startColor.g, startColor.b, alpha); // If using a MeshRenderer
             yield return null;
         }
 

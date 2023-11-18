@@ -25,10 +25,6 @@ public class DropItem : MonoBehaviour
         ChooseRandomDropType();
 
         StartCoroutine(FadeOutEffect());
-
-
-        //Destroy(gameObject, selfDestructTime); // Schedule the destruction
-
     }
 
     private IEnumerator FadeOutEffect ()

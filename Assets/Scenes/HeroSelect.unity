@@ -2623,7 +2623,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTransform: {fileID: 0}
   countdownText: {fileID: 2018722486}
-  timeRemaining: 3
+  timeRemaining: 1
   timerIsRunning: 0
 --- !u!1001 &942947456
 PrefabInstance:

@@ -18,6 +18,11 @@ public class Bar : MonoBehaviour
 
     public BarType barType;
 
+    private void Start ()
+    {
+        if (barType == BarType.Slowmotion) { AddBarToGameManager(); }
+    }
+
     public void UpdateFillUI ( float currentFillValue )
     {
         // Calculate fill amount based on current health
@@ -40,6 +45,11 @@ public class Bar : MonoBehaviour
         float normalizedValue = currentValue / maxValue;
 
         fillImage.fillAmount = normalizedValue;
+    }
+
+    public void AddBarToGameManager ()
+    {
+        GameManager.Instance.AddSMBar(this);
     }
 
     public void ResetBar ()

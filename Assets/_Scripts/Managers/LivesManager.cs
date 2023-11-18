@@ -11,8 +11,6 @@ public class LivesManager : MonoBehaviour
         // Initialize lives (assuming 3 for this example)
         lives = hearts.Length;
         UpdateHeartsUI();
-
-        //GameManager.Instance.AddLivesManager(this);
     }
 
     // Call this method whenever the player loses a life
