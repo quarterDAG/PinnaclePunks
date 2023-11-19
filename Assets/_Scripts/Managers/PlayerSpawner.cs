@@ -102,8 +102,26 @@ public class PlayerSpawner : MonoBehaviour
         Transform parentGO = GetParentGO(config);
 
         // Instantiate player status and parent it to the position transform
+        
         GameObject playerStatusGO = Instantiate(playerAvatarPrefab, parentGO, false);
-        Bar hpBar = playerStatusGO.GetComponentInChildren<Bar>();
+        Bar hpBar = null;
+        Bar shieldBar = null;
+
+       List <Bar> barList = new List<Bar>();    
+        barList.AddRange(playerStatusGO.GetComponentsInChildren<Bar>());
+
+        foreach (Bar bar in barList)
+        {
+            if(bar.barType == Bar.BarType.HP)
+            {
+                hpBar = bar;
+            }
+            else if (bar.barType == Bar.BarType.Shield)
+            {
+                shieldBar = bar;
+            }
+        }
+
         HeroAvatarImageController heroAvatarImageController = playerStatusGO.GetComponentInChildren<HeroAvatarImageController>();
         heroAvatarImageController.UpdateHeroImageAvatar(config);
 
@@ -120,11 +138,18 @@ public class PlayerSpawner : MonoBehaviour
                 HPAvatar.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
         }
 
-        // Link player status to the player
+        PlayerController playerController = instantiatedPlayer.GetComponent<PlayerController>();
+
         if (hpBar != null)
-        {
-            instantiatedPlayer.GetComponent<PlayerController>().AssignHPBar(hpBar);
-        }
+            playerController.AssignHPBar(hpBar);
+        else
+            Debug.Log("No HP bar found!");
+
+        if (shieldBar != null)
+            playerController.AssignShieldBar(shieldBar);
+        else
+            Debug.Log("No shield bar found!");
+
 
         Transform playerColorTransform = playerStatusGO.transform.Find("HP & AVATAR/PlayerColor");
         Image playerColorImage = playerColorTransform.GetComponent<Image>();

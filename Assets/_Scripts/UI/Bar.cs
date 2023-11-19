@@ -13,7 +13,8 @@ public class Bar : MonoBehaviour
     public enum BarType
     {
         HP,
-        Slowmotion
+        Slowmotion,
+        Shield
     }
 
     public BarType barType;
@@ -21,19 +22,7 @@ public class Bar : MonoBehaviour
     private void Start ()
     {
         if (barType == BarType.Slowmotion) { AddBarToGameManager(); }
-    }
-
-    public void UpdateFillUI ( float currentFillValue )
-    {
-        // Calculate fill amount based on current health
-        currentValue = currentFillValue;
-
-        currentValue = Mathf.Clamp(currentValue, 0, maxValue);
-
-        // Normalize the current value to be between 0 and 1.
-        float normalizedValue = currentValue / maxValue;
-
-        fillImage.fillAmount = normalizedValue;
+        UpdateValue(currentValue);
     }
 
     public void UpdateValue ( float amount )

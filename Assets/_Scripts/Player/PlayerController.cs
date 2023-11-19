@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 {
-    [SerializeField] private ScriptableStats _stats;
+    [SerializeField] private ScriptableStats movementStates;
 
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
@@ -25,21 +25,26 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     public event Action Jumped;
     public event Action Hit;
 
+    #endregion
+
+
     [System.Serializable]
     public class PlayerStates
     {
         public int Health = 99;
         public int MaxHealth = 99;
+        public int Shield = 0;
+        public int MaxShield = 99;
     }
 
     public PlayerStates stats = new PlayerStates();
 
-    #endregion
 
     private float _time;
 
     private PlayerRope playerRope;
     private Bar hpBar;
+    private Bar shieldBar;
 
     private bool canMove = true;
     private float originalGravityScale;
@@ -69,7 +74,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         _colOffsetDefault = _col.offset;
         _targetColOffset = new Vector2(_colOffsetDefault.x, _colOffsetDefault.y + 1.2f);
 
-        _currentSpeed = _stats.MaxSpeed;
+        _currentSpeed = movementStates.MaxSpeed;
         originalGravityScale = _rb.gravityScale;
 
     }
@@ -99,6 +104,11 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         livesManager = _hpBar.GetComponentInChildren<LivesManager>();
     }
 
+    public void AssignShieldBar ( Bar _shield )
+    {
+        shieldBar = _shield;
+    }
+
     public void AssignRespawn ( Transform spawnPoint )
     {
         respawnPoint = spawnPoint;
@@ -126,10 +136,10 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             Move = new Vector2(inputManager.InputVelocity.x, inputManager.InputVelocity.y),
         };
 
-        if (_stats.SnapInput)
+        if (movementStates.SnapInput)
         {
-            _frameInput.Move.x = Mathf.Abs(_frameInput.Move.x) < _stats.HorizontalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.Move.x);
-            _frameInput.Move.y = Mathf.Abs(_frameInput.Move.y) < _stats.VerticalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.Move.y);
+            _frameInput.Move.x = Mathf.Abs(_frameInput.Move.x) < movementStates.HorizontalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.Move.x);
+            _frameInput.Move.y = Mathf.Abs(_frameInput.Move.y) < movementStates.VerticalDeadZoneThreshold ? 0 : Mathf.Sign(_frameInput.Move.y);
         }
 
         if (_frameInput.JumpDown)
@@ -168,37 +178,45 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     }
 
 
-
-
     public async void TakeDamage ( int damage, int otherPlayerIndex )
     {
-
-        if (stats.Health > 0)
+        if (stats.Shield > 0 || stats.Health > 0)
         {
             Hit?.Invoke();
             inputManager.StartVibration(0.5f, 0.5f);
             playerAnimator.GetHitAnimation();
-            stats.Health -= damage;
-            hpBar.UpdateValue(-damage);
-            playerRope?.DestroyCurrentRope();
 
-            if (TimeManager.Instance.isSlowMotionActive)
+            // First, apply damage to the shield
+            int damageToShield = Mathf.Min(damage, stats.Shield);
+            stats.Shield -= damageToShield;
+            shieldBar.UpdateValue(-damageToShield);
+
+            // Calculate remaining damage after shield
+            int remainingDamage = damage - damageToShield;
+
+            // Apply remaining damage to health
+            if (remainingDamage > 0)
             {
-                await Task.Delay(1000);
-                TimeManager.Instance.CancelSlowMotionRequest();
+                stats.Health -= remainingDamage;
+                hpBar.UpdateValue(-remainingDamage);
+                playerRope?.DestroyCurrentRope();
+
+                if (TimeManager.Instance.isSlowMotionActive)
+                {
+                    await Task.Delay(1000);
+                    TimeManager.Instance.CancelSlowMotionRequest();
+                }
+
+                PlayerStatsManager.Instance.AddDamageToPlayerState(remainingDamage, otherPlayerIndex);
             }
 
-            PlayerStatsManager.Instance.AddDamageToPlayerState(damage, otherPlayerIndex);
-
-        }
-
-        else
-        {
-            if (!isDead)
+            if (stats.Health <= 0 && !isDead)
+            {
                 Die(otherPlayerIndex);
+            }
         }
-
     }
+
 
     public void Die ( int killerIndex )
     {
@@ -262,7 +280,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         Physics2D.queriesStartInColliders = false;
 
         // Ground and Ceiling
-        bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
+        bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, movementStates.GrounderDistance, ~movementStates.PlayerLayer);
 
         // Landed on the Ground
         if (!_grounded && groundHit)
@@ -302,8 +320,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private bool _coyoteUsable;
     private float _timeJumpWasPressed;
 
-    private bool HasBufferedJump => _bufferedJumpUsable && _time < _timeJumpWasPressed + _stats.JumpBuffer;
-    private bool CanUseCoyote => _coyoteUsable && !_grounded && _time < _frameLeftGrounded + _stats.CoyoteTime;
+    private bool HasBufferedJump => _bufferedJumpUsable && _time < _timeJumpWasPressed + movementStates.JumpBuffer;
+    private bool CanUseCoyote => _coyoteUsable && !_grounded && _time < _frameLeftGrounded + movementStates.CoyoteTime;
 
     private bool OnRope ()
     {
@@ -336,7 +354,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         _timeJumpWasPressed = 0;
         _bufferedJumpUsable = false;
         _coyoteUsable = false;
-        _frameVelocity.y = _stats.JumpPower;
+        _frameVelocity.y = movementStates.JumpPower;
 
         StartCoroutine(MoveColliderCoroutine(_targetColOffset, 0.5f));
 
@@ -386,12 +404,12 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     {
         if (_frameInput.Move.x == 0)
         {
-            var deceleration = _grounded ? _stats.GroundDeceleration : _stats.AirDeceleration;
+            var deceleration = _grounded ? movementStates.GroundDeceleration : movementStates.AirDeceleration;
             _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
         }
         else
         {
-            _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * _currentSpeed, _stats.Acceleration * Time.fixedDeltaTime);
+            _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * _currentSpeed, movementStates.Acceleration * Time.fixedDeltaTime);
         }
     }
 
@@ -405,13 +423,13 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     {
         if (_grounded && _frameVelocity.y <= 0f)
         {
-            _frameVelocity.y = _stats.GroundingForce;
+            _frameVelocity.y = movementStates.GroundingForce;
         }
         else
         {
-            var inAirGravity = _stats.FallAcceleration;
-            if (_endedJumpEarly && _frameVelocity.y > 0) inAirGravity *= _stats.JumpEndEarlyGravityModifier;
-            _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, -_stats.MaxFallSpeed, inAirGravity * Time.fixedDeltaTime);
+            var inAirGravity = movementStates.FallAcceleration;
+            if (_endedJumpEarly && _frameVelocity.y > 0) inAirGravity *= movementStates.JumpEndEarlyGravityModifier;
+            _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, -movementStates.MaxFallSpeed, inAirGravity * Time.fixedDeltaTime);
         }
     }
 
@@ -421,7 +439,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         if (speedModifierCoroutine != null)
         {
             StopCoroutine(speedModifierCoroutine);
-            _currentSpeed = _stats.MaxSpeed; // Reset speed to base before applying new modifier
+            _currentSpeed = movementStates.MaxSpeed; // Reset speed to base before applying new modifier
         }
 
         speedModifierCoroutine = StartCoroutine(SpeedModifierCoroutine(modifier, newGravityScale, duration));
@@ -434,7 +452,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         yield return new WaitForSeconds(duration);
 
-        _currentSpeed = _stats.MaxSpeed; // Reset to original speed after duration
+        _currentSpeed = movementStates.MaxSpeed; // Reset to original speed after duration
         speedModifierCoroutine = null; // Clear the reference to the coroutine
     }
 
@@ -447,7 +465,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             speedModifierCoroutine = null;
         }
 
-        _currentSpeed = _stats.MaxSpeed;
+        _currentSpeed = movementStates.MaxSpeed;
         _rb.gravityScale = originalGravityScale;
     }
 
@@ -458,7 +476,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 #if UNITY_EDITOR
     private void OnValidate ()
     {
-        if (_stats == null) Debug.LogWarning("Please assign a ScriptableStats asset to the Player Controller's Stats slot", this);
+        if (movementStates == null) Debug.LogWarning("Please assign a ScriptableStats asset to the Player Controller's Stats slot", this);
     }
 #endif
 
