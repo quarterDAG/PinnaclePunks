@@ -85,6 +85,7 @@ public class HeroSelectManager : MonoBehaviour
         // Set the instantiated player's position and rotation
         instantiatedPlayer.transform.position = spawnPoint.position;
         instantiatedPlayer.transform.SetParent(GetParentGO(config), false);
+        instantiatedPlayer.transform.SetSiblingIndex(0);
         instantiatedPlayer.transform.localScale = new Vector3(4, 4, 4);
 
         SetupHeroSelector(config, instantiatedPlayer);
