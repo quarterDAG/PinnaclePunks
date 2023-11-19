@@ -25150,6 +25150,7 @@ MonoBehaviour:
     MaxHealth: 100
     Shield: 99
     MaxShield: 99
+    spawnWithShield: 0
   lives: 3
 --- !u!114 &1518033666845181718
 MonoBehaviour:
@@ -40185,11 +40186,13 @@ MonoBehaviour:
     m_Bits: 768
   damageThisTag: 
   hitPoint: {fileID: 537444450710121095}
-  attackRange: 2.5
+  attackRange: 15
   damage: 30
-  attackCooldown: 0.5
   whoosh: {fileID: 8300000, guid: e850482f46d9ca94bbb2fe1004e7f6c8, type: 3}
   hammerHit: {fileID: 8300000, guid: d302ad1e703a1b54c91a12a64c1fb014, type: 3}
+  stonePrefab: {fileID: 8038312965000702181, guid: c0fab8d54230e9d4f9951184b9065783, type: 3}
+  stoneSpacing: 2
+  secondsBetweenEachStone: 0.05
 --- !u!82 &7468092810000837734
 AudioSource:
   m_ObjectHideFlags: 0

@@ -25,6 +25,11 @@ public class Bar : MonoBehaviour
         UpdateValue(currentValue);
     }
 
+    public void SetValue ( float value )
+    {
+        currentValue = value;
+    }
+
     public void UpdateValue ( float amount )
     {
         currentValue += amount;

@@ -1,5 +1,7 @@
 using System.Threading.Tasks;
+using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Hammer : MonoBehaviour, IWeapon
 {
@@ -14,14 +16,24 @@ public class Hammer : MonoBehaviour, IWeapon
     private int ownerIndex;
 
     private bool canAttack = true;
-    [SerializeField] private float attackCooldown = 0.5f;
-    private float nextAttackTime = 0f;
     private InputManager inputManager;
 
     private AudioSource audioSource;
 
     [SerializeField] private AudioClip whoosh;
     [SerializeField] private AudioClip hammerHit;
+
+    private bool isAttackInProgress = false;
+
+    private Vector3 attackDirection;
+    private Vector3 extendedEndPoint;
+
+    [SerializeField] private GameObject stonePrefab;
+    [SerializeField] private float stoneSpacing = 0.5f; // Spacing between stones
+    [SerializeField] private float secondsBetweenEachStone = 0.1f;
+
+
+
 
 
     void Awake ()
@@ -41,54 +53,84 @@ public class Hammer : MonoBehaviour, IWeapon
     {
         if (playerController.isDead) return;
 
-        if (canAttack && Time.time >= nextAttackTime)
+        if (canAttack)
             HandleAttack();
     }
 
     public void HandleAttack ()
     {
-        if (inputManager.IsAttackPressed)
+        if (canAttack && !isAttackInProgress)
         {
-            Attack();
-            nextAttackTime = Time.time + attackCooldown; // Set the next attack time
-        }
-    }
-
-    private async void Attack ()
-    {
-        playerAnimator.HammerAnimation(true);
-        audioSource.PlayOneShot(whoosh);
-        await Task.Delay(250);
-        PerformHit();
-        playerAnimator.HammerAnimation(false);
-    }
-
-    private void PerformHit ()
-    {
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(hitPoint.position, attackRange, whatToHit);
-
-        foreach (Collider2D enemy in hitEnemies)
-        {
-            if (enemy.gameObject.CompareTag(damageThisTag) || enemy.gameObject.CompareTag("DropBat"))
+            if (inputManager.IsAttackPressed)
             {
-                audioSource.PlayOneShot(hammerHit);
-
-                enemy.GetComponent<ICharacter>().TakeDamage(damage, ownerIndex);
+                Attack();
             }
         }
     }
+
+
+    private void Attack ()
+    {
+        if (isAttackInProgress) return;
+
+        Vector3 hitPointEnd = hitPoint.position;
+        attackDirection = (hitPointEnd - player.position).normalized;
+        extendedEndPoint = hitPointEnd + attackDirection * attackRange;
+
+        isAttackInProgress = true;
+        playerAnimator.HammerAnimation(true);
+        audioSource.PlayOneShot(whoosh);
+        StartCoroutine(DrawAndClearHitLine());
+    }
+
+    private IEnumerator DrawAndClearHitLine ()
+    {
+        Vector3 start = player.position;
+        Vector3 direction = (extendedEndPoint - start).normalized;
+
+        List<GameObject> spawnedStones = new List<GameObject>();
+        float distanceCovered = 0f;
+        float totalDistance = Vector3.Distance(start, extendedEndPoint);
+
+        while (distanceCovered < totalDistance)
+        {
+            Vector3 spawnPoint = start + direction * distanceCovered;
+            GameObject stone = Instantiate(stonePrefab, spawnPoint, Quaternion.identity);
+            spawnedStones.Add(stone);
+
+            StoneSkill skill = stone.GetComponent<StoneSkill>();
+            skill.SetDamage(damage);
+            skill.SetShooterIndex(ownerIndex);
+            skill.SetTagToDamage(damageThisTag);
+
+            distanceCovered += stoneSpacing;
+            yield return new WaitForSeconds(secondsBetweenEachStone);
+        }
+
+        audioSource.PlayOneShot(hammerHit);
+        playerAnimator.HammerAnimation(false);
+
+
+        // Hold the line when fully extended
+        yield return new WaitForSeconds(0.25f);  // Adjust time as needed
+
+        // Clear the line by destroying the stones
+        foreach (var stone in spawnedStones)
+        {
+            Destroy(stone);
+            yield return new WaitForSeconds(secondsBetweenEachStone); // Adjust delay as needed
+        }
+
+        isAttackInProgress = false;
+    }
+
+
+
 
     public void CanUse ( bool _canUse )
     {
         canAttack = _canUse;
     }
 
-    // Optional: Visualize attack range in the editor
-    private void OnDrawGizmosSelected ()
-    {
-        if (hitPoint == null)
-            return;
 
-        Gizmos.DrawWireSphere(hitPoint.position, attackRange);
-    }
 }

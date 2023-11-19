@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         public int MaxHealth = 99;
         public int Shield = 0;
         public int MaxShield = 99;
+        public bool spawnWithShield;
     }
 
     public PlayerStates stats = new PlayerStates();
@@ -58,6 +59,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     private InputManager inputManager;
     private LivesManager livesManager;
+
+
 
     public PlayerConfig playerConfig { get; private set; }
 
@@ -107,6 +110,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     public void AssignShieldBar ( Bar _shield )
     {
         shieldBar = _shield;
+        shieldBar.SetValue(stats.Shield);
     }
 
     public void AssignRespawn ( Transform spawnPoint )
@@ -260,6 +264,12 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         stats.Health = stats.MaxHealth;
         hpBar.UpdateValue(stats.Health);
+
+        if (stats.spawnWithShield)
+        {
+            stats.Shield = stats.MaxShield;
+            shieldBar.SetValue(stats.Shield);
+        }
 
         canMove = true;
 

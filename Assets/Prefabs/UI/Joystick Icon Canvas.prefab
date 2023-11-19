@@ -22,7 +22,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7218672928824339134
 RectTransform:
   m_ObjectHideFlags: 0
@@ -173,6 +173,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 5f5a399e-5c0c-4df3-b72d-0e44e02d6667
     m_ActionName: Player/Any Button
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1a086fac-4070-4d6f-b436-9dab38298fe6
+    m_ActionName: Player/Options[/DualShock4GamepadHID/start,/DualShock4GamepadHID1/start]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player
@@ -224,7 +228,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5f23dd2bea4d47a49bb3efb65f2babad, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b940cca92db66c54c9b2c709ccf92195, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -341,14 +345,14 @@ RectTransform:
   m_GameObject: {fileID: 2236600844561287462}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
+  m_LocalScale: {x: 0.95, y: 0.95, z: 0.95}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 7218672928824339134}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -67}
   m_SizeDelta: {x: 3999.9998, y: 3999.9998}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5126553171538639466
@@ -371,7 +375,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5f23dd2bea4d47a49bb3efb65f2babad, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b940cca92db66c54c9b2c709ccf92195, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

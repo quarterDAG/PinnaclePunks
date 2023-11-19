@@ -17,14 +17,14 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] private Transform aim;
     [SerializeField] private MeshRenderer meshRenderer;
 
-    private bool isFlipped = false;
+    public bool isFlipped { get; private set; }
     private bool isHit = false;
 
     private void Awake ()
     {
         rb = GetComponentInParent<Rigidbody2D>();
         playerController = GetComponentInParent<PlayerController>();
-        skeletonMecanim = GetComponent<SkeletonMecanim>();  
+        skeletonMecanim = GetComponent<SkeletonMecanim>();
         animator = GetComponent<Animator>();
         mouseAim = playerController.GetComponentInChildren<MouseAim>();
     }
@@ -110,6 +110,7 @@ public class PlayerAnimator : MonoBehaviour
 
     }
 
+
     private void HandleRunningAnimation ()
     {
         if (Mathf.Abs(rb.velocity.x) > 0.1f)
@@ -133,7 +134,7 @@ public class PlayerAnimator : MonoBehaviour
         animator.SetBool("IsShooting", _isShooting);
     }
 
-    public void ThrowAnimation(bool _isThrowing)
+    public void ThrowAnimation ( bool _isThrowing )
     {
         animator.SetBool("IsThrowing", _isThrowing);
 
