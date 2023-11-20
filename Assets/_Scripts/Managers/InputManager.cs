@@ -36,11 +36,6 @@ public class InputManager : MonoBehaviour
 
     public void OnMovementChanged ( InputAction.CallbackContext context )
     {
-   /*     if (context.control.device is Gamepad gamepad)
-        {
-            currentGamepad = gamepad;
-        }*/
-
         if (!context.performed)
         {
             return;
@@ -61,20 +56,18 @@ public class InputManager : MonoBehaviour
     public void OnJump ( InputAction.CallbackContext context )
     {
         float value = context.ReadValue<float>();
-        float releaseThreshold = 0.1f; // Set a threshold for detecting release
+        float releaseThreshold = 0.1f; 
 
         if (value > releaseThreshold)
         {
             if (!IsJumpHeld)
             {
-                // The button is pressed, set IsJumpPressed to true
                 IsJumpPressed = true;
                 IsJumpHeld = true;
             }
         }
         else
         {
-            // The button is released (or nearly released), set IsJumpPressed to false
             IsJumpPressed = false;
             IsJumpHeld = false;
         }

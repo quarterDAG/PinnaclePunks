@@ -12,6 +12,9 @@ public class ThrowSlowBombs : MonoBehaviour, IWeapon
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bombPrefab;
 
+    private SlowmotionController slowmotionController;
+    [SerializeField] private float bombSMCost = 5f;
+
     [SerializeField] private float fireRate = 1;
 
     [SerializeField] private float effectSpawnRate = 1;
@@ -30,6 +33,7 @@ public class ThrowSlowBombs : MonoBehaviour, IWeapon
     {
         audioSource = GetComponent<AudioSource>();
         playerController = GetComponentInParent<PlayerController>();
+        slowmotionController = playerController.GetComponent<SlowmotionController>();
         inputManager = GetComponentInParent<InputManager>();
     }
 
@@ -70,8 +74,11 @@ public class ThrowSlowBombs : MonoBehaviour, IWeapon
 
     private async void Throw ()
     {
+        if (slowmotionController.slowmotionBar.IsEmpty()) { return; }
         if (Time.unscaledTime >= timeToSpawnEffect)
         {
+            slowmotionController.UpdateSMBar(-bombSMCost);
+
             audioSource.PlayOneShot(whoosh);
             playerAnimator.ThrowAnimation(true);
             await Task.Delay(500);

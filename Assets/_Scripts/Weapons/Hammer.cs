@@ -8,11 +8,26 @@ public class Hammer : MonoBehaviour, IWeapon
     [SerializeField] private Transform player;
     private PlayerController playerController;
     [SerializeField] private PlayerAnimator playerAnimator;
-    [SerializeField] private LayerMask whatToHit;
+    [SerializeField] private LayerMask layerToHit;
     [SerializeField] private string damageThisTag;
     [SerializeField] private Transform hitPoint;
-    [SerializeField] private float attackRange = 1.5f;
-    [SerializeField] private int damage = 30;
+    [SerializeField] private float attackCooldown = 0.5f;
+
+    [Header("Melee Attack")]
+    [SerializeField] private int meleeAttackDamage = 50;
+    [SerializeField] private float meleeAttackRange = 2.5f;
+
+    [Header("StoneSkill")]
+    [SerializeField] private float stoneSkillRange = 15f;
+    [SerializeField] private int stoneSkillDamage = 30;
+    private Vector3 attackDirection;
+    private Vector3 extendedEndPoint;
+
+    [SerializeField] private GameObject stonePrefab;
+    [SerializeField] private float stoneSpacing = 0.5f; // Spacing between stones
+    [SerializeField] private float secondsBetweenEachStone = 0.1f;
+    
+    
     private int ownerIndex;
 
     private bool canAttack = true;
@@ -24,16 +39,7 @@ public class Hammer : MonoBehaviour, IWeapon
     [SerializeField] private AudioClip hammerHit;
 
     private bool isAttackInProgress = false;
-
-    private Vector3 attackDirection;
-    private Vector3 extendedEndPoint;
-
-    [SerializeField] private GameObject stonePrefab;
-    [SerializeField] private float stoneSpacing = 0.5f; // Spacing between stones
-    [SerializeField] private float secondsBetweenEachStone = 0.1f;
-
-
-
+    private HashSet<Collider2D> hitEnemies = new HashSet<Collider2D>();
 
 
     void Awake ()
@@ -53,8 +59,7 @@ public class Hammer : MonoBehaviour, IWeapon
     {
         if (playerController.isDead) return;
 
-        if (canAttack)
-            HandleAttack();
+        HandleAttack();
     }
 
     public void HandleAttack ()
@@ -73,17 +78,59 @@ public class Hammer : MonoBehaviour, IWeapon
     {
         if (isAttackInProgress) return;
 
-        Vector3 hitPointEnd = hitPoint.position;
-        attackDirection = (hitPointEnd - player.position).normalized;
-        extendedEndPoint = hitPointEnd + attackDirection * attackRange;
-
-        isAttackInProgress = true;
-        playerAnimator.HammerAnimation(true);
         audioSource.PlayOneShot(whoosh);
-        StartCoroutine(DrawAndClearHitLine());
+        playerAnimator.HammerAnimation(true);
+
+        if (playerController._grounded)
+        {
+            TriggerStoneSkill();
+        }
+        else
+        {
+            PerformMeleeAttack();
+        }
+
+        isAttackInProgress = true; 
+        StartCoroutine(ResetAttackFlagAfterDelay());
     }
 
-    private IEnumerator DrawAndClearHitLine ()
+
+    private void TriggerStoneSkill ()
+    {
+        // Existing logic to trigger StoneSkill
+        Vector3 hitPointEnd = hitPoint.position;
+        attackDirection = (hitPointEnd - player.position).normalized;
+        extendedEndPoint = hitPointEnd + attackDirection * stoneSkillRange;
+
+        StartCoroutine(StoneSkill());
+    }
+
+    private async void PerformMeleeAttack ()
+    {
+        hitEnemies.Clear(); // Clear the HashSet at the start of each attack
+
+        Collider2D[] detectedEnemies = Physics2D.OverlapCircleAll(hitPoint.position, meleeAttackRange, layerToHit);
+        foreach (Collider2D enemyCollider in detectedEnemies)
+        {
+            if (!hitEnemies.Contains(enemyCollider) && enemyCollider.gameObject.CompareTag(damageThisTag))
+            {
+                ICharacter enemyCharacter = enemyCollider.GetComponent<ICharacter>();
+                if (enemyCharacter != null)
+                {
+                    enemyCharacter.TakeDamage(meleeAttackDamage, ownerIndex);
+                    hitEnemies.Add(enemyCollider); // Add to the HashSet to prevent multiple hits
+                }
+
+                audioSource.PlayOneShot(hammerHit); // Play hit sound for each enemy
+            }
+        }
+        await Task.Delay(300);
+        playerAnimator.HammerAnimation(false); // Stop the hammer animation
+    }
+
+
+
+    private IEnumerator StoneSkill ()
     {
         Vector3 start = player.position;
         Vector3 direction = (extendedEndPoint - start).normalized;
@@ -99,7 +146,7 @@ public class Hammer : MonoBehaviour, IWeapon
             spawnedStones.Add(stone);
 
             StoneSkill skill = stone.GetComponent<StoneSkill>();
-            skill.SetDamage(damage);
+            skill.SetDamage(stoneSkillDamage);
             skill.SetShooterIndex(ownerIndex);
             skill.SetTagToDamage(damageThisTag);
 
@@ -125,7 +172,11 @@ public class Hammer : MonoBehaviour, IWeapon
     }
 
 
-
+    private IEnumerator ResetAttackFlagAfterDelay ()
+    {
+        yield return new WaitForSeconds(attackCooldown); // Set a cooldown duration
+        isAttackInProgress = false;
+    }
 
     public void CanUse ( bool _canUse )
     {

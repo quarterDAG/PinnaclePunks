@@ -17,7 +17,7 @@ public class PlayerRope : MonoBehaviour
     [SerializeField] private HingeJoint2D joint;
 
     [SerializeField] private float swingForce = 100f;
-    [SerializeField] private float ropeSMCost = 10f;
+    [SerializeField] private float ropeSMCost = 5f;
 
     private InputManager inputManager;
     private SlowmotionController slowmotionController;

@@ -43,8 +43,5 @@ public class SlowBomb : MonoBehaviour
 
         SlowEffectArea effectArea = slowArea.GetComponent<SlowEffectArea>();
         effectArea.Setup(slowDownFactor, gravityFactor, effectDuration, playerLayer);
-
-        // Destroy the area of effect object after the effect duration
-        //Destroy(slowArea, effectDuration);
     }
 }

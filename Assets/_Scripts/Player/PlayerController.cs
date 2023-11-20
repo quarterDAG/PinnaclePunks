@@ -283,7 +283,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     #region Collisions
 
     private float _frameLeftGrounded = float.MinValue;
-    private bool _grounded;
+    public bool _grounded { get; private set; }
 
     private async void CheckCollisions ()
     {

@@ -40181,18 +40181,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 5240961817479375904}
   playerAnimator: {fileID: 5385049584004442954}
-  whatToHit:
+  layerToHit:
     serializedVersion: 2
-    m_Bits: 768
+    m_Bits: 512
   damageThisTag: 
   hitPoint: {fileID: 537444450710121095}
-  attackRange: 15
-  damage: 30
-  whoosh: {fileID: 8300000, guid: e850482f46d9ca94bbb2fe1004e7f6c8, type: 3}
-  hammerHit: {fileID: 8300000, guid: d302ad1e703a1b54c91a12a64c1fb014, type: 3}
+  attackCooldown: 0.5
+  meleeAttackDamage: 50
+  meleeAttackRange: 2.5
+  stoneSkillRange: 15
+  stoneSkillDamage: 30
   stonePrefab: {fileID: 8038312965000702181, guid: c0fab8d54230e9d4f9951184b9065783, type: 3}
   stoneSpacing: 2
   secondsBetweenEachStone: 0.05
+  whoosh: {fileID: 8300000, guid: e850482f46d9ca94bbb2fe1004e7f6c8, type: 3}
+  hammerHit: {fileID: 8300000, guid: d302ad1e703a1b54c91a12a64c1fb014, type: 3}
 --- !u!82 &7468092810000837734
 AudioSource:
   m_ObjectHideFlags: 0
@@ -40375,6 +40378,7 @@ MonoBehaviour:
     m_Bits: 1941
   firePoint: {fileID: 8206595238848753644}
   bombPrefab: {fileID: 2372949663694061506, guid: b0a422547857d8d41a90749b8b61bf46, type: 3}
+  bombSMCost: 5
   fireRate: 1
   effectSpawnRate: 1
   whoosh: {fileID: 8300000, guid: e850482f46d9ca94bbb2fe1004e7f6c8, type: 3}

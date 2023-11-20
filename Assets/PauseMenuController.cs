@@ -63,10 +63,7 @@ public class PauseMenuController : MonoBehaviour
 
     public void ShowPauseMenu ( InputManager _inputManager )
     {
-        foreach (var button in buttons)
-        {
-            button.interactable = true;
-        }
+        MakeButtonsInteractables(true);
 
         canvas.enabled = true;
         selectedIndex = 0;
@@ -75,25 +72,29 @@ public class PauseMenuController : MonoBehaviour
 
     public void HidePauseMenu ()
     {
-        foreach (var button in buttons)
-        {
-            button.interactable = false;
-        }
+        MakeButtonsInteractables(false);
 
         canvas.enabled = false;
         inputManager = null;
     }
+
+    private void MakeButtonsInteractables ( bool _isInteractable )
+    {
+        foreach (var button in buttons)
+        {
+            button.interactable = _isInteractable;
+        }
+    }
+
     private void MoveSelection ( int direction )
     {
         int newIndex = selectedIndex + direction;
-        // Debug.Log("Direction: " + direction + ", Current Index: " + selectedIndex + ", New Index: " + newIndex);
 
         newIndex = Mathf.Clamp(newIndex, 0, buttons.Length - 1);
 
         if (newIndex != selectedIndex)
         {
             selectedIndex = newIndex;
-            Debug.Log("Updated Index: " + selectedIndex);
             UpdateButtonSelection();
         }
     }
