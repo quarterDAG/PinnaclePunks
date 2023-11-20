@@ -63,6 +63,11 @@ public class PauseMenuController : MonoBehaviour
 
     public void ShowPauseMenu ( InputManager _inputManager )
     {
+        foreach (var button in buttons)
+        {
+            button.interactable = true;
+        }
+
         canvas.enabled = true;
         selectedIndex = 0;
         UpdateButtonSelection();
@@ -70,13 +75,18 @@ public class PauseMenuController : MonoBehaviour
 
     public void HidePauseMenu ()
     {
+        foreach (var button in buttons)
+        {
+            button.interactable = false;
+        }
+
         canvas.enabled = false;
         inputManager = null;
     }
     private void MoveSelection ( int direction )
     {
         int newIndex = selectedIndex + direction;
-        Debug.Log("Direction: " + direction + ", Current Index: " + selectedIndex + ", New Index: " + newIndex);
+        // Debug.Log("Direction: " + direction + ", Current Index: " + selectedIndex + ", New Index: " + newIndex);
 
         newIndex = Mathf.Clamp(newIndex, 0, buttons.Length - 1);
 
@@ -118,6 +128,7 @@ public class PauseMenuController : MonoBehaviour
 
     public void Rematch ()
     {
+        Debug.Log("REMATCH!!");
         GameManager.Instance.Rematch();
         HidePauseMenu();
     }
@@ -135,6 +146,7 @@ public class PauseMenuController : MonoBehaviour
     {
         // Implement when there is a main menu
     }
+
 
     #endregion
 }

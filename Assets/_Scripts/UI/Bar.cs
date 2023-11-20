@@ -38,7 +38,8 @@ public class Bar : MonoBehaviour
         // Normalize the current value to be between 0 and 1.
         float normalizedValue = currentValue / maxValue;
 
-        fillImage.fillAmount = normalizedValue;
+        if (fillImage != null)
+            fillImage.fillAmount = normalizedValue;
     }
 
     public void AddBarToGameManager ()

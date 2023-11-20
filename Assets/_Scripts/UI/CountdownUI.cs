@@ -58,7 +58,7 @@ public class CountdownUI : MonoBehaviour
     {
         if (timeRemaining > 0)
         {
-            timeRemaining -= Time.deltaTime;
+            timeRemaining -= Time.unscaledDeltaTime;
             DisplayTime(timeRemaining);
         }
         else

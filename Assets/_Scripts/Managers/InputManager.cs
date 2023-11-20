@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -35,10 +36,10 @@ public class InputManager : MonoBehaviour
 
     public void OnMovementChanged ( InputAction.CallbackContext context )
     {
-        if (context.control.device is Gamepad gamepad)
+   /*     if (context.control.device is Gamepad gamepad)
         {
             currentGamepad = gamepad;
-        }
+        }*/
 
         if (!context.performed)
         {
@@ -168,21 +169,38 @@ public class InputManager : MonoBehaviour
     }
 
 
-    public void StartVibration ( float intensity, float duration )
+    public void StartVibration ( float intensity, int duration )
     {
         if (currentGamepad != null)
         {
             currentGamepad.SetMotorSpeeds(intensity, intensity); // Set both motors to the same speed
 
-            StartCoroutine(StopVibration(duration));
+            StopVibration(duration);
         }
     }
 
-    IEnumerator StopVibration ( float duration )
+    public async void StopVibration ( int duration )
     {
-        yield return new WaitForSeconds(duration);
+        await Task.Delay(duration);
 
-        currentGamepad.ResetHaptics();
+        if (currentGamepad != null)
+        {
+            currentGamepad.ResetHaptics();
+        }
     }
+
+    private void OnDestroy ()
+    {
+        StopAllCoroutines();
+    }
+
+    public void SetCurrentInputDevice(InputDevice _inputDevice)
+    {
+        if (_inputDevice is Gamepad)
+        {
+            currentGamepad = _inputDevice as Gamepad;
+        }
+    }
+
 
 }

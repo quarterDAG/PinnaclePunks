@@ -60,6 +60,8 @@ public class PlayerSpawner : MonoBehaviour
             playerIndex: playerCount
         );
 
+        instantiatedPlayer.GetComponent<InputManager>().SetCurrentInputDevice(config.inputDevice);
+
         // Set the instantiated player's position and rotation
         instantiatedPlayer.transform.position = spawnPoint.position;
         instantiatedPlayer.transform.SetParent(playersParent.transform, false);
@@ -137,6 +139,8 @@ public class PlayerSpawner : MonoBehaviour
             if (config.team == PlayerConfigData.Team.TeamB)
                 HPAvatar.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
         }
+
+
 
         PlayerController playerController = instantiatedPlayer.GetComponent<PlayerController>();
 

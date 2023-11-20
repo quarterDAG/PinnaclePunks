@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public CameraManager cameraManager;
     public List<SlowmotionController> slowmotionControllerList;
     public List<Bar> smBarList = new List<Bar>();
+    public SafeZone safeZone;
 
     public PauseMenuController pauseMenuController;
 
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
     {
         Singleton();
     }
+
 
 
     private void Singleton ()
@@ -46,11 +48,6 @@ public class GameManager : MonoBehaviour
         {
             activePauseInputManager = _inputManager; // Store the reference
 
-            foreach (SlowmotionController slowmotionController in slowmotionControllerList)
-            {
-                slowmotionController.SetIsPauseActive(true);
-            }
-
             pauseMenuController.SetInputManager(_inputManager);
             pauseMenuController.ShowPauseMenu(_inputManager);
             StopTime(true);
@@ -69,6 +66,7 @@ public class GameManager : MonoBehaviour
 
                 StopTime(false);
 
+
                 activePauseInputManager = null; // Reset the reference
             }
         }
@@ -78,18 +76,18 @@ public class GameManager : MonoBehaviour
     {
         if (_isPause)
         {
-
             Time.timeScale = 0f;
-
             isPauseActive = true;
-
         }
         else
         {
             Time.timeScale = 1f;
-
             isPauseActive = false;
+        }
 
+        foreach (SlowmotionController slowmotionController in slowmotionControllerList)
+        {
+            slowmotionController.SetIsPauseActive(isPauseActive);
         }
 
     }
@@ -99,15 +97,18 @@ public class GameManager : MonoBehaviour
         AssignAllManagers();
 
         ResetInputManager();
+        ResetPlayerSpawner();
         ResetLives();
         ResetSMBars();
         ResetInventories();
-        ResetPlayerSpawner();
         ResetMonsterList();
         InitializePlayers();
+        safeZone.ResetSafeZone();
 
         ClearManagerAssignments();
         AssignAllManagers();
+
+        StopTime(false);
 
         isPauseActive = false;
     }
@@ -126,8 +127,6 @@ public class GameManager : MonoBehaviour
     private void AssignAllManagers ()
     {
         livesManagerList.AddRange(FindObjectsOfType<LivesManager>());
-        //slowmotionControllerList.AddRange(FindObjectsOfType<SlowmotionController>());
-        //smBarList.AddRange(FindObjectsOfType<Bar>());
         inventoryList.AddRange(FindObjectsOfType<Inventory>());
         playerSpawner = FindObjectOfType<PlayerSpawner>();
         cameraManager = FindObjectOfType<CameraManager>();
@@ -144,8 +143,8 @@ public class GameManager : MonoBehaviour
 
     private void ResetInputManager ()
     {
-        activePauseInputManager = null;
 
+        activePauseInputManager = null;
     }
 
     private void ResetLives ()
@@ -210,9 +209,14 @@ public class GameManager : MonoBehaviour
         smBarList.Add(_smBar);
     }
 
-    public void SetPauseMenu(PauseMenuController _pmController)
+    public void SetPauseMenu ( PauseMenuController _pmController )
     {
         pauseMenuController = _pmController;
+    }
+
+    public void SetSafeZone ( SafeZone _safeZone )
+    {
+        safeZone = _safeZone;
     }
 
     #endregion

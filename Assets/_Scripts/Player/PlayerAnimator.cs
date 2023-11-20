@@ -41,7 +41,8 @@ public class PlayerAnimator : MonoBehaviour
 
     public async void GetHitAnimation ()
     {
-        if (!isHit)
+
+        if (!isHit && animator != null)
         {
             isHit = true;
             animator.SetBool("GetHit", true);

@@ -196,6 +196,8 @@ public class PlayerStatsManager : MonoBehaviour
 
     public void EndMatch ()
     {
+        GameManager.Instance.StopTime(true);
+
         DisplayStats();
         PlayerConfigData.Team winningTeam = DetermineWinningTeam();
 

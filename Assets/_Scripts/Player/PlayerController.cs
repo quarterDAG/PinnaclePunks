@@ -187,7 +187,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         if (stats.Shield > 0 || stats.Health > 0)
         {
             Hit?.Invoke();
-            inputManager.StartVibration(0.5f, 0.5f);
+            inputManager.StartVibration(0.5f, 250);
             playerAnimator.GetHitAnimation();
 
             // First, apply damage to the shield
