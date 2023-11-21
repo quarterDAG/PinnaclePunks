@@ -15,10 +15,12 @@ public class PlayerAnimator : MonoBehaviour
 
     private Rigidbody2D rb;
     [SerializeField] private Transform aim;
-    [SerializeField] private MeshRenderer meshRenderer;
+    [SerializeField] private SpriteRenderer slashFX;
 
     public bool isFlipped { get; private set; }
     private bool isHit = false;
+
+    private Color transparent;
 
     private void Awake ()
     {
@@ -27,6 +29,9 @@ public class PlayerAnimator : MonoBehaviour
         skeletonMecanim = GetComponent<SkeletonMecanim>();
         animator = GetComponent<Animator>();
         mouseAim = playerController.GetComponentInChildren<MouseAim>();
+
+        if (slashFX != null)
+            transparent = slashFX.color;
     }
 
 
@@ -36,7 +41,7 @@ public class PlayerAnimator : MonoBehaviour
 
         HandleFlip();
         HandleRunningAnimation();
-        HandleWeaponRotation();
+        //HandleWeaponRotation();
     }
 
     public async void GetHitAnimation ()
@@ -133,6 +138,14 @@ public class PlayerAnimator : MonoBehaviour
     public void ShootAnimation ( bool _isShooting )
     {
         animator.SetBool("IsShooting", _isShooting);
+
+        if (slashFX != null)
+        {
+            if (_isShooting)
+                slashFX.color = Color.white;
+            else
+                slashFX.color = transparent;
+        }
     }
 
     public void ThrowAnimation ( bool _isThrowing )
@@ -141,10 +154,6 @@ public class PlayerAnimator : MonoBehaviour
 
     }
 
-    public void HammerAnimation ( bool _isHammering )
-    {
-        animator.SetBool("IsHammering", _isHammering);
-    }
 
     public void DashAnimation ( bool _isDashing )
     {
@@ -154,6 +163,11 @@ public class PlayerAnimator : MonoBehaviour
     public void DeathAnimation ( bool _isDead )
     {
         animator.SetBool("IsDead", _isDead);
+    }
+
+    public void FallAnimation ( bool _isFalling )
+    {
+        animator.SetBool("IsFalling", _isFalling);
     }
 
 

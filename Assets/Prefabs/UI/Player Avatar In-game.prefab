@@ -873,8 +873,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heroAvatarSpriteList:
-  - {fileID: 21300000, guid: cf67ceb23e308d849a3d9bdf3d581537, type: 3}
-  - {fileID: 21300000, guid: a02416e49f1119b44acd82c792403feb, type: 3}
+  - {fileID: 21300000, guid: 6183e4ca28f917d4fb4dc5a0e7263e84, type: 3}
+  - {fileID: 21300000, guid: e6621c0bbab9f4b4cb4d0b0c807ef7af, type: 3}
+  - {fileID: 21300000, guid: 0ab3d9baba8637545b8ec671e6f9e274, type: 3}
   heroAvatarImage: {fileID: 4278513845177324888}
 --- !u!1 &7003417631476034962
 GameObject:

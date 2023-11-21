@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ public class PlayerRope : MonoBehaviour
 {
     private Transform player;
     private PlayerController playerController;
+    private PlayerAnimator playerAnimator;
 
     [SerializeField] private MouseAim mouseAim;
 
@@ -28,6 +30,7 @@ public class PlayerRope : MonoBehaviour
         playerController = player.GetComponent<PlayerController>();
         inputManager = player.GetComponent<InputManager>();
         slowmotionController = player.GetComponent<SlowmotionController>();
+        playerAnimator = player.GetComponentInChildren<PlayerAnimator>();
     }
 
     private void Update ()
@@ -59,17 +62,23 @@ public class PlayerRope : MonoBehaviour
         }
     }
 
-    private void ShootRope ()
+    private async void ShootRope ()
     {
         DestroyCurrentRope();
 
+
         if (slowmotionController.slowmotionBar.IsEmpty()) { return; }
+        playerAnimator.ThrowAnimation(true);
 
         slowmotionController.UpdateSMBar(-ropeSMCost);
         currentRope = Instantiate(ropePrefab, firePoint.position, firePoint.rotation);
         currentRope.GetComponent<Rope>().SetPlayerRope(this);
 
         lineRenderer.enabled = true;
+
+        await Task.Delay(300);
+        playerAnimator.ThrowAnimation(false);
+
     }
 
     private void UpdateLineRenderer ()

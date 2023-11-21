@@ -41,13 +41,17 @@ public class HeroSelectManager : MonoBehaviour
     private Dictionary<HeroSelector, int> teamBPlayerIndices = new Dictionary<HeroSelector, int>();
 
 
+    [Header("Hero Animator Controller")]
+    [SerializeField] private RuntimeAnimatorController archyAnimatorController;
+    [SerializeField] private RuntimeAnimatorController turtleAniamtorController;
+    [SerializeField] private RuntimeAnimatorController mageAnimatorController;
+
     private CountdownUI countdownUI;
 
     private void Awake ()
     {
         countdownUI = GetComponentInChildren<CountdownUI>();
         countdownUI.OnCountdownFinished += StartGame;
-
     }
 
     private void Start ()
@@ -163,8 +167,11 @@ public class HeroSelectManager : MonoBehaviour
                 if (animator != null) animator.enabled = false;
 
                 // Reset animator bools and set the correct animation state
-                animator.SetBool("IsArchy", avatarIndex == 0);
-                animator.SetBool("IsTurtle", avatarIndex == 1);
+                animator.SetBool("Archy", avatarIndex == 0);
+                animator.SetBool("Turtle", avatarIndex == 1);
+                animator.SetBool("Mage", avatarIndex == 2);
+
+
 
                 // Force native size
                 StartCoroutine(SetImageToNativeSizeNextFrame(playerImage));

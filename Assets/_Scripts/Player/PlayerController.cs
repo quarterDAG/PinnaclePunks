@@ -300,12 +300,12 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             _bufferedJumpUsable = true;
             _endedJumpEarly = false;
             GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
+            playerAnimator.FallAnimation(false);
 
 
             playerAnimator.JumpAnimation(false);
             await Task.Delay(3);
             _col.offset = _colOffsetDefault;
-            //StartCoroutine(MoveColliderCoroutine(_colOffsetDefault, 0.005f)); // 10 milliseconds = 0.01 seconds
 
         }
         // Left the Ground
@@ -314,6 +314,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             _grounded = false;
             _frameLeftGrounded = _time;
             GroundedChanged?.Invoke(false, 0);
+            playerAnimator.FallAnimation(true);
+
         }
 
         Physics2D.queriesStartInColliders = _cachedQueryStartInColliders;
@@ -366,8 +368,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         _coyoteUsable = false;
         _frameVelocity.y = movementStates.JumpPower;
 
-        StartCoroutine(MoveColliderCoroutine(_targetColOffset, 0.5f));
-
         if (OnRope())
             playerRope.DestroyCurrentRope();
 
@@ -376,35 +376,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         Jumped?.Invoke();
     }
 
-    private IEnumerator MoveColliderCoroutine ( Vector2 targetOffset, float duration )
-    {
-        float halfDuration = duration / 2f;
-        float time = 0;
-        Vector2 initialOffset = _col.offset;
 
-        // First, move to the target offset
-        while (time < halfDuration)
-        {
-            _col.offset = Vector2.Lerp(initialOffset, targetOffset, time / halfDuration);
-            time += Time.deltaTime;
-            yield return null;
-        }
-
-        // Ensure the collider reaches the target exactly
-        _col.offset = targetOffset;
-
-        // Reset time and move back to the original offset
-        time = 0;
-        while (time < halfDuration)
-        {
-            _col.offset = Vector2.Lerp(targetOffset, initialOffset, time / halfDuration);
-            time += Time.deltaTime;
-            yield return null;
-        }
-
-        // Ensure the collider returns to its original position exactly
-        _col.offset = initialOffset;
-    }
 
     #endregion
 

@@ -50,13 +50,12 @@ public class DashSkill : MonoBehaviour
 
     private void Update ()
     {
-        CheckForDoubleClickAndDash();
+        HandleDash();
     }
 
-    private void CheckForDoubleClickAndDash ()
+    private void HandleDash ()
     {
-        if (playerController.isDead || Time.time < lastDashTime + DASH_COOLDOWN)
-            return;
+    
 
         if (inputManager.IsDashPressed)
         {
@@ -119,6 +118,8 @@ public class DashSkill : MonoBehaviour
 
         gameObject.tag = teamTag;
         weapon.CanUse(true);
+
+        yield return new WaitForSeconds(0.5f);
         playerAnimator.DashAnimation(false);
     }
 

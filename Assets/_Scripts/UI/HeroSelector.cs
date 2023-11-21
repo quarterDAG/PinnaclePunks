@@ -18,17 +18,24 @@ public class HeroSelector : MonoBehaviour
 
     private Image frame;
 
+    private float navigationCooldown = 0.5f; // Time in seconds between avatar changes
+    private float lastNavigationTime;
+
     void Start ()
     {
         selectedHeroIndex = 0;
+
+        lastNavigationTime = -navigationCooldown;
     }
 
     void Update ()
     {
         if (!isPlayerReady)
         {
-            // Navigate through heroes
-            HandleHeroNavigation();
+            if (Time.time - lastNavigationTime > navigationCooldown)
+            {
+                HandleHeroNavigation();
+            }
 
             // Select hero and set to ready
             if (inputManager.IsJumpPressed)
@@ -77,20 +84,31 @@ public class HeroSelector : MonoBehaviour
     {
         int oldIndex = selectedHeroIndex;
         Vector2 inputVelocity = inputManager.InputVelocity;
+        bool hasNavigated = false;
+
         if (inputVelocity.x > 0)
         {
             selectedHeroIndex++;
+            hasNavigated = true;
         }
         else if (inputVelocity.x < 0)
         {
             selectedHeroIndex--;
+            hasNavigated = true;
         }
+
         selectedHeroIndex = Mathf.Clamp(selectedHeroIndex, 0, heroAvatars.Count - 1);
 
         // Update selector position if index changed
         if (oldIndex != selectedHeroIndex)
         {
             MoveSelectorToHero(selectedHeroIndex);
+        }
+
+        // Reset navigation timer
+        if (hasNavigated)
+        {
+            lastNavigationTime = Time.time;
         }
     }
 

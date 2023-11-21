@@ -32736,6 +32736,7 @@ MonoBehaviour:
   playerPrefabs:
   - {fileID: 6038754821143387965, guid: 427dc3767ac6cf240b051ef83d4be550, type: 3}
   - {fileID: 6038754821143387965, guid: 39a787db55836e044b796e0472490e54, type: 3}
+  - {fileID: 6038754821143387965, guid: 8060dfd474d04f4468994e24a92af2da, type: 3}
   playersParent: {fileID: 1169178941}
   playerAvatarPrefab: {fileID: 5951329947807079994, guid: acf2338cb7ade8648a1b20d96608444a, type: 3}
   teamAStatusParent: {fileID: 96100204}

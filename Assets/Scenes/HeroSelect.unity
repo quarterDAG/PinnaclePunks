@@ -656,7 +656,7 @@ PrefabInstance:
     - target: {fileID: 4009798469021292796, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: a02416e49f1119b44acd82c792403feb, type: 3}
+      objectReference: {fileID: 21300000, guid: e6621c0bbab9f4b4cb4d0b0c807ef7af, type: 3}
     - target: {fileID: 7546848372666206778, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
       propertyPath: m_Name
       value: Hero Select Avatar (1)
@@ -1025,13 +1025,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4009798469021292796, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 0ab3d9baba8637545b8ec671e6f9e274, type: 3}
     - target: {fileID: 7546848372666206778, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
       propertyPath: m_Name
       value: Hero Select Avatar (2)
       objectReference: {fileID: 0}
     - target: {fileID: 7546848372666206778, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1664,7 +1668,7 @@ PrefabInstance:
     - target: {fileID: 4009798469021292796, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: a02416e49f1119b44acd82c792403feb, type: 3}
+      objectReference: {fileID: 21300000, guid: e6621c0bbab9f4b4cb4d0b0c807ef7af, type: 3}
     - target: {fileID: 7546848372666206778, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
       propertyPath: m_Name
       value: Hero Select Avatar (1)
@@ -3123,9 +3127,11 @@ MonoBehaviour:
   avatarsTeamA:
   - {fileID: 2483908516010922545}
   - {fileID: 602691240}
+  - {fileID: 2119713943}
   avatarsTeamB:
   - {fileID: 1836422170}
   - {fileID: 357110815}
+  - {fileID: 431114460}
   teamAParent: {fileID: 304150754}
   teamBParent: {fileID: 1652083616}
   selectorPrefab: {fileID: 3450111750651732716, guid: 49df96f91d7def844b1347ba774caa13, type: 3}
@@ -3141,6 +3147,9 @@ MonoBehaviour:
   readyIconsB:
   - {fileID: 942947459}
   - {fileID: 334346774}
+  archyAnimatorController: {fileID: 9100000, guid: de09728ae084b5643a888f412df18c58, type: 2}
+  turtleAniamtorController: {fileID: 9100000, guid: ec638bf9dcfd6a840815c2ee27fccbad, type: 2}
+  mageAnimatorController: {fileID: 9100000, guid: 7de86bf11893e404fbb19684ffbe5214, type: 2}
 --- !u!1 &1184728308
 GameObject:
   m_ObjectHideFlags: 0
@@ -3448,7 +3457,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3418895093056905215, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3466,7 +3475,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 1207229279}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -5991,6 +6000,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4009798469021292796, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6183e4ca28f917d4fb4dc5a0e7263e84, type: 3}
     - target: {fileID: 7546848372666206778, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
       propertyPath: m_Name
       value: Hero Select Avatar
@@ -7017,13 +7030,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4009798469021292796, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 0ab3d9baba8637545b8ec671e6f9e274, type: 3}
     - target: {fileID: 7546848372666206778, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
       propertyPath: m_Name
       value: Hero Select Avatar (2)
       objectReference: {fileID: 0}
     - target: {fileID: 7546848372666206778, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7373,6 +7390,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4009798469021292796, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6183e4ca28f917d4fb4dc5a0e7263e84, type: 3}
     - target: {fileID: 7546848372666206778, guid: c3851f70adcfd9b47b8818ddc6269ce0, type: 3}
       propertyPath: m_Name
       value: Hero Select Avatar
