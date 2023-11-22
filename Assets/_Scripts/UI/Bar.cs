@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class Bar : MonoBehaviour
 {
@@ -8,6 +9,10 @@ public class Bar : MonoBehaviour
 
     [SerializeField] private float maxValue = 100f; // Assuming max health is 100
     [SerializeField] private float currentValue = 100f;
+
+    [SerializeField] private float manaRefillRate = 5f; // Mana refill rate per second
+    private bool isRefillingMana = false;
+
 
     public enum BarType
     {
@@ -20,25 +25,52 @@ public class Bar : MonoBehaviour
 
     private void Start ()
     {
-        if (barType == BarType.Mana) { AddBarToGameManager(); }
-        UpdateValue(currentValue);
+        UpdateValue(0); // Initialize the bar value
+
+        if (barType == BarType.Mana)
+        {
+            AddBarToGameManager();
+        }
+
     }
 
-    public void SetValue ( float value )
+    private void StartManaRefill ()
     {
-        currentValue = value;
+        if (!isRefillingMana)
+        {
+            isRefillingMana = true;
+            InvokeRepeating(nameof(RefillMana), 0.5f, 0.5f); // Refill 2 points per second
+        }
+    }
+
+    private void RefillMana ()
+    {
+        if (currentValue < maxValue)
+        {
+            UpdateValue(1); // Increment by 1 point each half second
+        }
+        else
+        {
+            isRefillingMana = false;
+            CancelInvoke(nameof(RefillMana)); // Stop refilling if max value is reached
+        }
     }
 
     public void UpdateValue ( float amount )
     {
-        currentValue += amount;
-        currentValue = Mathf.Clamp(currentValue, 0, maxValue);
+        currentValue = Mathf.Clamp(currentValue + amount, 0, maxValue);
+        UpdateUI();
 
-        // Normalize the current value to be between 0 and 1.
-        float normalizedValue = currentValue / maxValue;
+        if (barType == BarType.Mana && currentValue < maxValue)
+        {
+            StartManaRefill();
+        }
+    }
 
+    private void UpdateUI ()
+    {
         if (fillImage != null)
-            fillImage.fillAmount = normalizedValue;
+            fillImage.fillAmount = currentValue / maxValue;
     }
 
     public void AddBarToGameManager ()

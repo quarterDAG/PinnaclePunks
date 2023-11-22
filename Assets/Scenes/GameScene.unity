@@ -1095,7 +1095,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fillImage: {fileID: 1450347628}
-  percentageText: {fileID: 0}
   maxValue: 100
   currentValue: 100
   barType: 1
@@ -4572,7 +4571,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fillImage: {fileID: 46569216}
-  percentageText: {fileID: 0}
   maxValue: 100
   currentValue: 100
   barType: 1

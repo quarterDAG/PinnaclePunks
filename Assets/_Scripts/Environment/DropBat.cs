@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class DropBat : MonoBehaviour, ICharacter
@@ -14,122 +13,131 @@ public class DropBat : MonoBehaviour, ICharacter
     [SerializeField] private float minDropInterval = 1f;
     [SerializeField] private float maxDropInterval = 5f;
 
-    private ParticleSystem ps;
-    private float dropTimer;
-
-    private int health = 50;
-    private int maxHealth = 50;
-    private bool IsDead;
-
-    private bool canMove;
-
     [SerializeField] private SpriteRenderer iceCube;
 
+    private ParticleSystem ps;
+    private float dropTimer;
+    private int health = 50;
+    private int maxHealth = 50;
+    private bool isDead;
+    private bool isFrozen;
 
+    private Coroutine moveCoroutine;
 
     void Start ()
     {
         ps = GetComponentInChildren<ParticleSystem>();
-        StartCoroutine(MoveBetweenPoints());
+        moveCoroutine = StartCoroutine(MoveBetweenPoints());
         dropTimer = Random.Range(minDropInterval, maxDropInterval);
     }
 
     void Update ()
     {
-        if (IsDead) return;
-        if (!canMove) return;
+        if (isDead || isFrozen) return;
 
+        HandleDropTimer();
+    }
 
+    private void HandleDropTimer ()
+    {
         dropTimer -= Time.deltaTime;
         if (dropTimer <= 0f)
         {
             DropRandomPrefab();
             dropTimer = Random.Range(minDropInterval, maxDropInterval);
         }
-
     }
 
     private IEnumerator MoveBetweenPoints ()
     {
-        while (true)
-        {
-            yield return StartCoroutine(MoveToPoint(pointB.position));
-            yield return StartCoroutine(MoveToPoint(pointA.position));
-        }
-    }
+        Vector3 target = pointA.position;
 
-    private IEnumerator MoveToPoint ( Vector3 target )
-    {
-        while (Vector3.Distance(transform.position, target) > 0.01f)
+        while (!isDead)
         {
-            // Determine the direction of movement
-            Vector3 direction = target - transform.position;
-            // Flip the sprite based on the direction
-            if (direction.x > 0)
-                transform.localScale = new Vector3(1, 1, 1);
-            else if (direction.x < 0)
-                transform.localScale = new Vector3(-1, 1, 1);
+            if (transform.position == target)
+            {
+                target = target == pointA.position ? pointB.position : pointA.position;
+            }
 
-            transform.position = Vector3.MoveTowards(transform.position, target, Time.deltaTime * speed);
+            FlipSprite(target);
+
+            transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
             yield return null;
         }
     }
+    private void FlipSprite ( Vector3 target )
+    {
+        bool movingTowardsPointA = target == pointA.position;
+
+        if (movingTowardsPointA)
+        {
+            transform.localScale = new Vector3(-1f, 1f, 1f); // Flip sprite
+        }
+        else
+        {
+            transform.localScale = new Vector3(1f, 1f, 1f); // Normal orientation
+        }
+    }
+
+
     private void DropRandomPrefab ()
     {
         if (dropPrefabs.Count == 0) return;
 
         int randomIndex = Random.Range(0, dropPrefabs.Count);
-        GameObject drop = Instantiate(dropPrefabs[randomIndex], transform.position, Quaternion.identity);
+        Instantiate(dropPrefabs[randomIndex], transform.position, Quaternion.identity);
     }
-
 
     public void TakeDamage ( int damage, int shooterIndex )
     {
-        if (IsDead) return;
+        if (isDead) return;
 
         health -= damage;
         ps.Play();
 
         if (health <= 0)
         {
-            Die(shooterIndex);
+            Die(-1);
         }
     }
 
     public void Die ( int _shooterIndex )
     {
         flyingMonsterGO.SetActive(false);
-        IsDead = true;
-        Respawn();
+        iceCube.enabled = false;
+        isDead = true;
+        if (moveCoroutine != null) StopCoroutine(moveCoroutine);
+        StartCoroutine(RespawnCoroutine());
     }
 
-
-    async void Respawn ()
+    private IEnumerator RespawnCoroutine ()
     {
-        await Task.Delay(5000);
+        yield return new WaitForSeconds(5f);
 
         transform.position = respawnPoint.position;
-        IsDead = false;
+        isDead = false;
         flyingMonsterGO.SetActive(true);
         health = maxHealth;
+        moveCoroutine = StartCoroutine(MoveBetweenPoints());
     }
-
 
     public void Freeze ( float duration )
     {
-        if (!canMove)
+        if (!isFrozen && !isDead)
         {
-            StartCoroutine(FreezeCoroutine(duration));
+            isFrozen = true;
+            iceCube.enabled = true;
+            if (moveCoroutine != null) StopCoroutine(moveCoroutine);
+            StartCoroutine(UnfreezeAfterDelay(duration));
         }
     }
-    private IEnumerator FreezeCoroutine ( float duration )
-    {
-        iceCube.enabled = true;
-        canMove = true;
 
+    private IEnumerator UnfreezeAfterDelay ( float duration )
+    {
         yield return new WaitForSeconds(duration);
 
         iceCube.enabled = false;
-        canMove = false;
+        isFrozen = false;
+        if (!isDead) moveCoroutine = StartCoroutine(MoveBetweenPoints());
     }
 }

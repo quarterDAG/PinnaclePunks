@@ -5,10 +5,10 @@ using System.Collections;
 
 public class DropItem : MonoBehaviour
 {
-    public enum DropType { HP, SM, Count } // Add other drop types as needed
+    public enum DropType { HP, Mana, Count } // Add other drop types as needed
     public DropType dropType;
     public int healAmount = 100;
-    public float smAmount = 100f;
+    public float manaAmount = 100f;
 
     private int originalHealAmount;
     private float originalSmAmount;
@@ -34,7 +34,7 @@ public class DropItem : MonoBehaviour
         ChooseRandomDropType();
 
         originalHealAmount = healAmount;
-        originalSmAmount = smAmount;
+        originalSmAmount = manaAmount;
 
         StartCoroutine(FadeOutEffect());
     }
@@ -54,9 +54,9 @@ public class DropItem : MonoBehaviour
             {
                 healAmount = (int)Mathf.Lerp(originalHealAmount, 0, elapsedTime / selfDestructTime);
             }
-            else if (dropType == DropType.SM)
+            else if (dropType == DropType.Mana)
             {
-                smAmount = Mathf.Lerp(originalSmAmount, 0, elapsedTime / selfDestructTime);
+                manaAmount = Mathf.Lerp(originalSmAmount, 0, elapsedTime / selfDestructTime);
             }
 
             yield return null;
@@ -98,7 +98,7 @@ public class DropItem : MonoBehaviour
             SetParticlesColor(Color.red);
         }
 
-        if (dropType == DropType.SM)
+        if (dropType == DropType.Mana)
         {
             itemSpriteRenderer.sprite = itemSpriteList[1];
             SetParticlesColor(Color.blue);
@@ -120,9 +120,9 @@ public class DropItem : MonoBehaviour
                 // Increase player's health
                 player.IncreaseHealth(healAmount);
                 break;
-            case DropType.SM:
+            case DropType.Mana:
                 // Increase player's stamina
-                player.GetComponent<SlowmotionController>().UpdateSMBar(smAmount);
+                player.UpdateManaBar(manaAmount);
                 break;
 
             default:

@@ -25152,6 +25152,7 @@ MonoBehaviour:
     Shield: 99
     MaxShield: 99
     spawnWithShield: 0
+    MaxMana: 100
   lives: 3
   iceCube: {fileID: 430998635770500135}
 --- !u!114 &1518033666845181718
@@ -25179,6 +25180,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d089ccb2aa14bea4da9ef95e0e9383a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dashType: 0
+  teleportEffect: {fileID: 0}
   dashSpeed: 20
   dashDuration: 0.2
   isDamage: 1
@@ -25187,6 +25190,7 @@ MonoBehaviour:
     m_Bits: 768
   damage: 20
   yAxisActivated: 1
+  manaCost: 10
   dash: {fileID: 8300000, guid: 19dbd82338acc49429cdb4dc73942070, type: 3}
 --- !u!114 &5721426548412157444
 MonoBehaviour:
@@ -40338,7 +40342,7 @@ GameObject:
   - component: {fileID: 1156167233456115118}
   - component: {fileID: 1782931871510543541}
   m_Layer: 0
-  m_Name: Throw Slow Bombs
+  m_Name: Throw Bombs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40380,7 +40384,7 @@ MonoBehaviour:
     m_Bits: 1941
   firePoint: {fileID: 8206595238848753644}
   bombPrefab: {fileID: 2372949663694061506, guid: b0a422547857d8d41a90749b8b61bf46, type: 3}
-  bombSMCost: 5
+  bombManaCost: 5
   fireRate: 1
   effectSpawnRate: 1
   whoosh: {fileID: 8300000, guid: e850482f46d9ca94bbb2fe1004e7f6c8, type: 3}

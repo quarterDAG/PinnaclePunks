@@ -4940,7 +4940,8 @@ MonoBehaviour:
   pointB: {fileID: 0}
   respawnPoint: {fileID: 0}
   speed: 0
-  dropPrefabs: []
+  dropPrefabs:
+  - {fileID: 5520698518967202777, guid: e39025ff2e45dad47ba0168ecb238003, type: 3}
   minDropInterval: 1
   maxDropInterval: 5
   iceCube: {fileID: 4768164778147466739}
@@ -5076,11 +5077,59 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4596156624408148, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
       propertyPath: m_ConstrainProportionsScale
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 95357595875442700, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 212223628632171132, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 212223628632171132, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 212223628632171132, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1835929675
+      objectReference: {fileID: 0}
+    - target: {fileID: 212556776109906784, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 212556776109906784, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 212556776109906784, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1835929675
+      objectReference: {fileID: 0}
+    - target: {fileID: 212636302794787430, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 212636302794787430, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 212636302794787430, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1835929675
+      objectReference: {fileID: 0}
+    - target: {fileID: 212807122315363900, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 212807122315363900, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 212807122315363900, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1835929675
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

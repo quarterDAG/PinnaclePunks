@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         public int Shield = 0;
         public int MaxShield = 99;
         public bool spawnWithShield;
+        public int MaxMana = 100;
     }
 
     public PlayerStates stats = new PlayerStates();
@@ -111,7 +112,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     public void AssignShieldBar ( Bar _shield )
     {
         shieldBar = _shield;
-        shieldBar.SetValue(stats.Shield);
+        shieldBar.UpdateValue(stats.Shield);
     }
 
     public void AssignManaBar ( Bar _manaBar )
@@ -275,11 +276,12 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         stats.Health = stats.MaxHealth;
         hpBar.UpdateValue(stats.Health);
+        manaBar.UpdateValue(stats.MaxMana);
 
         if (stats.spawnWithShield)
         {
             stats.Shield = stats.MaxShield;
-            shieldBar.SetValue(stats.Shield);
+            shieldBar.UpdateValue(stats.Shield);
         }
 
         canMove = true;
@@ -301,9 +303,11 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     {
         iceCube.enabled = true;
         canMove = false;
+        _rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
 
         yield return new WaitForSeconds(duration);
 
+        _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         iceCube.enabled = false;
         canMove = true;
     }

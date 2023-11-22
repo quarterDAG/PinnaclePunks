@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class ThrowSlowBombs : MonoBehaviour, IWeapon
+public class ThrowBombs : MonoBehaviour, IWeapon
 {
     [SerializeField] private Transform player;
     private PlayerController playerController;
@@ -12,8 +12,7 @@ public class ThrowSlowBombs : MonoBehaviour, IWeapon
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bombPrefab;
 
-    private SlowmotionController slowmotionController;
-    [SerializeField] private float bombSMCost = 5f;
+    [SerializeField] private float bombManaCost = 5f;
 
     [SerializeField] private float fireRate = 1;
 
@@ -33,7 +32,6 @@ public class ThrowSlowBombs : MonoBehaviour, IWeapon
     {
         audioSource = GetComponent<AudioSource>();
         playerController = GetComponentInParent<PlayerController>();
-        slowmotionController = playerController.GetComponent<SlowmotionController>();
         inputManager = GetComponentInParent<InputManager>();
     }
 
@@ -74,10 +72,11 @@ public class ThrowSlowBombs : MonoBehaviour, IWeapon
 
     private async void Throw ()
     {
-        if (slowmotionController.slowmotionBar.IsEmpty()) { return; }
+        if (playerController.manaBar.IsEmpty()) { return; }
+
         if (Time.unscaledTime >= timeToSpawnEffect)
         {
-            slowmotionController.UpdateSMBar(-bombSMCost);
+            playerController.UpdateManaBar(-bombManaCost);
 
             audioSource.PlayOneShot(whoosh);
             playerAnimator.ThrowAnimation(true);
