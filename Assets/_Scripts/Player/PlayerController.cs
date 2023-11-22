@@ -14,7 +14,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private Vector2 _frameVelocity;
     private bool _cachedQueryStartInColliders;
     private Vector2 _colOffsetDefault;
-    private Vector2 _targetColOffset;
     private float _currentSpeed;
     private Coroutine speedModifierCoroutine;
 
@@ -46,6 +45,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private PlayerRope playerRope;
     private Bar hpBar;
     private Bar shieldBar;
+    public Bar manaBar { get; private set; }
 
     private bool canMove = true;
     private float originalGravityScale;
@@ -77,7 +77,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         _colOffsetDefault = _col.offset;
-        _targetColOffset = new Vector2(_colOffsetDefault.x, _colOffsetDefault.y + 1.2f);
 
         _currentSpeed = movementStates.MaxSpeed;
         originalGravityScale = _rb.gravityScale;
@@ -115,10 +114,17 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         shieldBar.SetValue(stats.Shield);
     }
 
+    public void AssignManaBar ( Bar _manaBar )
+    {
+        manaBar = _manaBar;
+    }
+
     public void AssignRespawn ( Transform spawnPoint )
     {
         respawnPoint = spawnPoint;
     }
+
+
 
     private void Update ()
     {
@@ -157,7 +163,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     }
 
 
-
     private void FixedUpdate ()
     {
         if (Time.timeScale == 0) return;
@@ -182,7 +187,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             PlayerStatsManager.Instance.VoteForRematch(playerConfig.playerIndex);
         }
     }
-
 
     public async void TakeDamage ( int damage, int otherPlayerIndex )
     {
@@ -223,6 +227,11 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         }
     }
 
+
+    public void UpdateManaBar ( float _manaValue )
+    {
+        manaBar.UpdateValue(_manaValue);
+    }
 
     public void Die ( int killerIndex )
     {
@@ -298,8 +307,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         iceCube.enabled = false;
         canMove = true;
     }
-
-
 
     #region Collisions
 

@@ -6,11 +6,19 @@ using UnityEngine.InputSystem;
 
 public class DashSkill : MonoBehaviour
 {
-    private const float DOUBLE_CLICK_TIME = .5f;
-    private const float DASH_COOLDOWN = 1.0f; // Cooldown time in seconds
-    private float lastDashTime = -DASH_COOLDOWN;
 
     private InputManager inputManager;
+
+    public enum DashType
+    {
+        Regular,
+        Teleport
+    }
+
+    [Header("Dash Type Settings")]
+    [SerializeField] private DashType dashType = DashType.Regular;
+    [SerializeField] private Animator teleportEffect;
+    private SpriteRenderer teleportSpriteRenderer;
 
     [SerializeField] float dashSpeed = 10f;
     [SerializeField] float dashDuration = 2f;
@@ -28,21 +36,29 @@ public class DashSkill : MonoBehaviour
     private string teamTag;
 
     [SerializeField] private bool yAxisActivated;
+    [SerializeField] private float manaCost = 10f;
 
     private AudioSource audioSource;
 
     [SerializeField] private AudioClip dash;
 
+    private bool canDash = true;
 
-
-    private void Start ()
+    private void Awake ()
     {
+        if (teleportEffect != null)
+            teleportSpriteRenderer = teleportEffect.GetComponent<SpriteRenderer>();
+
         audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody2D>();
         playerAnimator = GetComponentInChildren<PlayerAnimator>();
         weapon = GetComponentInChildren<IWeapon>();
         playerController = GetComponent<PlayerController>();
         inputManager = GetComponent<InputManager>();
+    }
+
+    private void Start ()
+    {
 
         playerIndex = playerController.playerConfig.playerIndex;
         teamTag = gameObject.tag;
@@ -50,23 +66,20 @@ public class DashSkill : MonoBehaviour
 
     private void Update ()
     {
-        HandleDash();
+        if (canDash)
+            HandleDash();
     }
 
     private void HandleDash ()
     {
-    
-
         if (inputManager.IsDashPressed)
         {
+            if (playerController.manaBar.IsEmpty() && manaCost > 0) return;
+
             Dash(GetDashDirectionForGamepad());
-            lastDashTime = Time.time; // Set the dash time after a successful dash
             inputManager.ResetDash(); // Reset the dash press state
         }
-
-
     }
-
 
 
     private Vector2 GetDashDirectionForGamepad ()
@@ -76,17 +89,65 @@ public class DashSkill : MonoBehaviour
         return gamepadDirection;
     }
 
-
     private void Dash ( Vector2 direction )
     {
-        Vector2 startDashPosition = rb.position;
-        Vector2 targetDashPosition = new Vector2(rb.position.x + (dashSpeed * direction.x), rb.position.y);
+        switch (dashType)
+        {
+            case DashType.Regular:
+                PerformRegularDash(direction);
+                break;
+            case DashType.Teleport:
+                PerformTeleportDash(direction);
+                break;
+        }
 
-        if (yAxisActivated)
-            targetDashPosition = new Vector2(rb.position.x + (dashSpeed * direction.x), rb.position.y + (dashSpeed * direction.y)); ;
+        playerController.UpdateManaBar(-manaCost);
+        canDash = false;
+    }
+
+
+    private void PerformRegularDash ( Vector2 direction )
+    {
+        // Existing dash logic
+        Vector2 startDashPosition = rb.position;
+        Vector2 targetDashPosition = CalculateTargetPosition(direction);
 
         StartCoroutine(DashMovementCoroutine(startDashPosition, targetDashPosition, dashDuration));
+
     }
+
+    private Vector2 CalculateTargetPosition ( Vector2 direction )
+    {
+        Vector2 targetPosition = new Vector2(rb.position.x + (dashSpeed * direction.x), rb.position.y);
+        if (yAxisActivated)
+            targetPosition = new Vector2(rb.position.x + (dashSpeed * direction.x), rb.position.y + (dashSpeed * direction.y));
+        return targetPosition;
+    }
+
+    private void PerformTeleportDash ( Vector2 direction )
+    {
+        Vector2 targetDashPosition = CalculateTargetPosition(direction);
+        StartCoroutine(TeleportCoroutine(targetDashPosition));
+    }
+
+    private IEnumerator TeleportCoroutine ( Vector2 targetPosition )
+    {
+        teleportSpriteRenderer.enabled = true;
+        teleportEffect.SetBool("Teleport", true);
+
+        yield return new WaitForSeconds(0.1f);
+
+        rb.position = targetPosition;
+        gameObject.tag = teamTag;
+        weapon.CanUse(true);
+        playerAnimator.DashAnimation(false);
+
+        yield return new WaitForSeconds(0.5f);
+        teleportEffect.SetBool("Teleport", false);
+        teleportSpriteRenderer.enabled = false;
+        canDash = true;
+    }
+
 
     private IEnumerator DashMovementCoroutine ( Vector2 start, Vector2 end, float duration )
     {
@@ -121,6 +182,7 @@ public class DashSkill : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
         playerAnimator.DashAnimation(false);
+        canDash = true;
     }
 
     private void CheckForCollisions ( Vector2 nextPosition )

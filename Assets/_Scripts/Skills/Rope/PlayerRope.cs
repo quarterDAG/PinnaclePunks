@@ -19,17 +19,15 @@ public class PlayerRope : MonoBehaviour
     [SerializeField] private HingeJoint2D joint;
 
     [SerializeField] private float swingForce = 100f;
-    [SerializeField] private float ropeSMCost = 5f;
+    [SerializeField] private float ropeManaCost = 5f;
 
     private InputManager inputManager;
-    private SlowmotionController slowmotionController;
 
     private void Awake ()
     {
         player = transform.parent;
         playerController = player.GetComponent<PlayerController>();
         inputManager = player.GetComponent<InputManager>();
-        slowmotionController = player.GetComponent<SlowmotionController>();
         playerAnimator = player.GetComponentInChildren<PlayerAnimator>();
     }
 
@@ -67,10 +65,10 @@ public class PlayerRope : MonoBehaviour
         DestroyCurrentRope();
 
 
-        if (slowmotionController.slowmotionBar.IsEmpty()) { return; }
+        if (playerController.manaBar.IsEmpty()) { return; }
         playerAnimator.ThrowAnimation(true);
 
-        slowmotionController.UpdateSMBar(-ropeSMCost);
+        playerController.UpdateManaBar(-ropeManaCost);
         currentRope = Instantiate(ropePrefab, firePoint.position, firePoint.rotation);
         currentRope.GetComponent<Rope>().SetPlayerRope(this);
 

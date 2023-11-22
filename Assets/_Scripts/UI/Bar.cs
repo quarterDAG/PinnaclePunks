@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class Bar : MonoBehaviour
 {
     [SerializeField] private Image fillImage; // Reference to the fill image component
-    [SerializeField] private TextMeshProUGUI percentageText;
 
     [SerializeField] private float maxValue = 100f; // Assuming max health is 100
     [SerializeField] private float currentValue = 100f;
@@ -13,7 +12,7 @@ public class Bar : MonoBehaviour
     public enum BarType
     {
         HP,
-        Slowmotion,
+        Mana,
         Shield
     }
 
@@ -21,7 +20,7 @@ public class Bar : MonoBehaviour
 
     private void Start ()
     {
-        if (barType == BarType.Slowmotion) { AddBarToGameManager(); }
+        if (barType == BarType.Mana) { AddBarToGameManager(); }
         UpdateValue(currentValue);
     }
 

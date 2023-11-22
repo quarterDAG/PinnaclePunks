@@ -104,23 +104,28 @@ public class PlayerSpawner : MonoBehaviour
         Transform parentGO = GetParentGO(config);
 
         // Instantiate player status and parent it to the position transform
-        
+
         GameObject playerStatusGO = Instantiate(playerAvatarPrefab, parentGO, false);
         Bar hpBar = null;
         Bar shieldBar = null;
+        Bar manaBar = null;
 
-       List <Bar> barList = new List<Bar>();    
+        List<Bar> barList = new List<Bar>();
         barList.AddRange(playerStatusGO.GetComponentsInChildren<Bar>());
 
         foreach (Bar bar in barList)
         {
-            if(bar.barType == Bar.BarType.HP)
+            switch (bar.barType)
             {
-                hpBar = bar;
-            }
-            else if (bar.barType == Bar.BarType.Shield)
-            {
-                shieldBar = bar;
+                case Bar.BarType.HP:
+                    hpBar = bar;
+                    break;
+                case Bar.BarType.Shield:
+                    shieldBar = bar;
+                    break;
+                case Bar.BarType.Mana:
+                    manaBar = bar;
+                    break;
             }
         }
 
@@ -153,6 +158,11 @@ public class PlayerSpawner : MonoBehaviour
             playerController.AssignShieldBar(shieldBar);
         else
             Debug.Log("No shield bar found!");
+
+        if (manaBar != null)
+            playerController.AssignManaBar(manaBar);
+        else
+            Debug.Log("No mana bar found!");
 
 
         Transform playerColorTransform = playerStatusGO.transform.Find("HP & AVATAR/PlayerColor");

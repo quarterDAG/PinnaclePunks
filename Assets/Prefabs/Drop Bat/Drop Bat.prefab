@@ -4935,6 +4935,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2741440df3bd8f4e8fa550f420c2795, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  flyingMonsterGO: {fileID: 6089437980396330030}
   pointA: {fileID: 0}
   pointB: {fileID: 0}
   respawnPoint: {fileID: 0}
@@ -5017,6 +5018,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Flying Monster - 03
       objectReference: {fileID: 0}
+    - target: {fileID: 1887031725088742, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4596156624408148, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -5073,11 +5078,20 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 95357595875442700, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
+--- !u!1 &6089437980396330030 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1887031725088742, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}
+  m_PrefabInstance: {fileID: 6090190141940089800}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6094750752578915740 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4596156624408148, guid: e9e82d14923265f4dad1ff837c68deb5, type: 3}

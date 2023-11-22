@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class DropBat : MonoBehaviour, ICharacter
 {
+    [SerializeField] private GameObject flyingMonsterGO;
     [SerializeField] private Transform pointA;
     [SerializeField] private Transform pointB;
     [SerializeField] private Transform respawnPoint;
@@ -14,7 +15,6 @@ public class DropBat : MonoBehaviour, ICharacter
     [SerializeField] private float maxDropInterval = 5f;
 
     private ParticleSystem ps;
-    private MeshRenderer meshRenderer;
     private float dropTimer;
 
     private int health = 50;
@@ -29,7 +29,6 @@ public class DropBat : MonoBehaviour, ICharacter
 
     void Start ()
     {
-        meshRenderer = GetComponentInChildren<MeshRenderer>();
         ps = GetComponentInChildren<ParticleSystem>();
         StartCoroutine(MoveBetweenPoints());
         dropTimer = Random.Range(minDropInterval, maxDropInterval);
@@ -67,9 +66,9 @@ public class DropBat : MonoBehaviour, ICharacter
             Vector3 direction = target - transform.position;
             // Flip the sprite based on the direction
             if (direction.x > 0)
-                transform.localScale = new Vector3(-1, 1, 1);
-            else if (direction.x < 0)
                 transform.localScale = new Vector3(1, 1, 1);
+            else if (direction.x < 0)
+                transform.localScale = new Vector3(-1, 1, 1);
 
             transform.position = Vector3.MoveTowards(transform.position, target, Time.deltaTime * speed);
             yield return null;
@@ -99,7 +98,7 @@ public class DropBat : MonoBehaviour, ICharacter
 
     public void Die ( int _shooterIndex )
     {
-        meshRenderer.enabled = false;
+        flyingMonsterGO.SetActive(false);
         IsDead = true;
         Respawn();
     }
@@ -111,7 +110,7 @@ public class DropBat : MonoBehaviour, ICharacter
 
         transform.position = respawnPoint.position;
         IsDead = false;
-        meshRenderer.enabled = true;
+        flyingMonsterGO.SetActive(true);
         health = maxHealth;
     }
 
