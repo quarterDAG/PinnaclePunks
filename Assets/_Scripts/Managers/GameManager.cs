@@ -27,8 +27,6 @@ public class GameManager : MonoBehaviour
         Singleton();
     }
 
-
-
     private void Singleton ()
     {
         if (Instance == null)
@@ -141,6 +139,8 @@ public class GameManager : MonoBehaviour
 
     }
 
+    #region Resets
+
     private void ResetInputManager ()
     {
 
@@ -186,6 +186,7 @@ public class GameManager : MonoBehaviour
         MinionsManager.Instance.ResetMinionList();
     }
 
+    #endregion
 
     #region Getters & Setters
 

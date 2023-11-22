@@ -9,7 +9,7 @@ public class PlayerManager : MonoBehaviour
     public static PlayerManager Instance { get; private set; }
     [SerializeField] PlayerConfigData playerConfigData;
 
-    private HeroSelectManager heroSelectManager;
+    private HeroSelectController heroSelectManager;
     private PlayerSpawner playerSpawner;
     private CameraManager cameraManager;
 
@@ -142,7 +142,7 @@ public class PlayerManager : MonoBehaviour
         return playerConfigs.FirstOrDefault(pc => pc.playerIndex == playerIndex);
     }
 
-    public void SetHeroSelectManager ( HeroSelectManager manager )
+    public void SetHeroSelectManager ( HeroSelectController manager )
     {
         heroSelectManager = manager;
     }

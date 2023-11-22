@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class HeroSelectManager : MonoBehaviour
+public class HeroSelectController : MonoBehaviour
 {
     [Header("Spawn Points")]
     public List<Transform> avatarsTeamA;
@@ -40,11 +40,6 @@ public class HeroSelectManager : MonoBehaviour
     private Dictionary<HeroSelector, int> teamAPlayerIndices = new Dictionary<HeroSelector, int>();
     private Dictionary<HeroSelector, int> teamBPlayerIndices = new Dictionary<HeroSelector, int>();
 
-
-    [Header("Hero Animator Controller")]
-    [SerializeField] private RuntimeAnimatorController archyAnimatorController;
-    [SerializeField] private RuntimeAnimatorController turtleAniamtorController;
-    [SerializeField] private RuntimeAnimatorController mageAnimatorController;
 
     private CountdownUI countdownUI;
 

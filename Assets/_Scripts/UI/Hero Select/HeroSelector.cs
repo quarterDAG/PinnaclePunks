@@ -12,7 +12,7 @@ public class HeroSelector : MonoBehaviour
     private bool isPlayerReady;
     private bool secondaryButtonReleased = true;
 
-    private HeroSelectManager heroSelectManager;
+    private HeroSelectController heroSelectManager;
 
     private PlayerConfig playerConfig;
 
@@ -154,7 +154,7 @@ public class HeroSelector : MonoBehaviour
         playerConfig = config;
     }
 
-    public void SetHeroSelectManager ( HeroSelectManager manager )
+    public void SetHeroSelectManager ( HeroSelectController manager )
     {
         heroSelectManager = manager;
     }
