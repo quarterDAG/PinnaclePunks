@@ -1,4 +1,3 @@
-using Spine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,6 +21,9 @@ public class DropBat : MonoBehaviour, ICharacter
     private int maxHealth = 50;
     private bool IsDead;
 
+    private bool canMove;
+
+    [SerializeField] private SpriteRenderer iceCube;
 
 
 
@@ -35,15 +37,17 @@ public class DropBat : MonoBehaviour, ICharacter
 
     void Update ()
     {
-        if (!IsDead)
+        if (IsDead) return;
+        if (!canMove) return;
+
+
+        dropTimer -= Time.deltaTime;
+        if (dropTimer <= 0f)
         {
-            dropTimer -= Time.deltaTime;
-            if (dropTimer <= 0f)
-            {
-                DropRandomPrefab();
-                dropTimer = Random.Range(minDropInterval, maxDropInterval);
-            }
+            DropRandomPrefab();
+            dropTimer = Random.Range(minDropInterval, maxDropInterval);
         }
+
     }
 
     private IEnumerator MoveBetweenPoints ()
@@ -109,5 +113,24 @@ public class DropBat : MonoBehaviour, ICharacter
         IsDead = false;
         meshRenderer.enabled = true;
         health = maxHealth;
+    }
+
+
+    public void Freeze ( float duration )
+    {
+        if (!canMove)
+        {
+            StartCoroutine(FreezeCoroutine(duration));
+        }
+    }
+    private IEnumerator FreezeCoroutine ( float duration )
+    {
+        iceCube.enabled = true;
+        canMove = true;
+
+        yield return new WaitForSeconds(duration);
+
+        iceCube.enabled = false;
+        canMove = false;
     }
 }

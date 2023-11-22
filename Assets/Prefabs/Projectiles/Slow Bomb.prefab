@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8004383240968416593}
   - component: {fileID: -1423828689342372402}
   - component: {fileID: 7466554082176135568}
+  - component: {fileID: 35776975295642766}
   m_Layer: 7
   m_Name: Slow Bomb
   m_TagString: Untagged
@@ -75,12 +76,12 @@ SpriteRenderer:
   m_SortingLayerID: 1835929675
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 818d5d29caad7e74b941625be29320d2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e81d5134ffc7ad94e8cfc882ed0e1b1e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.44, y: 0.44}
+  m_Size: {x: 4.96, y: 4.96}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -122,8 +123,8 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.44, y: 0.44}
-    newSize: {x: 0.44, y: 0.44}
+    oldSize: {x: 4.96, y: 4.96}
+    newSize: {x: 4.96, y: 4.96}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -152,3 +153,24 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   slowEffectPrefab: {fileID: 8642928541677274940, guid: 8428025f5fd190844934fd7cc747ad5f, type: 3}
+--- !u!95 &35776975295642766
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2372949663694061506}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: eca56ebc227534342be5eaf6f41e1240, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

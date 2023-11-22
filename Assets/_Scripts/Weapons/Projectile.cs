@@ -6,6 +6,13 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    public enum ProjectileType
+    {
+        Arrow,
+        IceBolt
+    }
+
+    [SerializeField] private ProjectileType projectileType;
 
     [SerializeField] private int moveSpeed = 230;
 
@@ -34,7 +41,39 @@ public class Projectile : MonoBehaviour
         Destroy(gameObject, 1 / Time.timeScale);
     }
 
+    /*    private void OnTriggerEnter2D ( Collider2D collision )
+        {
+            if (collision.CompareTag(damageTag) || collision.CompareTag("DropBat"))
+            {
+                var character = collision.GetComponent<ICharacter>();
+                var rb = collision.GetComponent<Rigidbody2D>();
+
+                if (character != null)
+                {
+                    HandleDamage(character, rb, collision);
+                }
+            }
+            else if (IsInLayerMask(collision.gameObject.layer, hitTheseLayers))
+            {
+                Destroy(gameObject);
+            }
+        }*/
+
     private void OnTriggerEnter2D ( Collider2D collision )
+    {
+        switch (projectileType)
+        {
+            case ProjectileType.Arrow:
+                HandleArrowCollision(collision);
+                break;
+            case ProjectileType.IceBolt:
+                HandleIceBoltCollision(collision);
+                break;
+                // Add more cases as needed
+        }
+    }
+
+    private void HandleArrowCollision ( Collider2D collision )
     {
         if (collision.CompareTag(damageTag) || collision.CompareTag("DropBat"))
         {
@@ -52,13 +91,37 @@ public class Projectile : MonoBehaviour
         }
     }
 
+    private void HandleIceBoltCollision ( Collider2D collision )
+    {
+
+        if (collision.CompareTag(damageTag) || collision.CompareTag("DropBat"))
+        {
+            // Check if collision is with a character
+            var character = collision.GetComponent<ICharacter>();
+            var rb = collision.GetComponent<Rigidbody2D>();
+
+            if (character != null)
+            {
+                HandleDamage(character, rb, collision);
+                character.Freeze(2f); // Assuming you have a method to freeze characters
+            }
+
+        }
+        else if (IsInLayerMask(collision.gameObject.layer, hitTheseLayers))
+        {
+            Destroy(gameObject);
+        }
+    }
+
+
     private void HandleDamage ( ICharacter character, Rigidbody2D rb, Collider2D collision )
     {
         PlaySoundEffect(arrowHit);
         character.TakeDamage(bulletDamage, shotOwnerIndex);
 
         spriteRenderer.enabled = false;
-        lineRenderer.enabled = false;
+        if (lineRenderer != null)
+            lineRenderer.enabled = false;
 
         if (rb != null && collision.CompareTag(damageTag))
         {

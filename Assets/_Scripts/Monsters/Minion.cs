@@ -1,5 +1,3 @@
-using Spine.Unity;
-using Spine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,7 +23,6 @@ public class Minion : MonoBehaviour, ICharacter
     private List<Transform> players = new List<Transform>(); // List of all players
     private float timeToFire = 0;
 
-    private SkeletonMecanim skeletonMecanim;
     private Animator animator;
     private bool isFlipped;
     public bool IsDead { get; private set; } = false;
@@ -37,6 +34,10 @@ public class Minion : MonoBehaviour, ICharacter
     private Transform closestPlayer;
     private float checkPlayerInterval = 1.0f; // Check every second
     private float lastCheckTime = 0;
+
+    private bool canMove = true;
+
+    [SerializeField] private SpriteRenderer iceCube;
 
 
     [System.Serializable]
@@ -50,12 +51,14 @@ public class Minion : MonoBehaviour, ICharacter
     private void Start ()
     {
         animator = GetComponent<Animator>();
-        skeletonMecanim = GetComponent<SkeletonMecanim>();
+        //skeletonMecanim = GetComponent<SkeletonMecanim>();
     }
 
     private void Update ()
     {
         if (IsDead) return;
+
+        if (!canMove) return;
 
         if (Time.time >= lastCheckTime + checkPlayerInterval)
         {
@@ -67,7 +70,7 @@ public class Minion : MonoBehaviour, ICharacter
         if (closestPlayer != null)
         {
             HandleFlip();
-            HandleRotation();
+            //HandleRotation();
 
             float distanceToPlayer = Vector3.Distance(transform.position, closestPlayer.position);
             if (distanceToPlayer <= attackRange && Time.time >= timeToFire)
@@ -155,7 +158,7 @@ public class Minion : MonoBehaviour, ICharacter
     }
 
 
-    private void HandleRotation ()
+/*    private void HandleRotation ()
     {
 
         Vector2 playerPosition = closestPlayer.position;
@@ -185,7 +188,7 @@ public class Minion : MonoBehaviour, ICharacter
         }
         skeleton.UpdateWorldTransform();
 
-    }
+    }*/
 
 
 
@@ -243,6 +246,25 @@ public class Minion : MonoBehaviour, ICharacter
         int animationDelay = (int)fireRate * 100;
         await Task.Delay(animationDelay);
         animator.SetBool("IsShooting", false);
+    }
+
+    public void Freeze ( float duration )
+    {
+        if (!canMove)
+        {
+            StartCoroutine(FreezeCoroutine(duration));
+        }
+    }
+
+    private IEnumerator FreezeCoroutine ( float duration )
+    {
+        iceCube.enabled = true;
+        canMove = true;
+
+        yield return new WaitForSeconds(duration);
+
+        iceCube.enabled = false;
+        canMove = false;
     }
 
     public void SetTagToAttack ( string _tagToAttack )

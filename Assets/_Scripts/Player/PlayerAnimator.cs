@@ -1,6 +1,4 @@
-using Spine.Unity;
 using UnityEngine;
-using Spine;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Threading.Tasks;
@@ -8,7 +6,6 @@ using System.Threading.Tasks;
 public class PlayerAnimator : MonoBehaviour
 {
     private Animator animator;
-    private SkeletonMecanim skeletonMecanim;
     private MouseAim mouseAim;
     private PlayerController playerController;
 
@@ -26,7 +23,6 @@ public class PlayerAnimator : MonoBehaviour
     {
         rb = GetComponentInParent<Rigidbody2D>();
         playerController = GetComponentInParent<PlayerController>();
-        skeletonMecanim = GetComponent<SkeletonMecanim>();
         animator = GetComponent<Animator>();
         mouseAim = playerController.GetComponentInChildren<MouseAim>();
 
@@ -41,7 +37,6 @@ public class PlayerAnimator : MonoBehaviour
 
         HandleFlip();
         HandleRunningAnimation();
-        //HandleWeaponRotation();
     }
 
     public async void GetHitAnimation ()
@@ -77,43 +72,6 @@ public class PlayerAnimator : MonoBehaviour
             transform.localScale = newScale;
             isFlipped = true;
         }
-    }
-
-    private void HandleWeaponRotation ()
-    {
-        Vector2 mouseAimPosition = mouseAim.GetAimPosition();
-        Vector2 weaponPosition = new Vector2(transform.position.x, transform.position.y);
-        Vector2 difference = mouseAimPosition - weaponPosition;
-
-        difference.Normalize();
-
-        if (isFlipped)
-            difference.y = -difference.y;
-
-        float rotZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
-
-        if (isFlipped)
-            rotZ += 70;
-        else
-            rotZ -= 110;
-
-        Skeleton skeleton = skeletonMecanim.skeleton;
-
-        foreach (Slot slot in skeleton.Slots)
-        {
-
-            if (slot.Bone.Data.Name.Contains("Hand_B"))
-                slot.Bone.Rotation = rotZ;
-
-            if (slot.Bone.Data.Name.Contains("Arrow"))
-                slot.A = 0;
-
-            if (slot.Bone.Data.Name.Contains("Shade"))
-                slot.A = 0;
-
-        }
-        skeleton.UpdateWorldTransform();
-
     }
 
 

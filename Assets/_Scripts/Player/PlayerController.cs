@@ -60,6 +60,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private InputManager inputManager;
     private LivesManager livesManager;
 
+    [SerializeField] private SpriteRenderer iceCube;
+
 
 
     public PlayerConfig playerConfig { get; private set; }
@@ -278,6 +280,25 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         gameObject.tag = teamTag;
     }
 
+    public void Freeze ( float duration )
+    {
+        if (canMove)
+        {
+            StartCoroutine(FreezeCoroutine(duration));
+        }
+    }
+
+    private IEnumerator FreezeCoroutine ( float duration )
+    {
+        iceCube.enabled = true;
+        canMove = false;
+
+        yield return new WaitForSeconds(duration);
+
+        iceCube.enabled = false;
+        canMove = true;
+    }
+
 
 
     #region Collisions
@@ -322,7 +343,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     }
 
     #endregion
-
 
     #region Jumping
 
