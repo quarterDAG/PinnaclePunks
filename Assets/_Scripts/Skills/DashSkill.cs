@@ -66,6 +66,8 @@ public class DashSkill : MonoBehaviour
 
     private void Update ()
     {
+        if (playerController.isDead) return;
+
         if (canDash)
             HandleDash();
     }

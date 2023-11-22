@@ -196,7 +196,7 @@ public class Minion : MonoBehaviour, ICharacter
     {
         stats.Health -= damage;
 
-        hpBar.UpdateValue(-damage);
+        hpBar.AddValue(-damage);
         PlayerStatsManager.Instance.AddDamageToPlayerState(damage, shooterIndex);
 
 

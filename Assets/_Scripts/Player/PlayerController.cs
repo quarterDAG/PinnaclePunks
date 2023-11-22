@@ -61,6 +61,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private InputManager inputManager;
     private LivesManager livesManager;
 
+    [SerializeField] private SpriteRenderer bubble;
     [SerializeField] private SpriteRenderer iceCube;
 
 
@@ -112,7 +113,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     public void AssignShieldBar ( Bar _shield )
     {
         shieldBar = _shield;
-        shieldBar.UpdateValue(stats.Shield);
+        shieldBar.SetValue(stats.Shield);
     }
 
     public void AssignManaBar ( Bar _manaBar )
@@ -200,7 +201,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             // First, apply damage to the shield
             int damageToShield = Mathf.Min(damage, stats.Shield);
             stats.Shield -= damageToShield;
-            shieldBar.UpdateValue(-damageToShield);
+            shieldBar.AddValue(-damageToShield);
 
             // Calculate remaining damage after shield
             int remainingDamage = damage - damageToShield;
@@ -209,7 +210,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             if (remainingDamage > 0)
             {
                 stats.Health -= remainingDamage;
-                hpBar.UpdateValue(-remainingDamage);
+                hpBar.AddValue(-remainingDamage);
                 playerRope?.DestroyCurrentRope();
 
                 if (TimeManager.Instance.isSlowMotionActive)
@@ -231,7 +232,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     public void UpdateManaBar ( float _manaValue )
     {
-        manaBar.UpdateValue(_manaValue);
+        manaBar.AddValue(_manaValue);
     }
 
     public void Die ( int killerIndex )
@@ -247,7 +248,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         canMove = false;
 
         _rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-
+        bubble.enabled = true;
 
         livesManager.LoseLife();
         lives--;
@@ -270,24 +271,26 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         respawnCountdownUI.StartTimer();
         await Task.Delay(3000);
 
+
         _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         isDead = false;
         playerAnimator.DeathAnimation(false);
 
         stats.Health = stats.MaxHealth;
-        hpBar.UpdateValue(stats.Health);
-        manaBar.UpdateValue(stats.MaxMana);
+        hpBar.AddValue(stats.Health);
+        manaBar.AddValue(stats.MaxMana);
 
         if (stats.spawnWithShield)
         {
             stats.Shield = stats.MaxShield;
-            shieldBar.UpdateValue(stats.Shield);
+            shieldBar.AddValue(stats.Shield);
         }
 
         canMove = true;
 
-        await Task.Delay(2000);
+        await Task.Delay(3000);
 
+        bubble.enabled = false;
         gameObject.tag = teamTag;
     }
 
@@ -501,7 +504,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         stats.Health += _hp;
         stats.Health = Mathf.Clamp(stats.Health, 0, stats.MaxHealth);
 
-        hpBar.UpdateValue(+_hp);
+        hpBar.AddValue(+_hp);
     }
 
     #endregion

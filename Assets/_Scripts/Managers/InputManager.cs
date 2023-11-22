@@ -26,7 +26,12 @@ public class InputManager : MonoBehaviour
 
     public bool IsStartPressed { get; private set; }
 
+    private PlayerController playerController;
 
+    private void Awake ()
+    {
+        playerController = GetComponent<PlayerController>();
+    }
 
     private void LateUpdate ()
     {
@@ -36,6 +41,7 @@ public class InputManager : MonoBehaviour
 
     public void OnMovementChanged ( InputAction.CallbackContext context )
     {
+        
         if (!context.performed)
         {
             return;
@@ -45,6 +51,9 @@ public class InputManager : MonoBehaviour
 
     public void OnAimChanged ( InputAction.CallbackContext context )
     {
+        if (playerController.isDead) return;
+
+
         if (!context.performed)
         {
             return;
@@ -76,6 +85,9 @@ public class InputManager : MonoBehaviour
 
     public void OnAttack ( InputAction.CallbackContext context )
     {
+        if (playerController.isDead) return;
+
+
         if (!context.performed)
         {
             IsAttackPressed = false;
@@ -91,6 +103,9 @@ public class InputManager : MonoBehaviour
 
     public void OnSlowmotion ( InputAction.CallbackContext context )
     {
+        if (playerController.isDead) return;
+
+
         if (!context.performed)
         {
             IsSlowmotionPressed = false;
@@ -116,6 +131,9 @@ public class InputManager : MonoBehaviour
 
     public void OnDash ( InputAction.CallbackContext context )
     {
+        if (playerController.isDead) return;
+
+
         if (context.performed && !IsDashPressed)
         {
             IsDashPressed = true;
@@ -134,6 +152,8 @@ public class InputManager : MonoBehaviour
 
     public void OnSpawnMinion ( InputAction.CallbackContext context )
     {
+        if (playerController.isDead) return;
+
         if (!context.performed)
         {
             IsSpawnMinionPressed = false;
@@ -147,8 +167,6 @@ public class InputManager : MonoBehaviour
     {
         GameManager.Instance.PauseMenu(this);
     }
-
-
 
     public void ResetDash ()
     {

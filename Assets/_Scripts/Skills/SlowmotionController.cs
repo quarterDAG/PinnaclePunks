@@ -78,7 +78,7 @@ public class SlowmotionController : MonoBehaviour
 
     public void UpdateSMBar ( float _smValue )
     {
-        slowmotionBar.UpdateValue(_smValue);
+        slowmotionBar.AddValue(_smValue);
     }
 
 

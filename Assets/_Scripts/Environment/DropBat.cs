@@ -71,11 +71,11 @@ public class DropBat : MonoBehaviour, ICharacter
 
         if (movingTowardsPointA)
         {
-            transform.localScale = new Vector3(-1f, 1f, 1f); // Flip sprite
+            transform.localScale = new Vector3(-1f, 1f, 1f);
         }
         else
         {
-            transform.localScale = new Vector3(1f, 1f, 1f); // Normal orientation
+            transform.localScale = new Vector3(1f, 1f, 1f);
         }
     }
 

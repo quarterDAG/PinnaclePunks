@@ -18,7 +18,7 @@ public class HeroSelector : MonoBehaviour
 
     private Image frame;
 
-    private float navigationCooldown = 0.5f; // Time in seconds between avatar changes
+    private float navigationCooldown = 0.2f; // Time in seconds between avatar changes
     private float lastNavigationTime;
 
     void Start ()
@@ -86,16 +86,34 @@ public class HeroSelector : MonoBehaviour
         Vector2 inputVelocity = inputManager.InputVelocity;
         bool hasNavigated = false;
 
-        if (inputVelocity.x > 0)
+        if (playerConfig.team == PlayerConfigData.Team.TeamA)
         {
-            selectedHeroIndex++;
-            hasNavigated = true;
+            if (inputVelocity.x > 0)
+            {
+                selectedHeroIndex++;
+                hasNavigated = true;
+            }
+            else if (inputVelocity.x < 0)
+            {
+                selectedHeroIndex--;
+                hasNavigated = true;
+            }
+
         }
-        else if (inputVelocity.x < 0)
+        else
         {
-            selectedHeroIndex--;
-            hasNavigated = true;
+            if (inputVelocity.x < 0)
+            {
+                selectedHeroIndex++;
+                hasNavigated = true;
+            }
+            else if (inputVelocity.x > 0)
+            {
+                selectedHeroIndex--;
+                hasNavigated = true;
+            }
         }
+
 
         selectedHeroIndex = Mathf.Clamp(selectedHeroIndex, 0, heroAvatars.Count - 1);
 

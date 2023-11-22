@@ -25,7 +25,7 @@ public class Bar : MonoBehaviour
 
     private void Start ()
     {
-        UpdateValue(0); // Initialize the bar value
+        AddValue(0); // Initialize the bar value
 
         if (barType == BarType.Mana)
         {
@@ -47,7 +47,7 @@ public class Bar : MonoBehaviour
     {
         if (currentValue < maxValue)
         {
-            UpdateValue(1); // Increment by 1 point each half second
+            AddValue(1); // Increment by 1 point each half second
         }
         else
         {
@@ -56,7 +56,12 @@ public class Bar : MonoBehaviour
         }
     }
 
-    public void UpdateValue ( float amount )
+    public void SetValue(float amount)
+    {
+        currentValue = amount;
+    }
+
+    public void AddValue ( float amount )
     {
         currentValue = Mathf.Clamp(currentValue + amount, 0, maxValue);
         UpdateUI();
@@ -80,7 +85,7 @@ public class Bar : MonoBehaviour
 
     public void ResetBar ()
     {
-        UpdateValue(maxValue);
+        AddValue(maxValue);
     }
 
     public bool IsEmpty ()
