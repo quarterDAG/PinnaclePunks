@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using System.Collections;
 
 public class IceWand : MonoBehaviour, IWeapon
 {
@@ -12,9 +13,10 @@ public class IceWand : MonoBehaviour, IWeapon
     [SerializeField] private GameObject arrowPrefab;
     //[SerializeField] private Gradient bulletGradient;
     [SerializeField] private string damageThisTag;
-
+   
+    private float originalFireRate;
     [SerializeField] private float fireRate = 0;
-    [SerializeField] private int damage = 10;
+    [SerializeField] private float damage = 10;
 
     [SerializeField] private float effectSpawnRate = 10;
     private float timeToSpawnEffect = 0;
@@ -40,6 +42,8 @@ public class IceWand : MonoBehaviour, IWeapon
     {
         playerIndex = playerController.playerConfig.playerIndex;
         damageThisTag = (gameObject.tag == "TeamA") ? "TeamB" : "TeamA";
+
+        originalFireRate = fireRate;    
     }
 
     void Update ()
@@ -118,5 +122,35 @@ public class IceWand : MonoBehaviour, IWeapon
         canShoot = _canUse;
     }
 
+    #region Power Ups
 
+    public void IncreaseFireRate ( float fireRateValue, float effectTime )
+    {
+        StartCoroutine(IncreareFireRateCoroutine(fireRateValue, effectTime));
+    }
+
+    IEnumerator IncreareFireRateCoroutine ( float fireRateValue, float effectTime )
+    {
+        fireRate *= fireRateValue;
+
+        yield return new WaitForSeconds(effectTime);
+
+        fireRate = originalFireRate;
+    }
+
+    public void IncreaseFireDamage ( float fireDamageMultiplier, float duration )
+    {
+        StartCoroutine(IncreaseFireDamageCoroutine(fireDamageMultiplier, duration));
+    }
+
+    IEnumerator IncreaseFireDamageCoroutine ( float fireDamageMultiplier, float duration )
+    {
+        damage *= fireDamageMultiplier;
+
+        yield return new WaitForSeconds(duration);
+
+        fireRate = originalFireRate;
+    }
+
+    #endregion
 }

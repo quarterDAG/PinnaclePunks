@@ -67,19 +67,27 @@ public class SafeZone : MonoBehaviour
 
     private void OnTriggerEnter2D ( Collider2D other )
     {
-        var player = other.GetComponent<PlayerController>();
-        if (player != null)
+        if (!other.CompareTag("Dodge"))
         {
-            playersOutsideSafeZone.Remove(player);
+            var player = other.GetComponent<PlayerController>();
+            if (player != null)
+            {
+                playersOutsideSafeZone.Remove(player);
+            }
+
         }
     }
 
     private void OnTriggerExit2D ( Collider2D other )
     {
-        var player = other.GetComponent<PlayerController>();
-        if (player != null)
+        if (!other.CompareTag("Dodge"))
         {
-            playersOutsideSafeZone.Add(player);
+            var player = other.GetComponent<PlayerController>();
+            if (player != null)
+            {
+                playersOutsideSafeZone.Add(player);
+            }
+
         }
     }
 

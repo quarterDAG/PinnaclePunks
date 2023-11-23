@@ -7,7 +7,7 @@ public class PlayerStats : ScriptableObject
     public string playerName;
     public int kills;
     public int deaths;
-    public int damage;
+    public float damage;
 
     public void ResetStats ()
     {

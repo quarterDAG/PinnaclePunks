@@ -1,4 +1,5 @@
 
+using System.Collections;
 using UnityEngine;
 
 public class Bow : MonoBehaviour, IWeapon
@@ -13,12 +14,15 @@ public class Bow : MonoBehaviour, IWeapon
     //[SerializeField] private Gradient bulletGradient;
     [SerializeField] private string damageThisTag;
 
+    private float originalFireRate;
     [SerializeField] private float fireRate = 0;
-    [SerializeField] private int damage = 10;
+    private float timeToFire = 0;
+
+    private float originalDamage;
+    [SerializeField] private float damage = 10;
 
     [SerializeField] private float effectSpawnRate = 10;
     private float timeToSpawnEffect = 0;
-    private float timeToFire = 0;
 
     private bool canShoot = true;
     private InputManager inputManager;
@@ -40,6 +44,9 @@ public class Bow : MonoBehaviour, IWeapon
     {
         playerIndex = playerController.playerConfig.playerIndex;
         damageThisTag = (gameObject.tag == "TeamA") ? "TeamB" : "TeamA";
+
+        originalFireRate = fireRate;
+        originalDamage = damage;    
     }
 
     void Update ()
@@ -67,18 +74,11 @@ public class Bow : MonoBehaviour, IWeapon
 
     public void HandleAttack ()
     {
-        if (fireRate == 0)
+
+        if (inputManager.IsAttackPressed && Time.time > timeToFire)
         {
-            if (inputManager.IsAttackPressed)
-                Shoot();
-        }
-        else
-        {
-            if (inputManager.IsAttackPressed && Time.time > timeToFire)
-            {
-                timeToFire = Time.time + 1 / fireRate;
-                Shoot();
-            }
+            timeToFire = Time.time + 1 / fireRate;
+            Shoot();
         }
 
         if (!inputManager.IsAttackPressed)
@@ -118,5 +118,35 @@ public class Bow : MonoBehaviour, IWeapon
         canShoot = _canUse;
     }
 
+    #region Power Ups
 
+    public void IncreaseFireRate ( float fireRateMultiplier, float duration )
+    {
+        StartCoroutine(IncreareFireRateCoroutine(fireRateMultiplier, duration));
+    }
+
+    IEnumerator IncreareFireRateCoroutine ( float fireRateMultiplier, float duration )
+    {
+        fireRate *= fireRateMultiplier;
+
+        yield return new WaitForSeconds(duration);
+
+        fireRate = originalFireRate;
+    }
+
+    public void IncreaseFireDamage ( float fireDamageMultiplier, float duration )
+    {
+        StartCoroutine(IncreaseFireDamageCoroutine(fireDamageMultiplier, duration));
+    }
+
+    IEnumerator IncreaseFireDamageCoroutine ( float fireDamageMultiplier, float duration )
+    {
+        damage *= fireDamageMultiplier;
+
+        yield return new WaitForSeconds(duration);
+
+        damage = originalDamage;
+    }
+
+    #endregion
 }

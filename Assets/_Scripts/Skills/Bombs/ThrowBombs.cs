@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class ThrowBombs : MonoBehaviour, IWeapon
+public class ThrowBombs : MonoBehaviour
 {
     [SerializeField] private Transform player;
     private PlayerController playerController;

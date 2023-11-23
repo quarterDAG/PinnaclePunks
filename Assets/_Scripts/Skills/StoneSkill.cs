@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StoneSkill : MonoBehaviour
 {
-    [SerializeField] private int damage;
+    [SerializeField] private float damage;
     [SerializeField] private HashSet<Collider2D> hitEnemies = new HashSet<Collider2D>();
     [SerializeField] private int shooterIndex = -1;
     [SerializeField] private string damageThisTag;
@@ -34,7 +34,7 @@ public class StoneSkill : MonoBehaviour
     public void SetShooterIndex ( int _shooterIndex )
     { shooterIndex = _shooterIndex; }
 
-    public void SetDamage ( int _damage )
+    public void SetDamage ( float _damage )
     { damage = _damage; }
 
     public void SetTagToDamage ( string _tag )

@@ -5,6 +5,9 @@ using Unity.Burst.Intrinsics;
 using UnityEngine;
 using Unity.VisualScripting;
 using System;
+using Spine;
+using Spine.Unity;
+
 
 public class Minion : MonoBehaviour, ICharacter
 {
@@ -19,6 +22,8 @@ public class Minion : MonoBehaviour, ICharacter
     [SerializeField] float attackRange = 5f; // Range within which the enemy will start shooting
     [SerializeField] float fireRate = 1f; // How often the enemy shoots
     [SerializeField] Transform firePoint; // Point from where the bullet will be shot
+
+    private SkeletonMecanim skeletonMecanim;
 
     private List<Transform> players = new List<Transform>(); // List of all players
     private float timeToFire = 0;
@@ -43,7 +48,7 @@ public class Minion : MonoBehaviour, ICharacter
     [System.Serializable]
     public class MinionStates
     {
-        public int Health = 99;
+        public float Health = 99;
     }
 
     public MinionStates stats = new MinionStates();
@@ -51,7 +56,7 @@ public class Minion : MonoBehaviour, ICharacter
     private void Start ()
     {
         animator = GetComponent<Animator>();
-        //skeletonMecanim = GetComponent<SkeletonMecanim>();
+        skeletonMecanim = GetComponent<SkeletonMecanim>();
     }
 
     private void Update ()
@@ -70,7 +75,7 @@ public class Minion : MonoBehaviour, ICharacter
         if (closestPlayer != null)
         {
             HandleFlip();
-            //HandleRotation();
+            HandleRotation();
 
             float distanceToPlayer = Vector3.Distance(transform.position, closestPlayer.position);
             if (distanceToPlayer <= attackRange && Time.time >= timeToFire)
@@ -158,7 +163,7 @@ public class Minion : MonoBehaviour, ICharacter
     }
 
 
-/*    private void HandleRotation ()
+    private void HandleRotation ()
     {
 
         Vector2 playerPosition = closestPlayer.position;
@@ -188,11 +193,11 @@ public class Minion : MonoBehaviour, ICharacter
         }
         skeleton.UpdateWorldTransform();
 
-    }*/
+    }
 
 
 
-    public void TakeDamage ( int damage, int shooterIndex )
+    public void TakeDamage ( float damage, int shooterIndex )
     {
         stats.Health -= damage;
 

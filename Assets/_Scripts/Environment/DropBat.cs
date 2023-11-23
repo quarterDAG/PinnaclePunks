@@ -17,7 +17,7 @@ public class DropBat : MonoBehaviour, ICharacter
 
     private ParticleSystem ps;
     private float dropTimer;
-    private int health = 50;
+    private float health = 50;
     private int maxHealth = 50;
     private bool isDead;
     private bool isFrozen;
@@ -88,7 +88,7 @@ public class DropBat : MonoBehaviour, ICharacter
         Instantiate(dropPrefabs[randomIndex], transform.position, Quaternion.identity);
     }
 
-    public void TakeDamage ( int damage, int shooterIndex )
+    public void TakeDamage ( float damage, int shooterIndex )
     {
         if (isDead) return;
 

@@ -7,6 +7,7 @@ public class CountdownUI : MonoBehaviour
 {
     private const string NUMBER_POPUP = "NumberPopup";
 
+    [SerializeField] private GameObject countDown;
     [SerializeField] private Transform playerTransform;
     [SerializeField] private TextMeshProUGUI countdownText;
     private Vector3 originalScale;
@@ -100,12 +101,12 @@ public class CountdownUI : MonoBehaviour
 
     private void Show ()
     {
-        gameObject.SetActive(true);
+        countDown.SetActive(true);
     }
 
     private void Hide ()
     {
-        gameObject.SetActive(false);
+        countDown.SetActive(false);
     }
 
 }

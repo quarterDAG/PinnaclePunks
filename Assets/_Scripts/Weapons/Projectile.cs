@@ -19,10 +19,11 @@ public class Projectile : MonoBehaviour
     [SerializeField] private LayerMask hitTheseLayers;
     [SerializeField] private string damageTag;
 
-    [SerializeField] private int bulletDamage = 10;
+    [SerializeField] private float bulletDamage = 10;
     [SerializeField] private float pushbackForce = 50f;
     private SpriteRenderer spriteRenderer;
     private LineRenderer lineRenderer;
+    private Collider2D projectileCollider;
 
     private int shotOwnerIndex;
 
@@ -33,6 +34,7 @@ public class Projectile : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         lineRenderer = GetComponentInChildren<LineRenderer>();
+        projectileCollider = GetComponent<Collider2D>();
     }
 
     void Update ()
@@ -41,23 +43,6 @@ public class Projectile : MonoBehaviour
         Destroy(gameObject, 1 / Time.timeScale);
     }
 
-    /*    private void OnTriggerEnter2D ( Collider2D collision )
-        {
-            if (collision.CompareTag(damageTag) || collision.CompareTag("DropBat"))
-            {
-                var character = collision.GetComponent<ICharacter>();
-                var rb = collision.GetComponent<Rigidbody2D>();
-
-                if (character != null)
-                {
-                    HandleDamage(character, rb, collision);
-                }
-            }
-            else if (IsInLayerMask(collision.gameObject.layer, hitTheseLayers))
-            {
-                Destroy(gameObject);
-            }
-        }*/
 
     private void OnTriggerEnter2D ( Collider2D collision )
     {
@@ -116,10 +101,13 @@ public class Projectile : MonoBehaviour
 
     private void HandleDamage ( ICharacter character, Rigidbody2D rb, Collider2D collision )
     {
+        projectileCollider.enabled = false;
         PlaySoundEffect(arrowHit);
         character.TakeDamage(bulletDamage, shotOwnerIndex);
 
-        spriteRenderer.enabled = false;
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = false;
+
         if (lineRenderer != null)
             lineRenderer.enabled = false;
 
@@ -154,7 +142,7 @@ public class Projectile : MonoBehaviour
     }
 
 
-    public void SetDamage ( int damage )
+    public void SetDamage ( float damage )
     {
         bulletDamage = damage;
     }

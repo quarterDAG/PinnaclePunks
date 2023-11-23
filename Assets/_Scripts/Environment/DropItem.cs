@@ -5,18 +5,37 @@ using System.Collections;
 
 public class DropItem : MonoBehaviour
 {
-    public enum DropType { HP, Mana, Count } // Add other drop types as needed
-    public DropType dropType;
-    public int healAmount = 100;
-    public float manaAmount = 100f;
+
+    [Header("General Settings")]
+    [SerializeField] private DropType dropType;
+    [SerializeField]
+    private enum DropType
+    {
+        HP,
+        Mana,
+        IncreaseFireRate,
+        IncreaseFireDamage,
+        IncreaseSpeed,
+        Count
+    }
+    [SerializeField] private float selfDestructTime = 5f; 
+    [SerializeField] private SpriteRenderer itemSpriteRenderer;
+
+    [Header("Power Ups")]
+    [SerializeField] private float powerupDuration = 7f;
+    [SerializeField] private float fireRateMultiplier = 1.5f;
+    [SerializeField] private float fireDamageMultiplier = 1.5f;
+    [SerializeField] private float speedMultiplier = 1.5f;
+
+
+    private int healAmount = 100;
+    private float manaAmount = 100f;
 
     private int originalHealAmount;
     private float originalSmAmount;
 
 
-    public float selfDestructTime = 5f; // Time in seconds after which the item self-destructs
 
-    [SerializeField] private SpriteRenderer itemSpriteRenderer;
     private Animator animator;
     private ParticleSystem _ps;
 
@@ -31,6 +50,7 @@ public class DropItem : MonoBehaviour
         animator = GetComponent<Animator>();
         _ps = GetComponentInChildren<ParticleSystem>();
 
+        SetParticlesColor(Color.green);
         ChooseRandomDropType();
 
         originalHealAmount = healAmount;
@@ -92,16 +112,31 @@ public class DropItem : MonoBehaviour
     private void ChooseRandomDropType ()
     {
         dropType = (DropType)Random.Range(0, (int)DropType.Count);
-        if (dropType == DropType.HP)
-        {
-            itemSpriteRenderer.sprite = itemSpriteList[0];
-            SetParticlesColor(Color.red);
-        }
 
-        if (dropType == DropType.Mana)
+        switch (dropType)
         {
-            itemSpriteRenderer.sprite = itemSpriteList[1];
-            SetParticlesColor(Color.blue);
+            case DropType.HP:
+                itemSpriteRenderer.sprite = itemSpriteList[0];
+                SetParticlesColor(Color.red);
+                break;
+
+            case DropType.Mana:
+                itemSpriteRenderer.sprite = itemSpriteList[1];
+                SetParticlesColor(Color.blue);
+                break;
+
+            case DropType.IncreaseFireRate:
+                itemSpriteRenderer.sprite = itemSpriteList[2]; // Ensure this is the correct index
+                break;
+
+            case DropType.IncreaseFireDamage:
+                itemSpriteRenderer.sprite = itemSpriteList[3];
+                break;
+
+            case DropType.IncreaseSpeed:
+                itemSpriteRenderer.sprite = itemSpriteList[4];
+                break;
+
         }
     }
 
@@ -123,6 +158,21 @@ public class DropItem : MonoBehaviour
             case DropType.Mana:
                 // Increase player's stamina
                 player.UpdateManaBar(manaAmount);
+                break;
+
+            case DropType.IncreaseFireRate:
+                player.powerUpImage.ActivatePowerUp(0, powerupDuration);
+                player.GetComponentInChildren<IWeapon>().IncreaseFireRate(fireRateMultiplier, powerupDuration);
+                break;
+
+            case DropType.IncreaseFireDamage:
+                player.powerUpImage.ActivatePowerUp(1, powerupDuration);
+                player.GetComponentInChildren<IWeapon>().IncreaseFireDamage(fireDamageMultiplier, powerupDuration);
+                break;
+
+            case DropType.IncreaseSpeed:
+                player.powerUpImage.ActivatePowerUp(2, powerupDuration);
+                player.IncreaseSpeed(speedMultiplier, powerupDuration);
                 break;
 
             default:

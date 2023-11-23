@@ -30,12 +30,12 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     [System.Serializable]
     public class PlayerStates
     {
-        public int Health = 99;
-        public int MaxHealth = 99;
-        public int Shield = 0;
-        public int MaxShield = 99;
+        public float Health = 99;
+        public float MaxHealth = 99;
+        public float Shield = 0;
+        public float MaxShield = 99;
         public bool spawnWithShield;
-        public int MaxMana = 100;
+        public float MaxMana = 100;
     }
 
     public PlayerStates stats = new PlayerStates();
@@ -62,6 +62,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private LivesManager livesManager;
 
     [SerializeField] private SpriteRenderer bubble;
+    public PowerUpImage powerUpImage;
     [SerializeField] private SpriteRenderer iceCube;
 
 
@@ -76,6 +77,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         playerAnimator = GetComponentInChildren<PlayerAnimator>();
         respawnCountdownUI = GetComponentInChildren<CountdownUI>();
         inputManager = GetComponent<InputManager>();
+        powerUpImage = GetComponentInChildren<PowerUpImage>();
 
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         _colOffsetDefault = _col.offset;
@@ -190,7 +192,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         }
     }
 
-    public async void TakeDamage ( int damage, int otherPlayerIndex )
+    public async void TakeDamage ( float damage, int otherPlayerIndex )
     {
         if (stats.Shield > 0 || stats.Health > 0)
         {
@@ -199,12 +201,12 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             playerAnimator.GetHitAnimation();
 
             // First, apply damage to the shield
-            int damageToShield = Mathf.Min(damage, stats.Shield);
+            float damageToShield = Mathf.Min(damage, stats.Shield);
             stats.Shield -= damageToShield;
             shieldBar.AddValue(-damageToShield);
 
             // Calculate remaining damage after shield
-            int remainingDamage = damage - damageToShield;
+            float remainingDamage = damage - damageToShield;
 
             // Apply remaining damage to health
             if (remainingDamage > 0)
@@ -229,7 +231,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         }
     }
 
-
     public void UpdateManaBar ( float _manaValue )
     {
         manaBar.AddValue(_manaValue);
@@ -248,6 +249,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         canMove = false;
 
         _rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+
+        bubble.GetComponent<Animator>().SetBool("Pop", false);
         bubble.enabled = true;
 
         livesManager.LoseLife();
@@ -290,6 +293,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         await Task.Delay(3000);
 
+        bubble.GetComponent<Animator>().SetBool("Pop", true);
+        await Task.Delay(500);
         bubble.enabled = false;
         gameObject.tag = teamTag;
     }
@@ -505,6 +510,20 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         stats.Health = Mathf.Clamp(stats.Health, 0, stats.MaxHealth);
 
         hpBar.AddValue(+_hp);
+    }
+
+    public void IncreaseSpeed ( float speedMultiplier, float duration )
+    {
+        StartCoroutine(IncreaseSpeedCoroutine(speedMultiplier, duration));
+    }
+
+    IEnumerator IncreaseSpeedCoroutine ( float fireDamageMultiplier, float duration )
+    {
+        _currentSpeed *= fireDamageMultiplier;
+
+        yield return new WaitForSeconds(duration);
+
+        _currentSpeed = movementStates.MaxSpeed;
     }
 
     #endregion

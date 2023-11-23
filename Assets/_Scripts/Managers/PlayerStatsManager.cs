@@ -90,7 +90,7 @@ public class PlayerStatsManager : MonoBehaviour
         }
     }
 
-    public void AddDamageToPlayerState ( int _damage, int _playerIndex )
+    public void AddDamageToPlayerState ( float _damage, int _playerIndex )
     {
         if (_playerIndex >= 0) // (-1 = Shot by a monster)
             allPlayerStats[_playerIndex].damage += _damage;

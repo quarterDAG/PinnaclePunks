@@ -11,15 +11,21 @@ public class StogoClub : MonoBehaviour, IWeapon
     [SerializeField] private LayerMask layerToHit;
     [SerializeField] private string damageThisTag;
     [SerializeField] private Transform hitPoint;
-    [SerializeField] private float attackCooldown = 0.5f;
+    //[SerializeField] private float attackCooldown = 0.5f;
+
+    private float originalFireRate;
+    [SerializeField] private float fireRate = 0;
+    private float timeToFire = 0;
 
     [Header("Melee Attack")]
-    [SerializeField] private int meleeAttackDamage = 50;
+    private float originalMeleeAttackDamage;
+    [SerializeField] private float meleeAttackDamage = 50;
     [SerializeField] private float meleeAttackRange = 2.5f;
 
     [Header("StoneSkill")]
+    private float originalStoneSkillDamage;
     [SerializeField] private float stoneSkillRange = 15f;
-    [SerializeField] private int stoneSkillDamage = 30;
+    [SerializeField] private float stoneSkillDamage = 30;
     private Vector3 attackDirection;
     private Vector3 extendedEndPoint;
 
@@ -52,6 +58,10 @@ public class StogoClub : MonoBehaviour, IWeapon
     {
         ownerIndex = playerController.playerConfig.playerIndex;
         damageThisTag = (gameObject.tag == "TeamA") ? "TeamB" : "TeamA";
+
+        originalFireRate = fireRate;
+        originalMeleeAttackDamage = meleeAttackDamage;
+        originalStoneSkillDamage = stoneSkillDamage;
     }
 
     void Update ()
@@ -65,8 +75,9 @@ public class StogoClub : MonoBehaviour, IWeapon
     {
         if (canAttack)
         {
-            if (inputManager.IsAttackPressed)
+            if (inputManager.IsAttackPressed && Time.time > timeToFire)
             {
+                timeToFire = Time.time + 1 / fireRate;
                 Attack();
             }
         }
@@ -89,15 +100,7 @@ public class StogoClub : MonoBehaviour, IWeapon
             PerformMeleeAttack();
         }
 
-        StartCoroutine(ResetAttackCooldown());
     }
-
-    private IEnumerator ResetAttackCooldown ()
-    {
-        yield return new WaitForSeconds(attackCooldown);
-        canAttack = true;
-    }
-
 
 
     private void TriggerStoneSkill ()
@@ -180,5 +183,35 @@ public class StogoClub : MonoBehaviour, IWeapon
         canAttack = _canUse;
     }
 
+
+    public void IncreaseFireRate ( float fireRateValue, float effectTime )
+    {
+        StartCoroutine(IncreareFireRateCoroutine(fireRateValue, effectTime));
+    }
+
+    IEnumerator IncreareFireRateCoroutine ( float fireRateValue, float effectTime )
+    {
+        fireRate *= fireRateValue;
+
+        yield return new WaitForSeconds(effectTime);
+
+        fireRate = originalFireRate;
+    }
+
+    public void IncreaseFireDamage ( float fireDamageMultiplier, float duration )
+    {
+        StartCoroutine(IncreaseFireDamageCoroutine(fireDamageMultiplier, duration));
+    }
+
+    IEnumerator IncreaseFireDamageCoroutine ( float fireDamageMultiplier, float duration )
+    {
+        stoneSkillDamage *= fireDamageMultiplier;
+        meleeAttackDamage *= fireDamageMultiplier;
+
+        yield return new WaitForSeconds(duration);
+
+        stoneSkillDamage = originalStoneSkillDamage;
+        meleeAttackDamage = originalMeleeAttackDamage;
+    }
 
 }
