@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public List<SlowmotionController> slowmotionControllerList;
     public List<Bar> smBarList = new List<Bar>();
     public SafeZone safeZone;
+    public InfinitePlatformGenerator platformGenerator;
 
     public PauseMenuController pauseMenuController;
 
@@ -103,6 +104,9 @@ public class GameManager : MonoBehaviour
         InitializePlayers();
         safeZone.ResetSafeZone();
 
+        if (platformGenerator != null)
+            platformGenerator.ResetGenerator();
+
         ClearManagerAssignments();
         AssignAllManagers();
 
@@ -128,6 +132,7 @@ public class GameManager : MonoBehaviour
         inventoryList.AddRange(FindObjectsOfType<Inventory>());
         playerSpawner = FindObjectOfType<PlayerSpawner>();
         cameraManager = FindObjectOfType<CameraManager>();
+        //platformGenerator = FindObjectOfType<InfinitePlatformGenerator>();
 
 
         if (playerSpawner == null)
@@ -195,7 +200,7 @@ public class GameManager : MonoBehaviour
         inventoryList.Add(_inventory);
     }
 
-    public void AddPlayerSpawner( PlayerSpawner _playerSpawner )
+    public void AddPlayerSpawner ( PlayerSpawner _playerSpawner )
     {
         playerSpawner = _playerSpawner;
     }
@@ -223,6 +228,11 @@ public class GameManager : MonoBehaviour
     public void SetSafeZone ( SafeZone _safeZone )
     {
         safeZone = _safeZone;
+    }
+
+    public void SetPlatformGenerator ( InfinitePlatformGenerator _platformGenerator )
+    {
+        platformGenerator = _platformGenerator;
     }
 
     #endregion

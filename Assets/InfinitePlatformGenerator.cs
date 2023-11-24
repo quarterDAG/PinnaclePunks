@@ -20,8 +20,14 @@ public class InfinitePlatformGenerator : MonoBehaviour
 
     void Start ()
     {
+        InitializeGenerator();
+    }
+
+    private void InitializeGenerator ()
+    {
+        GameManager.Instance.SetPlatformGenerator(this);
         nextSpawnY = safeZone.transform.position.y + firstSpawnYIncrement;
-        SpawnPlatform(); // Spawn the first platform immediately
+        SpawnPlatform();
     }
 
     void Update ()
@@ -86,6 +92,30 @@ public class InfinitePlatformGenerator : MonoBehaviour
             return platforms[platforms.Count - 1].transform.position;
         }
         return Vector3.zero; // Return a default value if no platforms are available
+    }
+
+    public void ResetGenerator ()
+    {
+        // Stop and reset the spawn timer
+        spawnTimer = 0f;
+
+        // Destroy all spawned platforms
+        foreach (GameObject platform in platforms)
+        {
+            if (platform != null)
+            {
+                Destroy(platform);
+            }
+        }
+
+        // Clear the list of platforms
+        platforms.Clear();
+
+        // Reset the next spawn Y position
+        nextSpawnY = safeZone.transform.position.y + firstSpawnYIncrement;
+
+        // Optionally, you can reinitialize the generator or do other reset actions here
+        InitializeGenerator();
     }
 
 }

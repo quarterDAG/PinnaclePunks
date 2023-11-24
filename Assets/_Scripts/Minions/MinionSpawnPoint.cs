@@ -4,12 +4,19 @@ using UnityEngine;
 public class MinionSpawnPoint : MonoBehaviour
 {
     private Minion currentMinionInstance;
+    [SerializeField] private float spawnAdjustmentY = -1.2f;
+    private Vector2 spawnPosition;
+
+    private void Awake ()
+    {
+        spawnPosition = new Vector2(transform.position.x, transform.position.y + spawnAdjustmentY);
+    }
 
     public void SpawnMinion ( Minion enemyPrefab, string TagToAttack, PlayerMinionSpawner playerMinionSpawner )
     {
         if (currentMinionInstance == null || currentMinionInstance.IsDead)
         {
-            currentMinionInstance = Instantiate(enemyPrefab, transform.position, transform.rotation) as Minion;
+            currentMinionInstance = Instantiate(enemyPrefab, spawnPosition, transform.rotation);
             currentMinionInstance.OnDeath += HandleMinionDeath;
             currentMinionInstance.SetTagToAttack(TagToAttack);
             currentMinionInstance.gameObject.tag = playerMinionSpawner.gameObject.tag;

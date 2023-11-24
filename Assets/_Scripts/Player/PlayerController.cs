@@ -258,17 +258,58 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             PlayerStatsManager.Instance.EndMatch();
         }
     }
+    /*
+        async void Respawn ()
+        {
+            await Task.Delay(2000);
+            bubble.GetComponent<Animator>().SetBool("Pop", false);
+            bubble.enabled = true;
 
-    async void Respawn ()
+            //transform.position = respawnPoint.position;
+            GameManager.Instance.playerSpawner.RespawnPlayer(playerConfig, this);
+            respawnCountdownUI.StartTimer();
+            await Task.Delay(3000);
+
+
+            _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+            isDead = false;
+            playerAnimator.DeathAnimation(false);
+
+            stats.Health = stats.MaxHealth;
+            hpBar.AddValue(stats.Health);
+            manaBar.AddValue(stats.MaxMana);
+
+            if (stats.spawnWithShield)
+            {
+                stats.Shield = stats.MaxShield;
+                shieldBar.AddValue(stats.Shield);
+            }
+
+            canMove = true;
+
+            await Task.Delay(3000);
+
+            bubble.GetComponent<Animator>().SetBool("Pop", true);
+            await Task.Delay(500);
+            bubble.enabled = false;
+            gameObject.tag = teamTag;
+        }*/
+
+    void Respawn ()
     {
-        await Task.Delay(2000);
-        bubble.GetComponent<Animator>().SetBool("Pop", false);
+        StartCoroutine(RespawnCoroutine());
+    }
+
+    private IEnumerator RespawnCoroutine ()
+    {
+        yield return new WaitForSeconds(2f);
+        // Start fade out coroutine instead of setting animation bool
+        StartCoroutine(FadeOutSprite(bubble.GetComponent<SpriteRenderer>(), 6f));
         bubble.enabled = true;
 
-        //transform.position = respawnPoint.position;
         GameManager.Instance.playerSpawner.RespawnPlayer(playerConfig, this);
         respawnCountdownUI.StartTimer();
-        await Task.Delay(3000);
+        yield return new WaitForSeconds(3f);
 
 
         _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
@@ -286,13 +327,27 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         }
 
         canMove = true;
+        // Wait for fade out to complete plus additional delay
+        yield return new WaitForSeconds(3f); // 3 seconds for fade out and 0.5 second buffer
 
-        await Task.Delay(3000);
-
-        bubble.GetComponent<Animator>().SetBool("Pop", true);
-        await Task.Delay(500);
         bubble.enabled = false;
         gameObject.tag = teamTag;
+    }
+
+    private IEnumerator FadeOutSprite ( SpriteRenderer spriteRenderer, float duration )
+    {
+        float elapsedTime = 0;
+        Color originalColor = spriteRenderer.color;
+
+        while (elapsedTime < duration)
+        {
+            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / duration);
+            spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f); // Ensure alpha is set to 0
     }
 
     public void Freeze ( float duration )

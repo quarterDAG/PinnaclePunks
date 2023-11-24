@@ -16,7 +16,7 @@ public class SafeZone : MonoBehaviour
     [SerializeField] private float endScale = 10f; // The scale you want to end at, 0 for completely disappearing
 
     private Transform spriteTransform;
-
+    private Vector3 originalPosition;
     private Vector3 originalScale;
     private Coroutine shrinkCoroutine;
 
@@ -24,7 +24,7 @@ public class SafeZone : MonoBehaviour
     {
         GameManager.Instance.SetSafeZone(this);
         spriteTransform = GetComponent<Transform>();
-
+        originalPosition = spriteTransform.position;
         originalScale = spriteTransform.localScale; // Store the original scale
 
         ResetSafeZone();
@@ -113,6 +113,7 @@ public class SafeZone : MonoBehaviour
         }
 
         spriteTransform.localScale = originalScale;
+        spriteTransform.position = originalPosition;
         playersInDamageZone.Clear();
 
         foreach (var player in FindObjectsOfType<PlayerController>())
