@@ -4,12 +4,16 @@ using System.Collections;
 
 public class SafeZone : MonoBehaviour
 {
-    public int damagePerSecond = 5;
+    [Header("General Settings")]
+    [SerializeField] private bool reverseDamageLogic;
+    [SerializeField] private bool isShrinking;
+    [SerializeField] private int damagePerSecond = 5;
 
-    private HashSet<PlayerController> playersOutsideSafeZone = new HashSet<PlayerController>();
+    private HashSet<PlayerController> playersInDamageZone = new HashSet<PlayerController>();
 
-    public float shrinkDuration = 90f; // Duration over which the object will shrink
-    public float endScale = 10f; // The scale you want to end at, 0 for completely disappearing
+    [Header("Shrinking Settings")]
+    [SerializeField] private float shrinkDuration = 90f; // Duration over which the object will shrink
+    [SerializeField] private float endScale = 10f; // The scale you want to end at, 0 for completely disappearing
 
     private Transform spriteTransform;
 
@@ -47,15 +51,6 @@ public class SafeZone : MonoBehaviour
         return Vector3.Distance(playerPosition, transform.position) <= GetCurrentSafeZoneRadius();
     }
 
-    public void RegisterInsideZonePlayer ( PlayerController player )
-    {
-        playersOutsideSafeZone.Remove(player);
-    }
-
-    public void RegisterOutsideZonePlayer ( PlayerController player )
-    {
-        playersOutsideSafeZone.Add(player);
-    }
 
     private float GetCurrentSafeZoneRadius ()
     {
@@ -67,33 +62,38 @@ public class SafeZone : MonoBehaviour
 
     private void OnTriggerEnter2D ( Collider2D other )
     {
-        if (!other.CompareTag("Dodge"))
+        var player = other.GetComponent<PlayerController>();
+        if (player != null)
         {
-            var player = other.GetComponent<PlayerController>();
-            if (player != null)
-            {
-                playersOutsideSafeZone.Remove(player);
-            }
-
+            UpdatePlayerDamageStatus(player, inside: true);
         }
     }
 
     private void OnTriggerExit2D ( Collider2D other )
     {
-        if (!other.CompareTag("Dodge"))
+        var player = other.GetComponent<PlayerController>();
+        if (player != null)
         {
-            var player = other.GetComponent<PlayerController>();
-            if (player != null)
-            {
-                playersOutsideSafeZone.Add(player);
-            }
-
+            UpdatePlayerDamageStatus(player, inside: false);
         }
     }
 
-    private void ApplyDamageToPlayersOutsideSafeZone ()
+
+    private void UpdatePlayerDamageStatus ( PlayerController player, bool inside )
     {
-        foreach (var player in playersOutsideSafeZone)
+        if ((reverseDamageLogic && inside) || (!reverseDamageLogic && !inside))
+        {
+            playersInDamageZone.Add(player);
+        }
+        else
+        {
+            playersInDamageZone.Remove(player);
+        }
+    }
+
+    private void ApplyDamageToPlayersInDamageZone ()
+    {
+        foreach (var player in playersInDamageZone)
         {
             player.TakeDamage(damagePerSecond, -1);
         }
@@ -101,7 +101,7 @@ public class SafeZone : MonoBehaviour
 
     public void StopApplyingDamage ()
     {
-        CancelInvoke(nameof(ApplyDamageToPlayersOutsideSafeZone));
+        CancelInvoke(nameof(ApplyDamageToPlayersInDamageZone));
     }
 
 
@@ -112,24 +112,18 @@ public class SafeZone : MonoBehaviour
             StopCoroutine(shrinkCoroutine);
         }
 
-
-        spriteTransform.localScale = originalScale; // Reset the scale
-        playersOutsideSafeZone.Clear(); // Clear the list of players outside the safe zone
+        spriteTransform.localScale = originalScale;
+        playersInDamageZone.Clear();
 
         foreach (var player in FindObjectsOfType<PlayerController>())
         {
-            if (IsInsideSafeZone(player.transform.position))
-            {
-                playersOutsideSafeZone.Remove(player);
-            }
-            else
-            {
-                playersOutsideSafeZone.Add(player);
-            }
+            bool isInside = IsInsideSafeZone(player.transform.position);
+            UpdatePlayerDamageStatus(player, isInside);
         }
 
+        if (isShrinking)
+            shrinkCoroutine = StartCoroutine(Shrink());
 
-        shrinkCoroutine = StartCoroutine(Shrink());
-        InvokeRepeating(nameof(ApplyDamageToPlayersOutsideSafeZone), 1f, 1f); // Start after 1 second and repeat every 1 second
+        InvokeRepeating(nameof(ApplyDamageToPlayersInDamageZone), 1f, 1f);
     }
 }

@@ -1,0 +1,62 @@
+
+EnemyDieFx.png
+size: 1024,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+1
+  rotate: false
+  xy: 853, 275
+  size: 123, 95
+  orig: 123, 95
+  offset: 0, 0
+  index: -1
+2
+  rotate: false
+  xy: 853, 372
+  size: 162, 128
+  orig: 162, 128
+  offset: 0, 0
+  index: -1
+3
+  rotate: false
+  xy: 672, 329
+  size: 179, 171
+  orig: 179, 171
+  offset: 0, 0
+  index: -1
+4
+  rotate: false
+  xy: 474, 305
+  size: 196, 195
+  orig: 196, 195
+  offset: 0, 0
+  index: -1
+5
+  rotate: false
+  xy: 263, 286
+  size: 209, 214
+  orig: 209, 214
+  offset: 0, 0
+  index: -1
+6
+  rotate: false
+  xy: 2, 2
+  size: 233, 232
+  orig: 233, 232
+  offset: 0, 0
+  index: -1
+7
+  rotate: false
+  xy: 2, 236
+  size: 259, 264
+  orig: 259, 264
+  offset: 0, 0
+  index: -1
+S_DieFX
+  rotate: false
+  xy: 263, 248
+  size: 170, 36
+  orig: 170, 36
+  offset: 0, 0
+  index: -1

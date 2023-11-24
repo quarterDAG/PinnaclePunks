@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class InfinitePlatformGenerator : MonoBehaviour
 {
-    [SerializeField] private GameObject platformPrefab;
+    [SerializeField] private List<GameObject> platformPrefabs; 
     [SerializeField] private float levelWidth = 3f;
     [SerializeField] private float minY = .2f;
     [SerializeField] private float maxY = 1.5f;
@@ -44,9 +44,13 @@ public class InfinitePlatformGenerator : MonoBehaviour
 
     void SpawnPlatform ()
     {
+
+        // Randomly select a platform prefab
+        GameObject selectedPrefab = platformPrefabs[Random.Range(0, platformPrefabs.Count)];
+
         float platformXPosition = Random.Range(-levelWidth, levelWidth);
         Vector3 spawnPosition = new Vector3(platformXPosition, nextSpawnY, 0f);
-        GameObject platform = Instantiate(platformPrefab, spawnPosition, Quaternion.identity, transform);
+        GameObject platform = Instantiate(selectedPrefab, spawnPosition, Quaternion.identity, transform);
         platforms.Add(platform);
         platform.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0f); // Start invisible
         nextSpawnY += Random.Range(minY, maxY);

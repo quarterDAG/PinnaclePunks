@@ -13,6 +13,8 @@ public class DropBat : MonoBehaviour, ICharacter
     [SerializeField] private float minDropInterval = 1f;
     [SerializeField] private float maxDropInterval = 5f;
 
+    public Transform currentTarget;
+
     [SerializeField] private SpriteRenderer iceCube;
 
     private ParticleSystem ps;
@@ -27,8 +29,9 @@ public class DropBat : MonoBehaviour, ICharacter
     void Start ()
     {
         ps = GetComponentInChildren<ParticleSystem>();
-        moveCoroutine = StartCoroutine(MoveBetweenPoints());
         dropTimer = Random.Range(minDropInterval, maxDropInterval);
+
+        SetNextTarget(pointA);
     }
 
     void Update ()
@@ -36,6 +39,31 @@ public class DropBat : MonoBehaviour, ICharacter
         if (isDead || isFrozen) return;
 
         HandleDropTimer();
+
+        MoveTowardsTarget();
+    }
+
+    private void MoveTowardsTarget ()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, currentTarget.position, speed * Time.deltaTime);
+        FlipSprite(currentTarget.position);
+    }
+
+    private void OnTriggerEnter2D ( Collider2D other )
+    {
+        if (other.transform == pointA)
+        {
+            SetNextTarget(pointB);
+        }
+        else if (other.transform == pointB)
+        {
+            SetNextTarget(pointA);
+        }
+    }
+
+    private void SetNextTarget ( Transform target )
+    {
+        currentTarget = target;
     }
 
     private void HandleDropTimer ()
@@ -48,26 +76,10 @@ public class DropBat : MonoBehaviour, ICharacter
         }
     }
 
-    private IEnumerator MoveBetweenPoints ()
+
+    private void FlipSprite ( Vector3 targetPosition )
     {
-        Vector3 target = pointA.position;
-
-        while (!isDead)
-        {
-            if (transform.position == target)
-            {
-                target = target == pointA.position ? pointB.position : pointA.position;
-            }
-
-            FlipSprite(target);
-
-            transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
-            yield return null;
-        }
-    }
-    private void FlipSprite ( Vector3 target )
-    {
-        bool movingTowardsPointA = target == pointA.position;
+        bool movingTowardsPointA = targetPosition == pointA.position;
 
         if (movingTowardsPointA)
         {
@@ -118,7 +130,6 @@ public class DropBat : MonoBehaviour, ICharacter
         isDead = false;
         flyingMonsterGO.SetActive(true);
         health = maxHealth;
-        moveCoroutine = StartCoroutine(MoveBetweenPoints());
     }
 
     public void Freeze ( float duration )
@@ -138,6 +149,5 @@ public class DropBat : MonoBehaviour, ICharacter
 
         iceCube.enabled = false;
         isFrozen = false;
-        if (!isDead) moveCoroutine = StartCoroutine(MoveBetweenPoints());
     }
 }

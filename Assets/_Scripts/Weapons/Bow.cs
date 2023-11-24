@@ -8,7 +8,6 @@ public class Bow : MonoBehaviour, IWeapon
     private PlayerController playerController;
     [SerializeField] private PlayerAnimator playerAnimator;
     [SerializeField] private MouseAim mouseAim;
-    [SerializeField] private LayerMask whatToHit;
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject arrowPrefab;
     //[SerializeField] private Gradient bulletGradient;
