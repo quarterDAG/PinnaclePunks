@@ -76,7 +76,7 @@ public class DashSkill : MonoBehaviour
     {
         if (inputManager.IsDashPressed)
         {
-            if (playerController.manaBar.IsEmpty() && manaCost > 0) return;
+            if (playerController.manaBar.currentValue < manaCost) return;
 
             Dash(GetDashDirectionForGamepad());
             inputManager.ResetDash(); // Reset the dash press state

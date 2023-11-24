@@ -8,9 +8,9 @@ public class Bar : MonoBehaviour
     [SerializeField] private Image fillImage; // Reference to the fill image component
 
     [SerializeField] private float maxValue = 100f; // Assuming max health is 100
-    [SerializeField] private float currentValue = 100f;
+    public float currentValue { get; private set; }
 
-    [SerializeField] private float manaRefillRate = 5f; // Mana refill rate per second
+    [SerializeField] private float manaRefillRate = 2f; // Mana refill rate per second
     private bool isRefillingMana = false;
 
 
@@ -22,6 +22,10 @@ public class Bar : MonoBehaviour
     }
 
     public BarType barType;
+    private void Awake ()
+    {
+        currentValue = maxValue;
+    }
 
     private void Start ()
     {
@@ -47,7 +51,7 @@ public class Bar : MonoBehaviour
     {
         if (currentValue < maxValue)
         {
-            AddValue(1); // Increment by 1 point each half second
+            AddValue(manaRefillRate); 
         }
         else
         {
@@ -56,7 +60,7 @@ public class Bar : MonoBehaviour
         }
     }
 
-    public void SetValue(float amount)
+    public void SetValue ( float amount )
     {
         currentValue = amount;
     }

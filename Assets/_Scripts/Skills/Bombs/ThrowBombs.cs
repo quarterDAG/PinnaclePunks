@@ -12,7 +12,7 @@ public class ThrowBombs : MonoBehaviour
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bombPrefab;
 
-    [SerializeField] private float bombManaCost = 5f;
+    [SerializeField] private float manaCost = 5f;
 
     [SerializeField] private float fireRate = 1;
 
@@ -61,6 +61,7 @@ public class ThrowBombs : MonoBehaviour
 
     public void HandleAttack ()
     {
+        if (playerController.manaBar.currentValue < manaCost) { return; }
 
         if (inputManager.IsSecondaryPressed && Time.time > timeToFire)
         {
@@ -72,11 +73,9 @@ public class ThrowBombs : MonoBehaviour
 
     private async void Throw ()
     {
-        if (playerController.manaBar.IsEmpty()) { return; }
-
         if (Time.unscaledTime >= timeToSpawnEffect)
         {
-            playerController.UpdateManaBar(-bombManaCost);
+            playerController.UpdateManaBar(-manaCost);
 
             audioSource.PlayOneShot(whoosh);
             playerAnimator.ThrowAnimation(true);

@@ -87,7 +87,6 @@ public class StogoClub : MonoBehaviour, IWeapon
     {
         if (!canAttack) return;
 
-        canAttack = false;
         audioSource.PlayOneShot(whoosh);
         playerAnimator.ShootAnimation(true);
 

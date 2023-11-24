@@ -328,7 +328,7 @@ public class HeroSelectController : MonoBehaviour
 
     public void StartGame ()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("InfernoMap");
     }
 
 

@@ -54,7 +54,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private PlayerAnimator playerAnimator;
     public bool isDead { get; private set; }
     [SerializeField] private int lives = 3; // Each player starts with 3 lives
-    private Transform respawnPoint; // This will be the player's base or respawn point
     private CountdownUI respawnCountdownUI;
     private string teamTag;
 
@@ -123,10 +122,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         manaBar = _manaBar;
     }
 
-    public void AssignRespawn ( Transform spawnPoint )
-    {
-        respawnPoint = spawnPoint;
-    }
 
 
 
@@ -250,8 +245,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         _rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
 
-        bubble.GetComponent<Animator>().SetBool("Pop", false);
-        bubble.enabled = true;
 
         livesManager.LoseLife();
         lives--;
@@ -269,8 +262,11 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     async void Respawn ()
     {
         await Task.Delay(2000);
+        bubble.GetComponent<Animator>().SetBool("Pop", false);
+        bubble.enabled = true;
 
-        this.transform.position = respawnPoint.position;
+        //transform.position = respawnPoint.position;
+        GameManager.Instance.playerSpawner.RespawnPlayer(playerConfig, this);
         respawnCountdownUI.StartTimer();
         await Task.Delay(3000);
 

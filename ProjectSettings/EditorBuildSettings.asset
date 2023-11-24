@@ -14,5 +14,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Scenes/GameScene.unity
     guid: f7c500cd411422e4d8565e36aa38f6d2
+  - enabled: 1
+    path: Assets/_Scenes/InfernoMap.unity
+    guid: 09336a13280b2af419fd4dfb10165c85
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 33328cf90cc657a47b622b4d8c8a4e66, type: 2}

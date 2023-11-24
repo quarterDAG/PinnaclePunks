@@ -195,6 +195,11 @@ public class GameManager : MonoBehaviour
         inventoryList.Add(_inventory);
     }
 
+    public void AddPlayerSpawner( PlayerSpawner _playerSpawner )
+    {
+        playerSpawner = _playerSpawner;
+    }
+
     public void AddLivesManager ( LivesManager _livesManager )
     {
         livesManagerList.Add(_livesManager);

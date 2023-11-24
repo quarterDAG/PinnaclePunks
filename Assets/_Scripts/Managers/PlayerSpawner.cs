@@ -26,10 +26,16 @@ public class PlayerSpawner : MonoBehaviour
     private int teamAPlayerCount = 0;
     private int teamBPlayerCount = 0;
 
+    public InfinitePlatformGenerator platformGenerator;
+    private Dictionary<int, GameObject> playerRespawnMarkers = new Dictionary<int, GameObject>();
+
+
+
 
     private void Start ()
     {
         PlayerManager.Instance.SetPlayerSpawner(this);
+        GameManager.Instance.AddPlayerSpawner(this);
         PlayerManager.Instance.InitializePlayers();
     }
 
@@ -66,8 +72,13 @@ public class PlayerSpawner : MonoBehaviour
         instantiatedPlayer.transform.position = spawnPoint.position;
         instantiatedPlayer.transform.SetParent(playersParent.transform, false);
 
-        // Assign player's respawn point
-        instantiatedPlayer.GetComponent<PlayerController>().AssignRespawn(spawnPoint);
+        if (platformGenerator != null)
+        {
+            GameObject respawnMarker = new GameObject("RespawnMarker_" + playerCount);
+            respawnMarker.transform.position = platformGenerator.GetLastPlatformPosition();
+            respawnMarker.transform.position += new Vector3(0, 1.0f, 0); // Adjust the Y position
+            playerRespawnMarkers[playerCount] = respawnMarker;
+        }
 
         return instantiatedPlayer;
     }
@@ -204,6 +215,61 @@ public class PlayerSpawner : MonoBehaviour
     private Transform GetParentGO ( PlayerConfig config )
     {
         return config.team == PlayerConfigData.Team.TeamA ? teamAStatusParent : teamBStatusParent;
+    }
+
+    public void UpdateAllPlayerRespawnPoints ()
+    {
+        Vector3 lastPlatformPosition = platformGenerator.GetLastPlatformPosition();
+        lastPlatformPosition.y += 1.0f; // Adjust the Y position
+
+        foreach (var kvp in playerRespawnMarkers)
+        {
+            kvp.Value.transform.position = lastPlatformPosition;
+        }
+    }
+
+    public void RespawnPlayer ( PlayerConfig config, PlayerController playerController )
+    {
+        if (platformGenerator != null)
+        {
+            // Find the player and respawn marker
+            if (playerRespawnMarkers.TryGetValue(config.playerIndex, out GameObject respawnMarker))
+            {
+                // Find the player with this playerCount
+                foreach (Transform child in playersParent.transform)
+                {
+                    PlayerInput playerInput = child.GetComponent<PlayerInput>();
+                    if (playerInput != null && playerInput.playerIndex == config.playerIndex)
+                    {
+                        child.position = respawnMarker.transform.position; // Respawn the player
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (config.team == PlayerConfigData.Team.TeamA)
+            {
+                playerController.transform.position = teamASpawnPoints[config.playerIndex].position;
+            }
+            else
+            {
+                playerController.transform.position = teamBSpawnPoints[config.playerIndex].position;
+            }
+        }
+    }
+
+    private void OnDestroy ()
+    {
+        // Cleanup respawn markers
+        foreach (var marker in playerRespawnMarkers.Values)
+        {
+            if (marker != null)
+            {
+                Destroy(marker);
+            }
+        }
     }
 
     #region Reset 
