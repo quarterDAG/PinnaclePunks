@@ -42,6 +42,7 @@ public class PlayerConfigData : ScriptableObject
     {
         ChoosingTeam,
         SelectingHero,
+        ChoosingMap,
         Ready,
         Playing
     }

@@ -6,19 +6,19 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Scenes/TeamSelect.unity
+    path: Assets/_Scenes/Menus/TeamSelect.unity
     guid: 776159fa7466e54478ca11a419942040
   - enabled: 1
-    path: Assets/_Scenes/HeroSelect.unity
+    path: Assets/_Scenes/Menus/HeroSelect.unity
     guid: 9938d70ba7a93f0408abb99dad67914f
   - enabled: 1
-    path: Assets/_Scenes/MapSelect.unity
+    path: Assets/_Scenes/Menus/MapSelect.unity
     guid: d96fba57b1e4c24418a12f712827e677
   - enabled: 1
-    path: Assets/_Scenes/GameScene.unity
+    path: Assets/_Scenes/Maps/Ruins.unity
     guid: f7c500cd411422e4d8565e36aa38f6d2
   - enabled: 1
-    path: Assets/_Scenes/InfernoMap.unity
+    path: Assets/_Scenes/Maps/Inferno.unity
     guid: 09336a13280b2af419fd4dfb10165c85
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 33328cf90cc657a47b622b4d8c8a4e66, type: 2}

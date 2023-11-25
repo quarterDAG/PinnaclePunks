@@ -8,6 +8,7 @@ using static PlayerConfigData;
 public class InputIcon : MonoBehaviour
 {
     private TeamSelectionController teamSelectionController;
+    private MapSelectController mapSelectController;
     [SerializeField] private PlayerConfig playerConfig;
     private Rigidbody2D rb;
     [SerializeField] private float speed = 1000f;
@@ -20,27 +21,44 @@ public class InputIcon : MonoBehaviour
     private InputDevice inputDevice;
 
     [SerializeField] private Image readyIcon;
+    private int selectedMap;
 
     private void Awake ()
     {
         rb = GetComponent<Rigidbody2D>();
         teamSelectionController = FindObjectOfType<TeamSelectionController>();
-        transform.SetParent(teamSelectionController.transform, false);
-        inputDevice = playerInput.devices[0];
-        AddPlayerConfig();
+        mapSelectController = FindObjectOfType<MapSelectController>();
+
+        if (teamSelectionController != null)
+        {
+            transform.SetParent(teamSelectionController.transform, false);
+
+            inputDevice = playerInput.devices[0];
+            AddPlayerConfig();
+
+        }
     }
 
 
     private void Update ()
     {
-        if (playerConfig.playerState != PlayerConfigData.PlayerState.Ready)
+        if (playerConfig.playerState != PlayerState.Ready)
             rb.velocity = inputManager.InputVelocity * speed;
 
-        if (inputManager.IsJumpPressed && playerConfig.team != PlayerConfigData.Team.Spectator)
-            SetPlayerStateReady();
+        if (teamSelectionController != null)
+        {
+            if (inputManager.IsJumpPressed && playerConfig.team != Team.Spectator)
+                SetPlayerStateReady();
 
-        if (inputManager.IsSecondaryPressed)
-            SetPlayerStateChoosingTeam();
+            if (inputManager.IsSecondaryPressed)
+                SetPlayerStateChoosingTeam();
+        }
+
+        if (mapSelectController != null)
+        {
+            if (inputManager.IsJumpPressed && selectedMap >= 0)
+                mapSelectController.VoteForMap(selectedMap, playerConfig.playerIndex, this);
+        }
 
     }
 
@@ -65,8 +83,7 @@ public class InputIcon : MonoBehaviour
             inputDevice = inputDevice
         };
 
-
-        GetComponent<Image>().color = _playerColor;
+        SetIconColor(_playerColor);
 
         SetNameAndSendPlayerStats(_playerName, _playerIndex);
 
@@ -75,7 +92,13 @@ public class InputIcon : MonoBehaviour
 
         playerConfig = newPlayerConfig;
 
-        SetPlayerStateChoosingTeam();
+        if (teamSelectionController != null)
+            SetPlayerStateChoosingTeam();
+    }
+
+    public void SetIconColor ( Color _playerColor )
+    {
+        GetComponent<Image>().color = _playerColor;
     }
 
     private void SetNameAndSendPlayerStats ( string _playerName, int _playerIndex )
@@ -140,36 +163,74 @@ public class InputIcon : MonoBehaviour
         }
     }
 
+    public void SetPlayerStateChoosingMap ()
+    {
+        if (playerConfig.playerState != PlayerState.ChoosingMap)
+        {
+            playerConfig.playerState = PlayerState.ChoosingMap;
+            PlayerManager.Instance.SetPlayerState(playerConfig.playerIndex, PlayerState.ChoosingMap);
+        }
+    }
+
+    public void SetSelectedMap ( int _selectedMap )
+    {
+
+        selectedMap = _selectedMap;
+    }
+
+    public void SetIconPosition ( Vector3 _position )
+    {
+        transform.position = _position;
+    }
+
+    public void SetIconConfig ( PlayerConfig _playerConfig )
+    {
+        playerConfig = _playerConfig;
+    }
+
+
+    public int GetSelectedMap ()
+    {
+        return selectedMap;
+    }
 
     #region Colliders
 
     private void OnTriggerEnter2D ( Collider2D other )
     {
-        // Attempt to join TeamA.
-        if (other.CompareTag("TeamA"))
+        if (teamSelectionController != null)
         {
-            if (teamSelectionController.CanJoinTeam(Team.TeamA))
+            // Attempt to join TeamA.
+            if (other.CompareTag("TeamA"))
             {
-                playerConfig.team = Team.TeamA;
+                if (teamSelectionController.CanJoinTeam(Team.TeamA))
+                {
+                    playerConfig.team = Team.TeamA;
+                }
+            }
+            // Attempt to join TeamB.
+            else if (other.CompareTag("TeamB"))
+            {
+                teamSelectionController.CanJoinTeam(Team.TeamB);
+                if (teamSelectionController.CanJoinTeam(Team.TeamB))
+                {
+                    playerConfig.team = Team.TeamB;
+                }
             }
         }
-        // Attempt to join TeamB.
-        else if (other.CompareTag("TeamB"))
-        {
-            teamSelectionController.CanJoinTeam(Team.TeamB);
-            if (teamSelectionController.CanJoinTeam(Team.TeamB))
-            {
-                playerConfig.team = Team.TeamB;
-            }
-        }
+
+
     }
 
     private void OnTriggerExit2D ( Collider2D other )
     {
-        if ((other.CompareTag("TeamA") && playerConfig.team == Team.TeamA) ||
-            (other.CompareTag("TeamB") && playerConfig.team == Team.TeamB))
+        if (teamSelectionController != null)
         {
-            playerConfig.team = Team.Spectator;
+            if ((other.CompareTag("TeamA") && playerConfig.team == Team.TeamA) ||
+                (other.CompareTag("TeamB") && playerConfig.team == Team.TeamB))
+            {
+                playerConfig.team = Team.Spectator;
+            }
         }
     }
 

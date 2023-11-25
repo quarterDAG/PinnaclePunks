@@ -66,23 +66,21 @@ public class PlayerManager : MonoBehaviour
 
     public void InitializeMapSelectors ()
     {
-        playerCount = 0;
-
-        foreach (var config in playerConfigs)
+        // Ensure that playerConfigs are already initialized and populated
+        if (playerConfigs != null && playerConfigs.Count > 0)
         {
-            var instantiatedSelector = mapSelectController.InstantiateSelector(config, playerCount);
-            if (instantiatedSelector != null)
+            for (int i = 0; i < playerConfigs.Count; i++)
             {
-                // Set up the player components that are specific to PlayerManager's responsibilities
-                //SetupPlayer(config, instantiatedSelector);
-
-                // Create a reference to the config in the player stats (mainly to access the team when calculating the score)
-                //PlayerStatsManager.Instance.allPlayerStats[config.playerIndex].SetPlayerConfig(config);
-                playerCount++;
+                var config = playerConfigs[i];
+                mapSelectController.InstantiateSelector(config, config.playerIndex);
             }
-
+        }
+        else
+        {
+            Debug.LogError("Player configs are not initialized");
         }
     }
+
 
     public void InitializeHeroes ()
     {

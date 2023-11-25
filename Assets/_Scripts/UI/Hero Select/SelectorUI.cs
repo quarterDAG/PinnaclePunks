@@ -149,7 +149,7 @@ public class SelectorUI : MonoBehaviour
             optionList = heroSelectController.GetTeamAvatarList(playerConfig.team);
 
         if (mapSelectController != null)
-            optionList = mapSelectController.mapsList;
+            optionList = mapSelectController.mapUIList;
     }
 
     public void SetPlayerConfig ( PlayerConfig config )
