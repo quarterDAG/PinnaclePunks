@@ -36,7 +36,7 @@ public class PlayerSpawner : MonoBehaviour
     {
         PlayerManager.Instance.SetPlayerSpawner(this);
         GameManager.Instance.AddPlayerSpawner(this);
-        PlayerManager.Instance.InitializePlayers();
+        PlayerManager.Instance.InitializeHeroes();
     }
 
     public PlayerInput InstantiatePlayer ( PlayerConfig config, int playerCount )

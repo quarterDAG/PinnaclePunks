@@ -3173,6 +3173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f4911b494aa0204eba98bd469496cb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nextScene: MapSelect
   avatarsTeamA:
   - {fileID: 2483908516010922545}
   - {fileID: 602691240}
@@ -3184,6 +3185,7 @@ MonoBehaviour:
   teamAParent: {fileID: 304150754}
   teamBParent: {fileID: 1652083616}
   selectorPrefab: {fileID: 3450111750651732716, guid: 49df96f91d7def844b1347ba774caa13, type: 3}
+  flipTeamB: 1
   heroImagesA:
   - {fileID: 1207229281}
   - {fileID: 706547080}

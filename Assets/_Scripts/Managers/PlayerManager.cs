@@ -9,7 +9,8 @@ public class PlayerManager : MonoBehaviour
     public static PlayerManager Instance { get; private set; }
     [SerializeField] PlayerConfigData playerConfigData;
 
-    private HeroSelectController heroSelectManager;
+    private HeroSelectController heroSelectController;
+    private MapSelectController mapSelectController;
     private PlayerSpawner playerSpawner;
     private CameraManager cameraManager;
 
@@ -38,7 +39,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void InitializeSelectors ()
+    public void InitializeHeroSelectors ()
     {
         playerCount = 0;
 
@@ -52,9 +53,9 @@ public class PlayerManager : MonoBehaviour
             }
             else
             {
-                var instantiatedSelector = heroSelectManager.InstantiateSelector(config, playerCount);
+                var instantiatedSelector = heroSelectController.InstantiateSelector(config, playerCount);
                 if (instantiatedSelector != null)
-                {                   
+                {
                     // Create a reference to the config in the player stats (mainly to access the team when calculating the score)
                     PlayerStatsManager.Instance.allPlayerStats[config.playerIndex].SetPlayerConfig(config);
                     playerCount++;
@@ -63,31 +64,43 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void InitializePlayers ()
+    public void InitializeMapSelectors ()
     {
         playerCount = 0;
 
         foreach (var config in playerConfigs)
         {
-
-            if (config.team == Team.Spectator)
+            var instantiatedSelector = mapSelectController.InstantiateSelector(config, playerCount);
+            if (instantiatedSelector != null)
             {
-                playerConfigData.RemovePlayerConfig(config);
-                return;
-            }
-            else
-            {
-                var instantiatedPlayer = playerSpawner.InstantiatePlayer(config, playerCount);
-                if (instantiatedPlayer != null)
-                {
-                    // Set up the player components that are specific to PlayerManager's responsibilities
-                    SetupPlayer(config, instantiatedPlayer);
+                // Set up the player components that are specific to PlayerManager's responsibilities
+                //SetupPlayer(config, instantiatedSelector);
 
-                    // Create a reference to the config in the player stats (mainly to access the team when calculating the score)
-                    PlayerStatsManager.Instance.allPlayerStats[config.playerIndex].SetPlayerConfig(config);
-                    playerCount++;
-                }
+                // Create a reference to the config in the player stats (mainly to access the team when calculating the score)
+                //PlayerStatsManager.Instance.allPlayerStats[config.playerIndex].SetPlayerConfig(config);
+                playerCount++;
             }
+
+        }
+    }
+
+    public void InitializeHeroes ()
+    {
+        playerCount = 0;
+
+        foreach (var config in playerConfigs)
+        {
+            var instantiatedPlayer = playerSpawner.InstantiatePlayer(config, playerCount);
+            if (instantiatedPlayer != null)
+            {
+                // Set up the player components that are specific to PlayerManager's responsibilities
+                SetupPlayer(config, instantiatedPlayer);
+
+                // Create a reference to the config in the player stats (mainly to access the team when calculating the score)
+                PlayerStatsManager.Instance.allPlayerStats[config.playerIndex].SetPlayerConfig(config);
+                playerCount++;
+            }
+
         }
     }
 
@@ -142,10 +155,16 @@ public class PlayerManager : MonoBehaviour
         return playerConfigs.FirstOrDefault(pc => pc.playerIndex == playerIndex);
     }
 
-    public void SetHeroSelectManager ( HeroSelectController manager )
+    public void SetHeroSelectController ( HeroSelectController controller )
     {
-        heroSelectManager = manager;
+        heroSelectController = controller;
     }
+
+    public void SetMapSelectController ( MapSelectController controller )
+    {
+        mapSelectController = controller;
+    }
+
     public void SetPlayerSpawner ( PlayerSpawner _playerSpawner )
     {
         playerSpawner = _playerSpawner;
@@ -184,8 +203,8 @@ public class PlayerManager : MonoBehaviour
         configCopy.playerState = PlayerState.Ready;
         playerConfigs[config.playerIndex] = configCopy;
 
-        if (heroSelectManager.AreAllPlayersReady())
-            heroSelectManager.StartCountdownTimer();
+        if (heroSelectController.AreAllPlayersReady())
+            heroSelectController.StartCountdownTimer();
     }
     #endregion
 

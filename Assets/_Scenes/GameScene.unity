@@ -1096,7 +1096,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fillImage: {fileID: 1450347628}
   maxValue: 100
-  currentValue: 100
   manaRefillRate: 5
   barType: 1
 --- !u!114 &67067888
@@ -2260,6 +2259,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba50e7db1adc9a41b254b3f5e9675a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnAdjustmentY: -1.2
 --- !u!1 &155820113
 GameObject:
   m_ObjectHideFlags: 0
@@ -2660,6 +2660,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 192144088}
+  - component: {fileID: 192144089}
   m_Layer: 0
   m_Name: Point A
   m_TagString: Untagged
@@ -2682,6 +2683,41 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1643611739}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &192144089
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 192144087}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 2
 --- !u!1 &207492148
 GameObject:
   m_ObjectHideFlags: 0
@@ -2825,6 +2861,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba50e7db1adc9a41b254b3f5e9675a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnAdjustmentY: -1.2
 --- !u!1 &211673435
 GameObject:
   m_ObjectHideFlags: 0
@@ -4573,7 +4610,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fillImage: {fileID: 46569216}
   maxValue: 100
-  currentValue: 100
   manaRefillRate: 5
   barType: 1
 --- !u!114 &356896745
@@ -6016,6 +6052,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba50e7db1adc9a41b254b3f5e9675a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnAdjustmentY: -1.2
 --- !u!1 &512263031
 GameObject:
   m_ObjectHideFlags: 0
@@ -7295,6 +7332,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba50e7db1adc9a41b254b3f5e9675a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnAdjustmentY: -1.2
 --- !u!1 &601546313
 GameObject:
   m_ObjectHideFlags: 0
@@ -32021,6 +32059,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba50e7db1adc9a41b254b3f5e9675a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnAdjustmentY: -1.2
 --- !u!1 &747605538
 GameObject:
   m_ObjectHideFlags: 0
@@ -32747,6 +32786,7 @@ MonoBehaviour:
   teamBStatusPositions:
   - {x: 350, y: 150}
   - {x: 300, y: 150}
+  platformGenerator: {fileID: 0}
 --- !u!1 &858979250
 GameObject:
   m_ObjectHideFlags: 0
@@ -33686,6 +33726,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba50e7db1adc9a41b254b3f5e9675a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnAdjustmentY: -1.2
 --- !u!1 &928555359
 GameObject:
   m_ObjectHideFlags: 0
@@ -33994,6 +34035,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba50e7db1adc9a41b254b3f5e9675a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnAdjustmentY: -1.2
 --- !u!1 &1017803762
 GameObject:
   m_ObjectHideFlags: 0
@@ -34865,6 +34907,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba50e7db1adc9a41b254b3f5e9675a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnAdjustmentY: -1.2
 --- !u!1 &1055536456
 GameObject:
   m_ObjectHideFlags: 0
@@ -36600,6 +36643,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00a29ef92996bdd4695cce406d5a6c58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  reverseDamageLogic: 0
+  isShrinking: 0
   damagePerSecond: 10
   shrinkDuration: 90
   endScale: 0.15
@@ -37219,6 +37264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba50e7db1adc9a41b254b3f5e9675a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnAdjustmentY: -1.2
 --- !u!1 &1169798072
 GameObject:
   m_ObjectHideFlags: 0
@@ -63261,6 +63307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba50e7db1adc9a41b254b3f5e9675a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnAdjustmentY: -1.2
 --- !u!1 &1611872533
 GameObject:
   m_ObjectHideFlags: 0
@@ -63953,6 +64000,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1669468288}
+  - component: {fileID: 1669468289}
   m_Layer: 0
   m_Name: Point B
   m_TagString: Untagged
@@ -63975,6 +64023,41 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1643611739}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &1669468289
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1669468287}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 2
 --- !u!1 &1686389077
 GameObject:
   m_ObjectHideFlags: 0
@@ -66558,6 +66641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba50e7db1adc9a41b254b3f5e9675a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnAdjustmentY: -1.2
 --- !u!1 &1850683283
 GameObject:
   m_ObjectHideFlags: 0
@@ -67106,6 +67190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba50e7db1adc9a41b254b3f5e9675a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnAdjustmentY: -1.2
 --- !u!1 &1881462892
 GameObject:
   m_ObjectHideFlags: 0

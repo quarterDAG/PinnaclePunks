@@ -183,7 +183,7 @@ public class GameManager : MonoBehaviour
 
     private void InitializePlayers ()
     {
-        PlayerManager.Instance.InitializePlayers();
+        PlayerManager.Instance.InitializeHeroes();
     }
 
     private void ResetMonsterList ()

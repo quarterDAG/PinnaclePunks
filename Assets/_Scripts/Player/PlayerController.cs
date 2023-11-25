@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     private InputManager inputManager;
     private LivesManager livesManager;
+    private PlayerMinionSpawner minionSpawner;
 
     [SerializeField] private SpriteRenderer bubble;
     public PowerUpImage powerUpImage;
@@ -77,12 +78,14 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         respawnCountdownUI = GetComponentInChildren<CountdownUI>();
         inputManager = GetComponent<InputManager>();
         powerUpImage = GetComponentInChildren<PowerUpImage>();
+        minionSpawner = GetComponent<PlayerMinionSpawner>();
 
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         _colOffsetDefault = _col.offset;
 
         _currentSpeed = movementStates.MaxSpeed;
         originalGravityScale = _rb.gravityScale;
+        minionSpawner.ConfigMinionSpawner();
 
     }
 
@@ -258,42 +261,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             PlayerStatsManager.Instance.EndMatch();
         }
     }
-    /*
-        async void Respawn ()
-        {
-            await Task.Delay(2000);
-            bubble.GetComponent<Animator>().SetBool("Pop", false);
-            bubble.enabled = true;
 
-            //transform.position = respawnPoint.position;
-            GameManager.Instance.playerSpawner.RespawnPlayer(playerConfig, this);
-            respawnCountdownUI.StartTimer();
-            await Task.Delay(3000);
-
-
-            _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-            isDead = false;
-            playerAnimator.DeathAnimation(false);
-
-            stats.Health = stats.MaxHealth;
-            hpBar.AddValue(stats.Health);
-            manaBar.AddValue(stats.MaxMana);
-
-            if (stats.spawnWithShield)
-            {
-                stats.Shield = stats.MaxShield;
-                shieldBar.AddValue(stats.Shield);
-            }
-
-            canMove = true;
-
-            await Task.Delay(3000);
-
-            bubble.GetComponent<Animator>().SetBool("Pop", true);
-            await Task.Delay(500);
-            bubble.enabled = false;
-            gameObject.tag = teamTag;
-        }*/
 
     void Respawn ()
     {
@@ -319,6 +287,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         stats.Health = stats.MaxHealth;
         hpBar.AddValue(stats.Health);
         manaBar.AddValue(stats.MaxMana);
+
+        minionSpawner.ConfigMinionSpawner();
 
         if (stats.spawnWithShield)
         {

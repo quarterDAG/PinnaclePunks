@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class HeroSelectController : MonoBehaviour
 {
+    [SerializeField] private string nextScene;
+    
     [Header("Spawn Points")]
     public List<Transform> avatarsTeamA;
     public List<Transform> avatarsTeamB;
@@ -25,9 +27,12 @@ public class HeroSelectController : MonoBehaviour
 
     [Header("Prefab")]
     public GameObject selectorPrefab;
+    [SerializeField] private bool flipTeamB;
 
-    private Dictionary<HeroSelector, int> selectorAvatarMapTeamA = new Dictionary<HeroSelector, int>();
-    private Dictionary<HeroSelector, int> selectorAvatarMapTeamB = new Dictionary<HeroSelector, int>();
+
+    // Avatar Disctionaries
+    private Dictionary<SelectorUI, int> uiSelectorsTeamA = new Dictionary<SelectorUI, int>();
+    private Dictionary<SelectorUI, int> uiSelectorsTeamB = new Dictionary<SelectorUI, int>();
 
     [Header("Hero Images")]
     [SerializeField] private List<Image> heroImagesA;
@@ -37,8 +42,9 @@ public class HeroSelectController : MonoBehaviour
     [SerializeField] private List<Image> readyIconsA;
     [SerializeField] private List<Image> readyIconsB;
 
-    private Dictionary<HeroSelector, int> teamAPlayerIndices = new Dictionary<HeroSelector, int>();
-    private Dictionary<HeroSelector, int> teamBPlayerIndices = new Dictionary<HeroSelector, int>();
+    // Team Dictionaries
+    private Dictionary<SelectorUI, int> teamAPlayerIndices = new Dictionary<SelectorUI, int>();
+    private Dictionary<SelectorUI, int> teamBPlayerIndices = new Dictionary<SelectorUI, int>();
 
 
     private CountdownUI countdownUI;
@@ -46,18 +52,18 @@ public class HeroSelectController : MonoBehaviour
     private void Awake ()
     {
         countdownUI = GetComponentInChildren<CountdownUI>();
-        countdownUI.OnCountdownFinished += StartGame;
+        countdownUI.OnCountdownFinished += NextScene;
     }
 
     private void Start ()
     {
-        PlayerManager.Instance.SetHeroSelectManager(this);
-        PlayerManager.Instance.InitializeSelectors();
+        PlayerManager.Instance.SetHeroSelectController(this);
+        PlayerManager.Instance.InitializeHeroSelectors();
     }
 
     private void OnDestroy ()
     {
-        countdownUI.OnCountdownFinished -= StartGame;
+        countdownUI.OnCountdownFinished -= NextScene;
     }
 
     public PlayerInput InstantiateSelector ( PlayerConfig config, int playerCount )
@@ -94,18 +100,19 @@ public class HeroSelectController : MonoBehaviour
 
     private void SetupHeroSelector ( PlayerConfig config, PlayerInput instantiatedPlayer )
     {
-        HeroSelector heroSelector = instantiatedPlayer.GetComponent<HeroSelector>();
-        heroSelector.SetHeroSelectManager(this);
+        SelectorUI heroSelector = instantiatedPlayer.GetComponent<SelectorUI>();
+        heroSelector.SetHeroSelectController(this);
         heroSelector.SetPlayerConfig(config);
-        heroSelector.GetHeroAvatarList();
+        heroSelector.GetOptionList();
         heroSelector.ColorFrame(config);
+        heroSelector.flipTeamB = flipTeamB;
 
         RegisterSelector(heroSelector);
     }
 
-    public void RegisterSelector ( HeroSelector selector )
+    public void RegisterSelector ( SelectorUI selector )
     {
-        var team = selector.GetHeroSelectorConfig().team;
+        var team = selector.GetSelectorConfig().team;
         int nextAvailableIndex = FindNextAvailableAvatarIndex(team);
         GetSelectorMap(team)[selector] = nextAvailableIndex;
 
@@ -113,17 +120,17 @@ public class HeroSelectController : MonoBehaviour
         var playerIndices = team == PlayerConfigData.Team.TeamA ? teamAPlayerIndices : teamBPlayerIndices;
         playerIndices[selector] = playerIndices.Count; // Assign the next index in the team
 
-        selector.MoveSelectorToHero(nextAvailableIndex);
+        selector.MoveSelectorToOption(nextAvailableIndex);
         UpdateHeroVisuals();
     }
 
 
-    public void UpdateSelectorAvatar ( HeroSelector selector, int avatarIndex, PlayerConfigData.Team team )
+    public void UpdateSelectorAvatar ( SelectorUI selector, int avatarIndex, PlayerConfigData.Team team )
     {
         if (team == PlayerConfigData.Team.TeamA)
-            selectorAvatarMapTeamA[selector] = avatarIndex;
+            uiSelectorsTeamA[selector] = avatarIndex;
         else if (team == PlayerConfigData.Team.TeamB)
-            selectorAvatarMapTeamB[selector] = avatarIndex;
+            uiSelectorsTeamB[selector] = avatarIndex;
 
         UpdateHeroVisuals();
         UpdateHeroImages(team);
@@ -132,12 +139,12 @@ public class HeroSelectController : MonoBehaviour
     private void UpdateHeroVisuals ()
     {
         // Reset visual for all selectors in both teams
-        ResetVisuals(selectorAvatarMapTeamA);
-        ResetVisuals(selectorAvatarMapTeamB);
+        ResetVisuals(uiSelectorsTeamA);
+        ResetVisuals(uiSelectorsTeamB);
 
         // Update visuals for each team
-        UpdateTeamVisuals(selectorAvatarMapTeamA);
-        UpdateTeamVisuals(selectorAvatarMapTeamB);
+        UpdateTeamVisuals(uiSelectorsTeamA);
+        UpdateTeamVisuals(uiSelectorsTeamB);
     }
 
     private void UpdateHeroImages ( PlayerConfigData.Team team )
@@ -149,7 +156,7 @@ public class HeroSelectController : MonoBehaviour
 
         foreach (var pair in selectorMap)
         {
-            HeroSelector selector = pair.Key;
+            SelectorUI selector = pair.Key;
             int avatarIndex = pair.Value;
 
             if (avatarIndex >= 0)
@@ -188,7 +195,7 @@ public class HeroSelectController : MonoBehaviour
         image.SetNativeSize();
     }
 
-    private void ResetVisuals ( Dictionary<HeroSelector, int> selectorMap )
+    private void ResetVisuals ( Dictionary<SelectorUI, int> selectorMap )
     {
         foreach (var selector in selectorMap.Keys)
         {
@@ -196,9 +203,9 @@ public class HeroSelectController : MonoBehaviour
         }
     }
 
-    private void UpdateTeamVisuals ( Dictionary<HeroSelector, int> selectorMap )
+    private void UpdateTeamVisuals ( Dictionary<SelectorUI, int> selectorMap )
     {
-        var avatarSelectorsMap = new Dictionary<int, List<HeroSelector>>();
+        var avatarSelectorsMap = new Dictionary<int, List<SelectorUI>>();
 
         // Populate the map
         foreach (var pair in selectorMap)
@@ -206,7 +213,7 @@ public class HeroSelectController : MonoBehaviour
             int avatarIndex = pair.Value;
             if (!avatarSelectorsMap.ContainsKey(avatarIndex))
             {
-                avatarSelectorsMap[avatarIndex] = new List<HeroSelector>();
+                avatarSelectorsMap[avatarIndex] = new List<SelectorUI>();
             }
             avatarSelectorsMap[avatarIndex].Add(pair.Key);
         }
@@ -237,7 +244,7 @@ public class HeroSelectController : MonoBehaviour
         }
 
         // Determine the correct selector map based on the team
-        var selectorMap = team == PlayerConfigData.Team.TeamA ? selectorAvatarMapTeamA : selectorAvatarMapTeamB;
+        var selectorMap = team == PlayerConfigData.Team.TeamA ? uiSelectorsTeamA : uiSelectorsTeamB;
 
         // Count the number of selectors per avatar
         foreach (var pair in selectorMap)
@@ -262,9 +269,9 @@ public class HeroSelectController : MonoBehaviour
         return -1; // Return -1 if no avatars are available
     }
 
-    public void UpdateReadyIcon ( HeroSelector selector, bool isReady )
+    public void UpdateReadyIcon ( SelectorUI selector, bool isReady )
     {
-        var team = selector.GetHeroSelectorConfig().team;
+        var team = selector.GetSelectorConfig().team;
         var playerIndices = team == PlayerConfigData.Team.TeamA ? teamAPlayerIndices : teamBPlayerIndices;
 
         if (playerIndices.TryGetValue(selector, out int teamPlayerIndex))
@@ -326,17 +333,17 @@ public class HeroSelectController : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene("TeamSelect");
     }
 
-    public void StartGame ()
+    public void NextScene ()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("InfernoMap");
+        UnityEngine.SceneManagement.SceneManager.LoadScene(nextScene);
     }
 
 
     #region Getters
 
-    private Dictionary<HeroSelector, int> GetSelectorMap ( PlayerConfigData.Team team )
+    private Dictionary<SelectorUI, int> GetSelectorMap ( PlayerConfigData.Team team )
     {
-        return team == PlayerConfigData.Team.TeamA ? selectorAvatarMapTeamA : selectorAvatarMapTeamB;
+        return team == PlayerConfigData.Team.TeamA ? uiSelectorsTeamA : uiSelectorsTeamB;
     }
 
     private Transform GetSpawnPoint ( PlayerConfig config )
