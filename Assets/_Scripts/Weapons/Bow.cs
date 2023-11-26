@@ -102,6 +102,7 @@ public class Bow : MonoBehaviour, IWeapon
         Projectile projectile = bullet.GetComponent<Projectile>();
         projectile.SetTagToDamage(damageThisTag);
         projectile.SetPlayerOwnerIndex(playerIndex);
+        projectile.SetPlayerController(playerController);
         //moveTrail.SetBulletGradient(bulletGradient);
         projectile.SetDamage(damage);
     }

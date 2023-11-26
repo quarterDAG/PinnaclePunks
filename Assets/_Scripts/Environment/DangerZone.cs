@@ -15,7 +15,6 @@ public class DangerZone : MonoBehaviour
     [SerializeField] private float shrinkDuration = 90f; // Duration over which the object will shrink
     [SerializeField] private float endScale = 10f; // The scale you want to end at, 0 for completely disappearing
 
-    [SerializeField] private float bounceStrength = 1f;
     private Transform spriteTransform;
     private Vector3 originalPosition;
     private Vector3 originalScale;
@@ -79,7 +78,7 @@ public class DangerZone : MonoBehaviour
         }
     }
 
-    private async void OnCollisionEnter2D ( Collision2D collision )
+    private void OnCollisionEnter2D ( Collision2D collision )
     {
         var player = collision.gameObject.GetComponent<PlayerController>();
         if (player != null)
@@ -90,7 +89,7 @@ public class DangerZone : MonoBehaviour
         var drop = collision.gameObject.GetComponent<DropItem>();
         if (drop != null)
         {
-            await drop.Pop(null);
+            drop.Pop(null);
         }
 
     }

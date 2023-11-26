@@ -283,8 +283,6 @@ public class PlayerSpawner : MonoBehaviour
         teamAPlayerCount = 0;
         teamBPlayerCount = 0;
 
-        // Optional: Handle existing players and their status components
-        // This might involve deactivating or destroying them
         ResetPlayersAndStatuses();
     }
 
@@ -293,8 +291,6 @@ public class PlayerSpawner : MonoBehaviour
         // Assuming all players are child objects of 'playersParent'
         foreach (Transform child in playersParent.transform)
         {
-            // Here you can choose to deactivate or destroy the players
-            // Deactivate: child.gameObject.SetActive(false);
             Destroy(child.gameObject);
         }
 

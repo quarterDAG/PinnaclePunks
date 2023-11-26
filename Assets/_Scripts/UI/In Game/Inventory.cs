@@ -32,7 +32,7 @@ public class Inventory : MonoBehaviour
 
     private void Start ()
     {
-        GatherInputManagersFromOwners();
+        //GatherInputManagersFromOwners();
 
         directionToIndexMapping = new Dictionary<Vector2, int>
         {
@@ -53,6 +53,7 @@ public class Inventory : MonoBehaviour
 
     public void AddInventoryOwner ( PlayerMinionSpawner newOwner )
     {
+
         if (inventoryOwners == null)
         {
             inventoryOwners = new PlayerMinionSpawner[1] { newOwner };
@@ -65,6 +66,8 @@ public class Inventory : MonoBehaviour
             newInventoryOwners[inventoryOwners.Length] = newOwner;
             inventoryOwners = newInventoryOwners;
         }
+
+        GatherInputManagersFromOwners();
     }
 
     private void GatherInputManagersFromOwners ()
@@ -92,22 +95,36 @@ public class Inventory : MonoBehaviour
 
     private void Update ()
     {
-        // Calculate the minimum length to avoid IndexOutOfRangeException
+        if (inventoryOwners == null || inputManagers == null)
+        {
+            Debug.LogError("inventoryOwners or inputManagers is null");
+            return;
+        }
+
+
+        // Calculate the minimum length once, outside the loop
         int minLength = Mathf.Min(inventoryOwners.Length, inputManagers.Length);
 
         for (int i = 0; i < minLength; i++)
         {
-            if (inputManagers[i] != null)
+            InputManager inputManager = inputManagers[i]; // Cache the inputManager
+            if (inputManager != null)
             {
-                Vector2 inputDirection = inputManagers[i].InventoryInput; // Make sure this method exists and returns Vector2
-
+                Vector2 inputDirection = inputManager.InventoryInput;
                 if (inputDirection != Vector2.zero)
                 {
-                    TrySelectMinionWithDirection(inputDirection, inventoryOwners[i]);
+                    // Normalize the vector only if necessary
+                    Vector2 direction = inputDirection.normalized;
+
+                    if (directionToIndexMapping.TryGetValue(direction, out int minionIndex))
+                    {
+                        OnMinionSelected(minionIndex, inventoryOwners[i]); // Cache inventoryOwner
+                    }
                 }
             }
         }
     }
+
 
 
     private void TrySelectMinionWithDirection ( Vector2 inputDirection, PlayerMinionSpawner owner )
@@ -192,6 +209,8 @@ public class Inventory : MonoBehaviour
 
     public void ResetInventory ()
     {
+        inventoryOwners = null;
+
         // Reset each item in the inventory
         for (int i = 0; i < minionInventory.Count; i++)
         {

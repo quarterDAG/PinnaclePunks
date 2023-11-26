@@ -58,6 +58,12 @@ public class Projectile : MonoBehaviour
                 break;
                 // Add more cases as needed
         }
+
+        DropItem drop = collision.gameObject.GetComponent<DropItem>();
+        if (drop != null)
+        {
+            drop.Pop(playerController);
+        }
     }
 
     private void HandleArrowCollision ( Collider2D collision )

@@ -95,6 +95,7 @@ public class GameManager : MonoBehaviour
     {
         AssignAllManagers();
 
+        safeZone.ResetSafeZone();
         ResetInputManager();
         ResetPlayerSpawner();
         ResetLives();
@@ -102,7 +103,6 @@ public class GameManager : MonoBehaviour
         ResetInventories();
         ResetMonsterList();
         InitializePlayers();
-        safeZone.ResetSafeZone();
 
         if (platformGenerator != null)
             platformGenerator.ResetGenerator();

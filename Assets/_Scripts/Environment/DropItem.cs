@@ -19,6 +19,7 @@ public class DropItem : MonoBehaviour
         Count
     }
     [SerializeField] private float selfDestructTime = 5f;
+    [SerializeField] private SpriteRenderer bubbleSpriteRenderer;
     [SerializeField] private SpriteRenderer itemSpriteRenderer;
 
     [Header("Power Ups")]
@@ -34,9 +35,6 @@ public class DropItem : MonoBehaviour
     private int originalHealAmount;
     private float originalSmAmount;
 
-
-
-    private Animator animator;
     private ParticleSystem _ps;
 
     [SerializeField] private List<Sprite> itemSpriteList = new List<Sprite>();
@@ -46,8 +44,8 @@ public class DropItem : MonoBehaviour
 
     private void Start ()
     {
+        bubbleSpriteRenderer = GetComponent<SpriteRenderer>();
         audioSource = GetComponent<AudioSource>();
-        animator = GetComponent<Animator>();
         _ps = GetComponentInChildren<ParticleSystem>();
 
         SetParticlesColor(Color.green);
@@ -82,7 +80,7 @@ public class DropItem : MonoBehaviour
             yield return null;
         }
 
-        animator.SetBool("Pop", true);
+        //animator.SetBool("Pop", true);
         yield return new WaitForSeconds(0.35f);
 
         Destroy(gameObject);
@@ -90,7 +88,7 @@ public class DropItem : MonoBehaviour
 
 
 
-    private async void OnTriggerEnter2D ( Collider2D other )
+    private void OnTriggerEnter2D ( Collider2D other )
     {
         if (other.CompareTag("TeamA") || other.CompareTag("TeamB"))
         {
@@ -98,18 +96,21 @@ public class DropItem : MonoBehaviour
 
             if (player != null)
             {
-                await Pop(player);
+                Pop(player);
 
             }
         }
     }
 
 
-    public async Task Pop ( PlayerController player )
+    public async void Pop ( PlayerController player )
     {
         audioSource.PlayOneShot(bottleOpen);
-        animator.SetBool("Pop", true);
         _ps.Play();
+
+        itemSpriteRenderer.enabled = false;
+        bubbleSpriteRenderer.enabled = false;
+
         if (player != null)
             ApplyEffect(player);
 

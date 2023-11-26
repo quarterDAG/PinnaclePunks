@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         _currentSpeed = movementStates.MaxSpeed;
         originalGravityScale = _rb.gravityScale;
-        minionSpawner.ConfigMinionSpawner();
+        //minionSpawner.ConfigMinionSpawner();
 
     }
 
@@ -263,7 +263,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     }
 
 
-    void Respawn ()
+    public void Respawn ()
     {
         StartCoroutine(RespawnCoroutine());
     }
@@ -288,7 +288,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         hpBar.AddValue(stats.Health);
         manaBar.AddValue(stats.MaxMana);
 
-        minionSpawner.ConfigMinionSpawner();
+        //minionSpawner.ConfigMinionSpawner();
 
         if (stats.spawnWithShield)
         {
