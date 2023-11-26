@@ -2493,7 +2493,7 @@ GameObject:
   - component: {fileID: 784856815}
   - component: {fileID: 784856814}
   m_Layer: 5
-  m_Name: Collider
+  m_Name: MapUI Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2860,10 +2860,10 @@ RectTransform:
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 1616362696}
   - {fileID: 236681413}
   - {fileID: 513185288}
   - {fileID: 1425886298}
-  - {fileID: 1616362696}
   m_Father: {fileID: 1153393014}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -3331,10 +3331,10 @@ RectTransform:
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 784856813}
   - {fileID: 203513845}
   - {fileID: 1301516017}
   - {fileID: 384461679}
-  - {fileID: 784856813}
   m_Father: {fileID: 1153393014}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
@@ -5130,7 +5130,7 @@ GameObject:
   - component: {fileID: 1616362698}
   - component: {fileID: 1616362697}
   m_Layer: 5
-  m_Name: Collider
+  m_Name: MapUI Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -85,8 +85,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         _currentSpeed = movementStates.MaxSpeed;
         originalGravityScale = _rb.gravityScale;
-        //minionSpawner.ConfigMinionSpawner();
-
     }
 
 
