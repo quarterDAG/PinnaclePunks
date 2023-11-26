@@ -17,11 +17,11 @@ MonoBehaviour:
     m_Bits: 512
   SnapInput: 1
   VerticalDeadZoneThreshold: 0.01
-  HorizontalDeadZoneThreshold: 0.644
+  HorizontalDeadZoneThreshold: 0.1
   MaxSpeed: 20
   Acceleration: 120
   GroundDeceleration: 60
-  AirDeceleration: 60
+  AirDeceleration: 30
   GroundingForce: -1.5
   GrounderDistance: 0.05
   JumpPower: 30

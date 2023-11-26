@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public CameraManager cameraManager;
     public List<SlowmotionController> slowmotionControllerList;
     public List<Bar> smBarList = new List<Bar>();
-    public SafeZone safeZone;
+    public DangerZone safeZone;
     public InfinitePlatformGenerator platformGenerator;
 
     public PauseMenuController pauseMenuController;
@@ -225,7 +225,7 @@ public class GameManager : MonoBehaviour
         pauseMenuController = _pmController;
     }
 
-    public void SetSafeZone ( SafeZone _safeZone )
+    public void SetSafeZone ( DangerZone _safeZone )
     {
         safeZone = _safeZone;
     }

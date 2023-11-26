@@ -45,7 +45,7 @@ public class Bow : MonoBehaviour, IWeapon
         damageThisTag = (gameObject.tag == "TeamA") ? "TeamB" : "TeamA";
 
         originalFireRate = fireRate;
-        originalDamage = damage;    
+        originalDamage = damage;
     }
 
     void Update ()

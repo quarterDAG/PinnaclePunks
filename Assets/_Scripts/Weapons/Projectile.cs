@@ -30,6 +30,8 @@ public class Projectile : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip arrowHit;
 
+    private PlayerController playerController;
+
     private void Awake ()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -161,5 +163,10 @@ public class Projectile : MonoBehaviour
     {
         LineRenderer lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.colorGradient = newGradient;
+    }
+
+    public void SetPlayerController ( PlayerController _playerController )
+    {
+        playerController = _playerController;
     }
 }

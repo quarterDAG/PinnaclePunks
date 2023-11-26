@@ -107,7 +107,7 @@ public class TeamSelectionController : MonoBehaviour
 
         if (TwoPlayersAreReady())
         {
-            StartGameCountdown();
+            countdownUI.StartTimer();
         }
     }
 
@@ -119,7 +119,7 @@ public class TeamSelectionController : MonoBehaviour
 
         if (!TwoPlayersAreReady())
         {
-            StopGameCoundown();
+            countdownUI.StopTimer();
         }
     }
 
@@ -133,15 +133,6 @@ public class TeamSelectionController : MonoBehaviour
         return readyPlayersCount >= 2;
     }
 
-    private void StartGameCountdown ()
-    {
-        countdownUI.StartTimer();
-    }
-
-    private void StopGameCoundown ()
-    {
-        countdownUI.StopTimer();
-    }
 
     public void NextScene ()
     {

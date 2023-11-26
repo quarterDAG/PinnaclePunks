@@ -382,6 +382,18 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         Physics2D.queriesStartInColliders = _cachedQueryStartInColliders;
     }
 
+
+    void OnCollisionEnter2D ( Collision2D collision )
+    {
+        Debug.Log("Velocity Before Bounce: " + GetComponent<Rigidbody2D>().velocity);
+    }
+
+    void OnCollisionExit2D ( Collision2D collision )
+    {
+        Debug.Log("Velocity After Bounce: " + GetComponent<Rigidbody2D>().velocity);
+    }
+
+
     #endregion
 
     #region Jumping

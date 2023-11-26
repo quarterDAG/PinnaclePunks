@@ -18,7 +18,7 @@ public class DropItem : MonoBehaviour
         IncreaseSpeed,
         Count
     }
-    [SerializeField] private float selfDestructTime = 5f; 
+    [SerializeField] private float selfDestructTime = 5f;
     [SerializeField] private SpriteRenderer itemSpriteRenderer;
 
     [Header("Power Ups")]
@@ -98,15 +98,23 @@ public class DropItem : MonoBehaviour
 
             if (player != null)
             {
-                audioSource.PlayOneShot(bottleOpen);
-                animator.SetBool("Pop", true);
-                _ps.Play();
-                ApplyEffect(player);
-                await Task.Delay(350);
-                Destroy(gameObject);
+                await Pop(player);
 
             }
         }
+    }
+
+
+    public async Task Pop ( PlayerController player )
+    {
+        audioSource.PlayOneShot(bottleOpen);
+        animator.SetBool("Pop", true);
+        _ps.Play();
+        if (player != null)
+            ApplyEffect(player);
+
+        await Task.Delay(350);
+        Destroy(gameObject);
     }
 
     private void ChooseRandomDropType ()

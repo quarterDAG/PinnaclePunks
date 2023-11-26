@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class SelectorUI : MonoBehaviour
 {
-    [SerializeField] private InputManager inputManager; 
-    public List<Transform> optionList; 
+    [SerializeField] private InputManager inputManager;
+    public List<Transform> optionList;
 
     [SerializeField] private int selectedOptionIndex;
     public bool flipTeamB;
@@ -20,7 +20,7 @@ public class SelectorUI : MonoBehaviour
 
     private Image frame;
 
-    private float navigationCooldown = 0.2f; 
+    private float navigationCooldown = 0.2f;
     private float lastNavigationTime;
 
     void Start ()
@@ -147,9 +147,6 @@ public class SelectorUI : MonoBehaviour
     {
         if (heroSelectController != null)
             optionList = heroSelectController.GetTeamAvatarList(playerConfig.team);
-
-        if (mapSelectController != null)
-            optionList = mapSelectController.mapUIList;
     }
 
     public void SetPlayerConfig ( PlayerConfig config )

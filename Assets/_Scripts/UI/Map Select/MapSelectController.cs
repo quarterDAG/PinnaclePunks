@@ -9,8 +9,8 @@ public class MapSelectController : MonoBehaviour
 {
     private Dictionary<int, int> mapVotes = new Dictionary<int, int>(); // Stores votes for each map
     private List<int> playerIndices = new List<int>(); // List of player indices for vote tracking
-    private int totalPlayers; // Total number of players participating
-    public List<Transform> mapUIList;
+    private int totalPlayers;
+
     [SerializeField] private List<string> mapNameList;
     [SerializeField] private GameObject selectorPrefab;
 
@@ -21,6 +21,17 @@ public class MapSelectController : MonoBehaviour
 
     [SerializeField] private CountdownUI countdownUI;
 
+    private string selectedMap;
+
+    private void Awake ()
+    {
+        countdownUI.OnCountdownFinished += LoadSelectedMap;
+    }
+
+    private void OnDestroy ()
+    {
+        countdownUI.OnCountdownFinished -= LoadSelectedMap;
+    }
 
 
     private void Start ()
@@ -54,6 +65,7 @@ public class MapSelectController : MonoBehaviour
         inputIcon.SetIconConfig(config);
         inputIcon.SetIconColor(config.playerColor);
         inputIcon.SetPlayerStateChoosingMap();
+        inputIcon.SetIconSpeed(750f);
 
         AddPlayer();
     }
@@ -149,13 +161,18 @@ public class MapSelectController : MonoBehaviour
 
         // Randomly select a map if there's a tie
         int selectedMapIndex = topMaps[Random.Range(0, topMaps.Count)];
-        LoadSelectedMap(selectedMapIndex);
+
+        selectedMap = mapNameList[selectedMapIndex];
+        countdownUI.StartTimer();
+
+        //LoadSelectedMap(selectedMapIndex);
     }
 
+
     // Method to load the selected map
-    private void LoadSelectedMap ( int mapIndex )
+    private void LoadSelectedMap ()
     {
-        SceneManager.LoadScene(mapNameList[mapIndex]);
+        SceneManager.LoadScene(selectedMap);
     }
 
     // Method to set the total number of players

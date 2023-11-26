@@ -3285,7 +3285,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa926822be27c3c4eb218d84d48959c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapUIList: []
   mapNameList:
   - Ruins
   - Inferno
@@ -3301,7 +3300,7 @@ MonoBehaviour:
   - {fileID: 244594098}
   - {fileID: 1151366072}
   - {fileID: 990816600}
-  countdownUI: {fileID: 0}
+  countdownUI: {fileID: 919302742}
 --- !u!1 &1184728308
 GameObject:
   m_ObjectHideFlags: 0

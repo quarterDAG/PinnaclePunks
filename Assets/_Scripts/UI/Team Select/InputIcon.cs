@@ -48,7 +48,11 @@ public class InputIcon : MonoBehaviour
         if (teamSelectionController != null)
         {
             if (inputManager.IsJumpPressed && playerConfig.team != Team.Spectator)
+            {
                 SetPlayerStateReady();
+                teamSelectionController.SetPlayerTeam(playerConfig.playerIndex, playerConfig.team, transform);
+                teamSelectionController.SetPlayerReady(playerConfig.playerIndex);
+            }
 
             if (inputManager.IsSecondaryPressed)
                 SetPlayerStateChoosingTeam();
@@ -57,7 +61,13 @@ public class InputIcon : MonoBehaviour
         if (mapSelectController != null)
         {
             if (inputManager.IsJumpPressed && selectedMap >= 0)
+            {
                 mapSelectController.VoteForMap(selectedMap, playerConfig.playerIndex, this);
+                SetPlayerStateReady();
+            }
+
+            if (inputManager.IsSecondaryPressed)
+                SetPlayerStateChoosingMap();
         }
 
     }
@@ -144,8 +154,6 @@ public class InputIcon : MonoBehaviour
         {
             playerConfig.playerState = PlayerState.Ready;
             rb.velocity = Vector2.zero;
-            teamSelectionController.SetPlayerTeam(playerConfig.playerIndex, playerConfig.team, transform);
-            teamSelectionController.SetPlayerReady(playerConfig.playerIndex);
             readyIcon.enabled = true;
 
             // Handle any other functionality that should occur when the player is ready
@@ -169,6 +177,8 @@ public class InputIcon : MonoBehaviour
         {
             playerConfig.playerState = PlayerState.ChoosingMap;
             PlayerManager.Instance.SetPlayerState(playerConfig.playerIndex, PlayerState.ChoosingMap);
+            readyIcon.enabled = false;
+
         }
     }
 
@@ -186,6 +196,11 @@ public class InputIcon : MonoBehaviour
     public void SetIconConfig ( PlayerConfig _playerConfig )
     {
         playerConfig = _playerConfig;
+    }
+
+    public void SetIconSpeed ( float _speed )
+    {
+        speed = _speed;
     }
 
 
