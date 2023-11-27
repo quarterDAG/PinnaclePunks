@@ -8,7 +8,10 @@ public class ShadowCaster : MonoBehaviour
     public LayerMask groundLayer;
 
     [SerializeField] private Collider2D playerCollider;
-    private Color currentColor = Color.black; // Default color
+    private Color currentColor = Color.black;
+
+    public float minScale = 0.5f;
+    public float maxScale = 1.5f;
 
     void Update ()
     {
@@ -22,10 +25,16 @@ public class ShadowCaster : MonoBehaviour
             float distance = hit.distance;
             float alpha = 1 - (distance / maxHeight);
             shadowSpriteRenderer.color = new Color(currentColor.r, currentColor.g, currentColor.b, Mathf.Clamp(alpha, 0, 1));
+
+            // Scale the shadow's x-axis based on distance
+            float scaleX = Mathf.Lerp(minScale, maxScale, distance / maxHeight);
+            shadowTransform.localScale = new Vector3(scaleX, shadowTransform.localScale.y, 1);
         }
         else
         {
             shadowSpriteRenderer.color = new Color(currentColor.r, currentColor.g, currentColor.b, 0);
+            shadowTransform.localScale = new Vector3(minScale, shadowTransform.localScale.y, 1); // Reset x scale to minimum
+
         }
     }
 

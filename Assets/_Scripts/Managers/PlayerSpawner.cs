@@ -183,6 +183,8 @@ public class PlayerSpawner : MonoBehaviour
         instantiatedPlayer.GetComponentInChildren<MouseAim>().GetComponent<SpriteRenderer>().color = config.playerColor;
 
         instantiatedPlayer.transform.Find("Indicator").GetComponent<SpriteRenderer>().color = config.playerColor;
+        instantiatedPlayer.GetComponent<ShadowCaster>().SetColor(config.playerColor);
+
     }
 
     private Vector2 GetPlayerStatusPosition ( PlayerConfig config )
@@ -283,6 +285,8 @@ public class PlayerSpawner : MonoBehaviour
         teamAPlayerCount = 0;
         teamBPlayerCount = 0;
 
+        // Optional: Handle existing players and their status components
+        // This might involve deactivating or destroying them
         ResetPlayersAndStatuses();
     }
 
@@ -291,6 +295,7 @@ public class PlayerSpawner : MonoBehaviour
         // Assuming all players are child objects of 'playersParent'
         foreach (Transform child in playersParent.transform)
         {
+
             Destroy(child.gameObject);
         }
 
