@@ -10,6 +10,7 @@ public class PlayerSpawner : MonoBehaviour
     public List<Transform> teamBSpawnPoints;
     private int teamASpawnIndex = 0;
     private int teamBSpawnIndex = 0;
+    public List<Transform> freeForAllSpawnPoints;
 
 
     [Header("Prefab & Parent Settings")]
@@ -83,29 +84,43 @@ public class PlayerSpawner : MonoBehaviour
         return instantiatedPlayer;
     }
 
+
     private Transform GetSpawnPoint ( PlayerConfig config )
     {
         Transform spawnPoint = null;
 
-        // Determine the spawn point based on the team
-        if (config.team == PlayerConfigData.Team.TeamA)
+        switch (config.team)
         {
-            if (teamASpawnIndex < teamASpawnPoints.Count)
-            {
-                spawnPoint = teamASpawnPoints[teamASpawnIndex];
-                //teamASpawnIndex++;
-            }
-        }
-        else if (config.team == PlayerConfigData.Team.TeamB)
-        {
-            if (teamBSpawnIndex < teamBSpawnPoints.Count)
-            {
-                spawnPoint = teamBSpawnPoints[teamBSpawnIndex];
-                //teamBSpawnIndex++;
-            }
+            case PlayerConfigData.Team.TeamA:
+                // Existing logic for TeamA
+                break;
+            case PlayerConfigData.Team.TeamB:
+                // Existing logic for TeamB
+                break;
+            case PlayerConfigData.Team.FreeForAll:
+                // Logic for FreeForAll
+                spawnPoint = GetRandomFreeForAllSpawnPoint();
+                break;
         }
 
         return spawnPoint;
+    }
+
+    private Transform GetRandomFreeForAllSpawnPoint ()
+    {
+        // Combine all spawn points or use specific FreeForAll spawn points
+        var allSpawnPoints = new List<Transform>(teamASpawnPoints);
+        allSpawnPoints.AddRange(teamBSpawnPoints);
+        allSpawnPoints.AddRange(freeForAllSpawnPoints); // Only if you have specific FreeForAll spawn points
+
+        if (allSpawnPoints.Count == 0)
+        {
+            Debug.LogError("No spawn points available for FreeForAll.");
+            return null;
+        }
+
+        int randomIndex = Random.Range(0, allSpawnPoints.Count);
+        return allSpawnPoints[randomIndex];
     }
 
     public void InstantiateHeroAvatarComponent ( PlayerConfig config, PlayerInput instantiatedPlayer )

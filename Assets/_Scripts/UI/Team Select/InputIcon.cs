@@ -18,10 +18,11 @@ public class InputIcon : MonoBehaviour
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private InputManager inputManager;
 
-    private InputDevice inputDevice;
 
     [SerializeField] private Image readyIcon;
     private int selectedMap;
+
+
 
     private void Awake ()
     {
@@ -33,9 +34,14 @@ public class InputIcon : MonoBehaviour
         {
             transform.SetParent(teamSelectionController.transform, false);
 
-            inputDevice = playerInput.devices[0];
-            AddPlayerConfig();
+            //inputDevice = playerInput.devices[0];
+            playerConfig = playerConfigData.AddPlayerConfig(playerInput);
 
+            if (teamSelectionController != null)
+            {
+                SetIconColor(playerConfig.playerColor);
+                SetPlayerStateChoosingTeam();
+            }
         }
     }
 
@@ -55,7 +61,11 @@ public class InputIcon : MonoBehaviour
             }
 
             if (inputManager.IsSecondaryPressed)
+            {
                 SetPlayerStateChoosingTeam();
+                if (teamSelectionController.AreAllPlayersSelecting())
+                    teamSelectionController.PreviousScene();
+            }
         }
 
         if (mapSelectController != null)
@@ -72,80 +82,9 @@ public class InputIcon : MonoBehaviour
 
     }
 
-    // Call this method when a player joins the game.
-    public void AddPlayerConfig ()
-    {
-        // Get the control scheme from the input manager, typically based on the last input received.
-        int _playerIndex = PlayerManager.Instance.GetUniquePlayerIndex();
-
-        Color _playerColor = GetUniquePlayerColor(_playerIndex);
-        string _playerName = GetPlayerNameByColor(_playerIndex);
-
-
-        // Create the new PlayerConfig with the unique color and control scheme.
-        PlayerConfig newPlayerConfig = new PlayerConfig
-        {
-            playerIndex = _playerIndex,
-            playerName = _playerName,
-            playerColor = _playerColor,
-            team = Team.Spectator,
-            controlScheme = ControlScheme.Gamepad,
-            inputDevice = inputDevice
-        };
-
-        SetIconColor(_playerColor);
-
-        SetNameAndSendPlayerStats(_playerName, _playerIndex);
-
-        // Add the new PlayerConfig to the playerConfigs list.
-        PlayerManager.Instance.playerConfigs.Add(newPlayerConfig);
-
-        playerConfig = newPlayerConfig;
-
-        if (teamSelectionController != null)
-            SetPlayerStateChoosingTeam();
-    }
-
     public void SetIconColor ( Color _playerColor )
     {
         GetComponent<Image>().color = _playerColor;
-    }
-
-    private void SetNameAndSendPlayerStats ( string _playerName, int _playerIndex )
-    {
-        PlayerStats _playerStats = ScriptableObject.CreateInstance<PlayerStats>();
-        _playerStats.playerName = _playerName;
-        PlayerStatsManager.Instance.UpdatePlayerStats(_playerStats, _playerIndex);
-    }
-
-    private Color GetUniquePlayerColor ( int playerIndex )
-    {
-        // Ensure that the player index is within the range of available colors.
-        if (playerConfigData.playerColors.Count > 0)
-        {
-            // Use modulo to loop back to the start of the color list if there are more players than colors.
-            return playerConfigData.playerColors[playerIndex % playerConfigData.playerColors.Count];
-        }
-        else
-            return Color.white;
-    }
-
-    private string GetPlayerNameByColor ( int playerIndex )
-    {
-        switch (playerIndex)
-        {
-            case 0:
-                return "Red";
-            case 1:
-                return "Blue";
-            case 2:
-                return "Green";
-            case 3:
-                return "Yellow";
-            default:
-                return "Unknown";
-
-        }
     }
 
     private void SetPlayerStateReady ()

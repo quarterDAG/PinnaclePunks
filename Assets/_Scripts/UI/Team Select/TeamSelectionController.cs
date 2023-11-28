@@ -20,6 +20,7 @@ public class TeamSelectionController : MonoBehaviour
     [SerializeField] private CountdownUI countdownUI;
 
     [SerializeField] private string nextScene = "HeroSelect";
+    [SerializeField] private string previousScene = "MainMenu";
 
     private void Start ()
     {
@@ -131,6 +132,26 @@ public class TeamSelectionController : MonoBehaviour
         int readyPlayersCount = playerConfigs.Count(p => p.playerState == PlayerState.Ready);
 
         return readyPlayersCount >= 2;
+    }
+
+    public bool AreAllPlayersSelecting ()
+    {
+        List<PlayerConfig> playerConfigList = PlayerManager.Instance.GetPlayerConfigList();
+
+        foreach (var playerConfig in playerConfigList)
+        {
+            if (playerConfig.playerState != PlayerConfigData.PlayerState.ChoosingTeam)
+            {
+                return false; // If any player is not selcting hero
+            }
+        }
+        return true; // All players are selcting hero
+    }
+
+    public void PreviousScene ()
+    {
+        SceneManager.LoadScene(previousScene);
+
     }
 
 

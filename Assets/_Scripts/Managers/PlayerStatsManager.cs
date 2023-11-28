@@ -15,7 +15,7 @@ public class PlayerStatsManager : MonoBehaviour
     public List<PlayerStats> allPlayerStats = new List<PlayerStats>();
     public List<PlayerStatsDisplayItem> playerStatsDisplayItems = new List<PlayerStatsDisplayItem>();
 
-    private Canvas canvas;
+    public Canvas canvas {  get; private set; }
 
     private HashSet<int> playersVotedForRematch = new HashSet<int>();
     [SerializeField] private CountdownUI countdownUI;

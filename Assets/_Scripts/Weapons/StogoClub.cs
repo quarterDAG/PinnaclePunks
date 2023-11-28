@@ -57,8 +57,7 @@ public class StogoClub : MonoBehaviour, IWeapon
     private void Start ()
     {
         ownerIndex = playerController.playerConfig.playerIndex;
-        damageThisTag = (gameObject.tag == "TeamA") ? "TeamB" : "TeamA";
-
+        SetDamageTag();
         originalFireRate = fireRate;
         originalMeleeAttackDamage = meleeAttackDamage;
         originalStoneSkillDamage = stoneSkillDamage;
@@ -69,6 +68,23 @@ public class StogoClub : MonoBehaviour, IWeapon
         if (playerController.isDead) return;
 
         HandleAttack();
+    }
+
+    private void SetDamageTag ()
+    {
+
+        switch (gameObject.tag)
+        {
+            case "TeamA":
+                damageThisTag = "TeamB";
+                break;
+            case "TeamB":
+                damageThisTag = "TeamA";
+                break;
+            case "FreeForAll":
+                damageThisTag = "FreeForAll";
+                break;
+        }
     }
 
     public void HandleAttack ()
@@ -122,10 +138,15 @@ public class StogoClub : MonoBehaviour, IWeapon
             if (!hitEnemies.Contains(enemyCollider) && enemyCollider.gameObject.CompareTag(damageThisTag))
             {
                 ICharacter enemyCharacter = enemyCollider.GetComponent<ICharacter>();
+                var _playerController = enemyCollider.GetComponent<PlayerController>();
+
                 if (enemyCharacter != null)
                 {
-                    enemyCharacter.TakeDamage(meleeAttackDamage, ownerIndex);
-                    hitEnemies.Add(enemyCollider);
+                    if (_playerController == null || _playerController != this.playerController)
+                    {
+                        enemyCharacter.TakeDamage(meleeAttackDamage, ownerIndex);
+                        hitEnemies.Add(enemyCollider);
+                    }
                 }
 
                 audioSource.PlayOneShot(hammerHit);
@@ -152,10 +173,14 @@ public class StogoClub : MonoBehaviour, IWeapon
             GameObject stone = Instantiate(stonePrefab, spawnPoint, Quaternion.identity);
             spawnedStones.Add(stone);
 
-            StoneSkill skill = stone.GetComponent<StoneSkill>();
-            skill.SetDamage(stoneSkillDamage);
-            skill.SetShooterIndex(ownerIndex);
-            skill.SetTagToDamage(damageThisTag);
+            Projectile projectile = stone.GetComponent<Projectile>();
+            projectile.SetTagToDamage(damageThisTag);
+            projectile.SetPlayerOwnerIndex(ownerIndex);
+            projectile.SetPlayerController(playerController);
+            //moveTrail.SetBulletGradient(bulletGradient);
+            projectile.SetDamage(stoneSkillDamage);
+
+
 
             distanceCovered += stoneSpacing;
             yield return new WaitForSeconds(secondsBetweenEachStone);

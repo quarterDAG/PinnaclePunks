@@ -8,8 +8,20 @@ using UnityEngine.UI;
 public class HeroSelectController : MonoBehaviour
 {
     [SerializeField] private string nextScene;
-    
-    [Header("Spawn Points")]
+    [SerializeField] private string previousScene = "TeamSelect";
+
+    public bool isFreeForAllMode = false;
+
+    [Header("Free For All Settings")]
+    public List<Transform> avatarsFreeForAll;
+    public List<Image> heroImagesFreeForAll;
+    public List<Image> readyIconsFreeForAll;
+    public Transform parentFreeForAll;
+
+    private Dictionary<SelectorUI, int> uiSelectorsFreeForAll = new Dictionary<SelectorUI, int>();
+
+
+    [Header("Selectors Spawn Points")]
     public List<Transform> avatarsTeamA;
     public List<Transform> avatarsTeamB;
     private int teamASpawnIndex = 0;
@@ -68,7 +80,7 @@ public class HeroSelectController : MonoBehaviour
 
     public PlayerInput InstantiateSelector ( PlayerConfig config, int playerCount )
     {
-        Transform spawnPoint = GetSpawnPoint(config);
+        Transform spawnPoint = isFreeForAllMode ? GetFreeForAllSpawnPoint(playerCount) : GetSpawnPoint(config);
 
         teamPlayerCounts[config.team]++;
 
@@ -95,15 +107,20 @@ public class HeroSelectController : MonoBehaviour
 
         SetupHeroSelector(config, instantiatedPlayer);
 
+        if (isFreeForAllMode)
+        {
+            // Additional logic for Free for All mode
+        }
+
         return instantiatedPlayer;
     }
 
-    private void SetupHeroSelector ( PlayerConfig config, PlayerInput instantiatedPlayer )
+    public void SetupHeroSelector ( PlayerConfig config, PlayerInput instantiatedPlayer )
     {
         SelectorUI heroSelector = instantiatedPlayer.GetComponent<SelectorUI>();
         heroSelector.SetHeroSelectController(this);
         heroSelector.SetPlayerConfig(config);
-        heroSelector.GetOptionList();
+        //heroSelector.GetOptionList();
         heroSelector.ColorFrame(config);
         heroSelector.flipTeamB = flipTeamB;
 
@@ -330,7 +347,7 @@ public class HeroSelectController : MonoBehaviour
     public void PreviousScene ()
     {
         PlayerManager.Instance.ResetPlayerConfigs();
-        UnityEngine.SceneManagement.SceneManager.LoadScene("TeamSelect");
+        UnityEngine.SceneManagement.SceneManager.LoadScene(previousScene);
     }
 
     public void NextScene ()
@@ -376,8 +393,38 @@ public class HeroSelectController : MonoBehaviour
 
     public List<Transform> GetTeamAvatarList ( PlayerConfigData.Team team )
     {
-        return team == PlayerConfigData.Team.TeamA ? avatarsTeamA : avatarsTeamB;
+        switch (team)
+        {
+            case PlayerConfigData.Team.TeamA:
+                return avatarsTeamA;
+
+            case PlayerConfigData.Team.TeamB:
+                return avatarsTeamB;
+
+            case PlayerConfigData.Team.FreeForAll:
+                return avatarsFreeForAll;
+
+            default: return null;
+
+        }
+
     }
+    private Transform GetFreeForAllSpawnPoint ( int playerCount )
+    {
+        // Ensure that the playerCount is within the range of available spawn points
+        if (avatarsFreeForAll != null && avatarsFreeForAll.Count > 0)
+        {
+            int spawnIndex = playerCount % avatarsFreeForAll.Count;
+            return avatarsFreeForAll[spawnIndex];
+        }
+        else
+        {
+            Debug.LogError("No available spawn points for Free For All mode.");
+            return null; // Return null if no spawn points are available
+        }
+    }
+
+
 
     #endregion
 

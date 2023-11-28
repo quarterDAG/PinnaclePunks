@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
+using static PlayerConfigData;
 
 
 public class SelectorUI : MonoBehaviour
@@ -9,6 +11,12 @@ public class SelectorUI : MonoBehaviour
     public List<Transform> optionList;
 
     [SerializeField] private int selectedOptionIndex;
+
+    [SerializeField] private PlayerConfigData playerConfigData;
+    [SerializeField] private PlayerStats playerStats;
+    [SerializeField] private PlayerInput playerInput;
+
+
     public bool flipTeamB;
     private bool isPlayerSelected;
     private bool secondaryButtonReleased = true;
@@ -23,14 +31,42 @@ public class SelectorUI : MonoBehaviour
     private float navigationCooldown = 0.2f;
     private float lastNavigationTime;
 
+
+    private float selectionCooldown = 1.0f; // Cooldown time in seconds before allowing selection
+    private float timeSinceInstantiation;
+
+    private void Awake ()
+    {
+        heroSelectController = FindAnyObjectByType<HeroSelectController>();
+
+    }
+
     void Start ()
     {
+        if (heroSelectController != null)
+            if (heroSelectController.isFreeForAllMode)
+            {
+                transform.SetParent(heroSelectController.transform, false);
+
+                //inputDevice = playerInput.devices[0];
+                playerConfig = playerConfigData.AddPlayerConfig(playerInput);
+                ColorFrame(playerConfig);
+
+                playerConfig.team = Team.FreeForAll;
+                PlayerManager.Instance.SetTeam(playerConfig.playerIndex, Team.FreeForAll);
+                PlayerManager.Instance.SetPlayerState(playerConfig.playerIndex, PlayerState.SelectingHero);
+            }
+
+        GetOptionList();
         selectedOptionIndex = 0;
         lastNavigationTime = -navigationCooldown;
+        timeSinceInstantiation = 0;
     }
 
     void Update ()
     {
+        timeSinceInstantiation += Time.deltaTime;
+
         if (!isPlayerSelected)
         {
             if (Time.time - lastNavigationTime > navigationCooldown)
@@ -38,18 +74,21 @@ public class SelectorUI : MonoBehaviour
                 HandleOptionsNavigation();
             }
 
-            // Select hero and set to ready
-            if (inputManager.IsJumpPressed)
+            if (timeSinceInstantiation > selectionCooldown)
             {
-                JumpButtonPressed();
+                if (inputManager.IsJumpPressed)
+                {
+                    JumpButtonPressed();
+                }
+
+                if (inputManager.IsSecondaryPressed && secondaryButtonReleased)
+                {
+                    secondaryButtonReleased = false;
+                    if (heroSelectController.AreAllPlayersSelecting())
+                        heroSelectController.PreviousScene();
+                }
             }
 
-            if (inputManager.IsSecondaryPressed && secondaryButtonReleased)
-            {
-                secondaryButtonReleased = false;
-                if (heroSelectController.AreAllPlayersSelecting())
-                    heroSelectController.PreviousScene();
-            }
         }
         else
         {
@@ -108,10 +147,10 @@ public class SelectorUI : MonoBehaviour
     }
 
     // Helper method to determine navigation direction
-    private int GetNavigationDirection ( float input, PlayerConfigData.Team team )
+    private int GetNavigationDirection ( float input, Team team )
     {
         bool isInputPositive = input > 0;
-        bool shouldFlip = (team == PlayerConfigData.Team.TeamB && flipTeamB);
+        bool shouldFlip = (team == Team.TeamB && flipTeamB);
 
         if (isInputPositive)
         {

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4637089189243570322}
   - component: {fileID: 2107251082231871859}
   - component: {fileID: 4770606407731914700}
-  - component: {fileID: 543849913889714948}
+  - component: {fileID: 4631708132139663069}
   m_Layer: 0
   m_Name: Stone Skill
   m_TagString: Untagged
@@ -151,7 +151,7 @@ PolygonCollider2D:
       - {x: 0.63, y: -0.5}
       - {x: 0.58, y: -0.42999998}
   m_UseDelaunayMesh: 0
---- !u!114 &543849913889714948
+--- !u!114 &4631708132139663069
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -160,9 +160,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 8038312965000702181}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb384a4b2db78654ba7470516fa26adc, type: 3}
+  m_Script: {fileID: 11500000, guid: 014006864881bac46a4829427ed86952, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 0
-  shooterIndex: -1
-  damageThisTag: 
+  projectileType: 0
+  moveSpeed: 0
+  hitTheseLayers:
+    serializedVersion: 2
+    m_Bits: 24
+  damageTag: 
+  bulletDamage: 10
+  pushbackForce: 50
+  audioSource: {fileID: 0}
+  arrowHit: {fileID: 0}

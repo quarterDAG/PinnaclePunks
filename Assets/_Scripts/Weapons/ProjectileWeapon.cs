@@ -1,26 +1,27 @@
 
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
-public class IceWand : MonoBehaviour, IWeapon
+public class ProjectileWeapon : MonoBehaviour, IWeapon
 {
     [SerializeField] private Transform player;
     private PlayerController playerController;
     [SerializeField] private PlayerAnimator playerAnimator;
     [SerializeField] private MouseAim mouseAim;
-    [SerializeField] private LayerMask whatToHit;
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject arrowPrefab;
     //[SerializeField] private Gradient bulletGradient;
     [SerializeField] private string damageThisTag;
-   
+
     private float originalFireRate;
     [SerializeField] private float fireRate = 0;
+    private float timeToFire = 0;
+
+    private float originalDamage;
     [SerializeField] private float damage = 10;
 
     [SerializeField] private float effectSpawnRate = 10;
     private float timeToSpawnEffect = 0;
-    private float timeToFire = 0;
 
     private bool canShoot = true;
     private InputManager inputManager;
@@ -41,9 +42,27 @@ public class IceWand : MonoBehaviour, IWeapon
     private void Start ()
     {
         playerIndex = playerController.playerConfig.playerIndex;
-        damageThisTag = (gameObject.tag == "TeamA") ? "TeamB" : "TeamA";
+        SetDamageTag();
 
-        originalFireRate = fireRate;    
+        originalFireRate = fireRate;
+        originalDamage = damage;
+    }
+
+    private void SetDamageTag ()
+    {
+
+        switch (gameObject.tag)
+        {
+            case "TeamA":
+                damageThisTag = "TeamB";
+                break;
+            case "TeamB":
+                damageThisTag = "TeamA";
+                break;
+            case "FreeForAll":
+                damageThisTag = "FreeForAll";
+                break;
+        }
     }
 
     void Update ()
@@ -71,18 +90,11 @@ public class IceWand : MonoBehaviour, IWeapon
 
     public void HandleAttack ()
     {
-        if (fireRate == 0)
+
+        if (inputManager.IsAttackPressed && Time.time > timeToFire)
         {
-            if (inputManager.IsAttackPressed)
-                Shoot();
-        }
-        else
-        {
-            if (inputManager.IsAttackPressed && Time.time > timeToFire)
-            {
-                timeToFire = Time.time + 1 / fireRate;
-                Shoot();
-            }
+            timeToFire = Time.time + 1 / fireRate;
+            Shoot();
         }
 
         if (!inputManager.IsAttackPressed)
@@ -107,6 +119,7 @@ public class IceWand : MonoBehaviour, IWeapon
         Projectile projectile = bullet.GetComponent<Projectile>();
         projectile.SetTagToDamage(damageThisTag);
         projectile.SetPlayerOwnerIndex(playerIndex);
+        projectile.SetPlayerController(playerController);
         //moveTrail.SetBulletGradient(bulletGradient);
         projectile.SetDamage(damage);
     }
@@ -124,16 +137,16 @@ public class IceWand : MonoBehaviour, IWeapon
 
     #region Power Ups
 
-    public void IncreaseFireRate ( float fireRateValue, float effectTime )
+    public void IncreaseFireRate ( float fireRateMultiplier, float duration )
     {
-        StartCoroutine(IncreareFireRateCoroutine(fireRateValue, effectTime));
+        StartCoroutine(IncreareFireRateCoroutine(fireRateMultiplier, duration));
     }
 
-    IEnumerator IncreareFireRateCoroutine ( float fireRateValue, float effectTime )
+    IEnumerator IncreareFireRateCoroutine ( float fireRateMultiplier, float duration )
     {
-        fireRate *= fireRateValue;
+        fireRate *= fireRateMultiplier;
 
-        yield return new WaitForSeconds(effectTime);
+        yield return new WaitForSeconds(duration);
 
         fireRate = originalFireRate;
     }
@@ -149,7 +162,7 @@ public class IceWand : MonoBehaviour, IWeapon
 
         yield return new WaitForSeconds(duration);
 
-        fireRate = originalFireRate;
+        damage = originalDamage;
     }
 
     #endregion

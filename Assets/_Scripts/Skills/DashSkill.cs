@@ -40,7 +40,7 @@ public class DashSkill : MonoBehaviour
 
     private AudioSource audioSource;
 
-    [SerializeField] private AudioClip dash;
+    [SerializeField] private AudioClip audioClip;
 
     private bool canDash = true;
 
@@ -76,7 +76,8 @@ public class DashSkill : MonoBehaviour
     {
         if (inputManager.IsDashPressed)
         {
-            if (playerController.manaBar.currentValue < manaCost) return;
+            if (playerController.manaBar != null)
+                if (playerController.manaBar.currentValue < manaCost) return;
 
             Dash(GetDashDirectionForGamepad());
             inputManager.ResetDash(); // Reset the dash press state
@@ -134,6 +135,7 @@ public class DashSkill : MonoBehaviour
 
     private IEnumerator TeleportCoroutine ( Vector2 targetPosition )
     {
+        audioSource.PlayOneShot(audioClip);
         teleportSpriteRenderer.enabled = true;
         teleportEffect.SetBool("Teleport", true);
 
@@ -153,7 +155,7 @@ public class DashSkill : MonoBehaviour
 
     private IEnumerator DashMovementCoroutine ( Vector2 start, Vector2 end, float duration )
     {
-        audioSource.PlayOneShot(dash);
+        audioSource.PlayOneShot(audioClip);
         playerAnimator.DashAnimation(true);
 
         gameObject.tag = "Dodge";

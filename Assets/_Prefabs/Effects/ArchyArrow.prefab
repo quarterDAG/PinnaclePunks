@@ -100,10 +100,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 014006864881bac46a4829427ed86952, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectileType: 0
   moveSpeed: 50
   hitTheseLayers:
     serializedVersion: 2
-    m_Bits: 17
+    m_Bits: 24
   damageTag: 
   bulletDamage: 10
   pushbackForce: 50000

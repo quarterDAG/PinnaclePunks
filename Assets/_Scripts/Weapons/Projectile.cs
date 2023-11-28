@@ -48,15 +48,26 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D ( Collider2D collision )
     {
-        switch (projectileType)
+        if (collision.CompareTag(damageTag) || collision.CompareTag("DropBat"))
         {
-            case ProjectileType.Arrow:
-                HandleArrowCollision(collision);
-                break;
-            case ProjectileType.IceBolt:
-                HandleIceBoltCollision(collision);
-                break;
-                // Add more cases as needed
+            var character = collision.GetComponent<ICharacter>();
+            var rb = collision.GetComponent<Rigidbody2D>();
+            var playerController = collision.GetComponent<PlayerController>();
+
+            if (character != null)
+            {
+                if (playerController == null || playerController.playerConfig.playerIndex != shotOwnerIndex)
+                {
+                    HandleDamage(character, rb, collision);
+
+                    if (projectileType == ProjectileType.IceBolt)
+                        character.Freeze(2f);
+                }
+            }
+        }
+        else if (IsInLayerMask(collision.gameObject.layer, hitTheseLayers))
+        {
+            Destroy(gameObject);
         }
 
         DropItem drop = collision.gameObject.GetComponent<DropItem>();
@@ -65,47 +76,6 @@ public class Projectile : MonoBehaviour
             drop.Pop(playerController);
         }
     }
-
-    private void HandleArrowCollision ( Collider2D collision )
-    {
-        if (collision.CompareTag(damageTag) || collision.CompareTag("DropBat"))
-        {
-            var character = collision.GetComponent<ICharacter>();
-            var rb = collision.GetComponent<Rigidbody2D>();
-
-            if (character != null)
-            {
-                HandleDamage(character, rb, collision);
-            }
-        }
-        else if (IsInLayerMask(collision.gameObject.layer, hitTheseLayers))
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    private void HandleIceBoltCollision ( Collider2D collision )
-    {
-
-        if (collision.CompareTag(damageTag) || collision.CompareTag("DropBat"))
-        {
-            // Check if collision is with a character
-            var character = collision.GetComponent<ICharacter>();
-            var rb = collision.GetComponent<Rigidbody2D>();
-
-            if (character != null)
-            {
-                HandleDamage(character, rb, collision);
-                character.Freeze(2f); // Assuming you have a method to freeze characters
-            }
-
-        }
-        else if (IsInLayerMask(collision.gameObject.layer, hitTheseLayers))
-        {
-            Destroy(gameObject);
-        }
-    }
-
 
     private void HandleDamage ( ICharacter character, Rigidbody2D rb, Collider2D collision )
     {

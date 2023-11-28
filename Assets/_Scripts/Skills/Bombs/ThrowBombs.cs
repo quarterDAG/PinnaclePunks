@@ -61,7 +61,8 @@ public class ThrowBombs : MonoBehaviour
 
     public void HandleAttack ()
     {
-        if (playerController.manaBar.currentValue < manaCost) { return; }
+        if (playerController.manaBar != null)
+            if (playerController.manaBar.currentValue < manaCost) { return; }
 
         if (inputManager.IsSecondaryPressed && Time.time > timeToFire)
         {

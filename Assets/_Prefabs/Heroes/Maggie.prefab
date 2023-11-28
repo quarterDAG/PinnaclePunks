@@ -25199,6 +25199,7 @@ MonoBehaviour:
   bubble: {fileID: 2586947911717814191}
   powerUpImage: {fileID: 6306015463748190880}
   iceCube: {fileID: 6514146931280459538}
+  aiController: {fileID: 0}
 --- !u!114 &1518033666845181718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25235,7 +25236,7 @@ MonoBehaviour:
   damage: 20
   yAxisActivated: 1
   manaCost: 10
-  dash: {fileID: 8300000, guid: 19dbd82338acc49429cdb4dc73942070, type: 3}
+  audioClip: {fileID: 8300000, guid: 1170899b7a379ea499e0ad179630a633, type: 3}
 --- !u!114 &5721426548412157444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40322,6 +40323,7 @@ GameObject:
   - component: {fileID: 6028678352786882193}
   - component: {fileID: 7468092810000837734}
   - component: {fileID: 5885429706121125744}
+  - component: {fileID: 5205765936161403834}
   m_Layer: 0
   m_Name: Weapon
   m_TagString: Untagged
@@ -40356,7 +40358,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.25
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -40447,7 +40449,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7588801696254306056}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ca65e1464cf5cf428c1a53b6e3f5bc2, type: 3}
   m_Name: 
@@ -40464,7 +40466,29 @@ MonoBehaviour:
   fireRate: 3
   damage: 10
   effectSpawnRate: 10
-  bowReleased: {fileID: 8300000, guid: 4d016757ccac3264689054d28cc1de21, type: 3}
+  fireShot: {fileID: 0}
+--- !u!114 &5205765936161403834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7588801696254306056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d52a9d778548514f939038b60cb1303, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 5240961817479375904}
+  playerAnimator: {fileID: 1133885643701160458}
+  mouseAim: {fileID: 6231824700150868758}
+  firePoint: {fileID: 6028678352786882193}
+  arrowPrefab: {fileID: 2372949663694061506, guid: fd25a8149742d5d4892c84506e3cb098, type: 3}
+  damageThisTag: 
+  fireRate: 3
+  damage: 10
+  effectSpawnRate: 10
+  bowReleased: {fileID: 8300000, guid: 6cad0812ce9dcdb4a802b81d660c2e51, type: 3}
 --- !u!1 &7599851207667780729
 GameObject:
   m_ObjectHideFlags: 0

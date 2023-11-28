@@ -81,7 +81,6 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-
     public void InitializeHeroes ()
     {
         playerCount = 0;

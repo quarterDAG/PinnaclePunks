@@ -184,8 +184,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputManager: {fileID: 6125324141952652097}
-  heroAvatars: []
-  selectedHeroIndex: 0
+  optionList: []
+  selectedOptionIndex: 0
+  playerConfigData: {fileID: 11400000, guid: d3e8662a30226a343a404490b291db19, type: 2}
+  playerStats: {fileID: 0}
+  playerInput: {fileID: -1252300234644729528}
+  flipTeamB: 0
 --- !u!114 &6125324141952652097
 MonoBehaviour:
   m_ObjectHideFlags: 0

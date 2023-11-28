@@ -97,7 +97,6 @@ public class Inventory : MonoBehaviour
     {
         if (inventoryOwners == null || inputManagers == null)
         {
-            Debug.LogError("inventoryOwners or inputManagers is null");
             return;
         }
 

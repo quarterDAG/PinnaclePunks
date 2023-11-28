@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Scenes/Menus/MainMenu.unity
+    guid: b68db992a176a0e4da889d056a3a793f
+  - enabled: 1
+    path: Assets/_Scenes/Menus/FFA_HeroSelect.unity
+    guid: 1f6b4d980846ec04bad0765982076af1
+  - enabled: 1
     path: Assets/_Scenes/Menus/TeamSelect.unity
     guid: 776159fa7466e54478ca11a419942040
   - enabled: 1

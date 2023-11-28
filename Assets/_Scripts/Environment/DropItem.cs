@@ -42,6 +42,8 @@ public class DropItem : MonoBehaviour
     private AudioSource audioSource;
     [SerializeField] AudioClip bottleOpen;
 
+    private bool isTaken;
+
     private void Start ()
     {
         bubbleSpriteRenderer = GetComponent<SpriteRenderer>();
@@ -90,21 +92,23 @@ public class DropItem : MonoBehaviour
 
     private void OnTriggerEnter2D ( Collider2D other )
     {
-        if (other.CompareTag("TeamA") || other.CompareTag("TeamB"))
+
+        PlayerController player = other.GetComponent<PlayerController>();
+
+        if (player != null)
         {
-            PlayerController player = other.GetComponent<PlayerController>();
+            Pop(player);
 
-            if (player != null)
-            {
-                Pop(player);
-
-            }
         }
+
     }
 
 
     public async void Pop ( PlayerController player )
     {
+        if (isTaken) return;
+
+        isTaken = true;
         audioSource.PlayOneShot(bottleOpen);
         _ps.Play();
 

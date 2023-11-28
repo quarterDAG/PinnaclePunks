@@ -59,11 +59,12 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     private InputManager inputManager;
     private LivesManager livesManager;
-    private PlayerMinionSpawner minionSpawner;
 
     [SerializeField] private SpriteRenderer bubble;
     public PowerUpImage powerUpImage;
     [SerializeField] private SpriteRenderer iceCube;
+
+    [SerializeField] private AIController aiController;
 
 
 
@@ -78,7 +79,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         respawnCountdownUI = GetComponentInChildren<CountdownUI>();
         inputManager = GetComponent<InputManager>();
         powerUpImage = GetComponentInChildren<PowerUpImage>();
-        minionSpawner = GetComponent<PlayerMinionSpawner>();
+        aiController = GetComponentInChildren<AIController>();
 
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         _colOffsetDefault = _col.offset;
@@ -124,8 +125,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     }
 
 
-
-
     private void Update ()
     {
         if (Time.timeScale == 0) return;
@@ -135,6 +134,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         if (!canMove) return;
 
         _time += Time.deltaTime;
+
+        if (aiController != null) return;
 
         GatherInput();
     }
@@ -156,10 +157,15 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         if (_frameInput.JumpDown)
         {
-            _jumpToConsume = true;
-            _timeJumpWasPressed = _time;
+            JumpTriggered();
         }
 
+    }
+
+    public void JumpTriggered ()
+    {
+        _jumpToConsume = true;
+        _timeJumpWasPressed = _time;
     }
 
 
@@ -168,24 +174,25 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         if (Time.timeScale == 0) return;
 
         CheckCollisions();
-
         HandleJump();
-        HandleDirection();
+
+        if (aiController == null)
+            HandleDirection();
 
         if (!OnRope())
         {
             HandleGravity();
             ApplyMovement();
         }
-
     }
 
     private void LateUpdate ()
     {
-        if (inputManager.IsJumpPressed)
-        {
-            PlayerStatsManager.Instance.VoteForRematch(playerConfig.playerIndex);
-        }
+        if (PlayerStatsManager.Instance != null)
+            if (inputManager.IsJumpPressed && PlayerStatsManager.Instance.canvas.enabled == true)
+            {
+                PlayerStatsManager.Instance.VoteForRematch(playerConfig.playerIndex);
+            }
     }
 
     public async void TakeDamage ( float damage, int otherPlayerIndex )
@@ -229,7 +236,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     public void UpdateManaBar ( float _manaValue )
     {
-        manaBar.AddValue(_manaValue);
+        if (manaBar != null)
+            manaBar.AddValue(_manaValue);
     }
 
     public void Die ( int killerIndex )
@@ -381,17 +389,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     }
 
 
-    void OnCollisionEnter2D ( Collision2D collision )
-    {
-        Debug.Log("Velocity Before Bounce: " + GetComponent<Rigidbody2D>().velocity);
-    }
-
-    void OnCollisionExit2D ( Collision2D collision )
-    {
-        Debug.Log("Velocity After Bounce: " + GetComponent<Rigidbody2D>().velocity);
-    }
-
-
     #endregion
 
     #region Jumping
@@ -524,6 +521,14 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     #endregion
 
     private void ApplyMovement () => _rb.velocity = _frameVelocity;
+
+    public void SetFrameVelocityX ( float velocityX )
+    {
+        Vector2 currentVelocity = _rb.velocity;
+        currentVelocity.x = velocityX; // Only change the x component
+        _frameVelocity = currentVelocity; // Apply the updated velocity
+    }
+
 
 #if UNITY_EDITOR
     private void OnValidate ()
