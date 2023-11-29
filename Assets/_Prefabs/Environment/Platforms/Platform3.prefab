@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7659714069017644016}
   - component: {fileID: 797506217195746382}
   - component: {fileID: -1922101699499320024}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Platform3
   m_TagString: Platform
   m_Icon: {fileID: 0}
@@ -190,6 +190,10 @@ PrefabInstance:
     - target: {fileID: 1020813506810407821, guid: f2202c317950d124498d5fff30ac3564, type: 3}
       propertyPath: m_Name
       value: MonsterSpawn
+      objectReference: {fileID: 0}
+    - target: {fileID: 1020813506810407821, guid: f2202c317950d124498d5fff30ac3564, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1472998102105798429, guid: f2202c317950d124498d5fff30ac3564, type: 3}
       propertyPath: m_LocalPosition.x

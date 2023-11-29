@@ -150,6 +150,9 @@ public class TeamSelectionController : MonoBehaviour
 
     public void PreviousScene ()
     {
+        PlayerManager.Instance.ResetPlayerConfigs();
+        PlayerStatsManager.Instance.ClearAllStatsList();
+
         SceneManager.LoadScene(previousScene);
 
     }

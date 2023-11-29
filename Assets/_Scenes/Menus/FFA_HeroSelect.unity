@@ -2158,9 +2158,9 @@ RectTransform:
   - {fileID: 1922285471}
   - {fileID: 616861680}
   - {fileID: 616040846}
-  - {fileID: 919302738}
   - {fileID: 304150754}
   - {fileID: 778069328}
+  - {fileID: 919302738}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2197,7 +2197,7 @@ MonoBehaviour:
   - {fileID: 706547082}
   - {fileID: 1518396705}
   - {fileID: 1746233362}
-  parentFreeForAll: {fileID: 0}
+  parentFreeForAll: {fileID: 304150754}
   avatarsTeamA:
   - {fileID: 2483908516010922545}
   - {fileID: 602691240}

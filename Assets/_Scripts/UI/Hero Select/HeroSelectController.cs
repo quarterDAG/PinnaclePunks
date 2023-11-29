@@ -347,6 +347,8 @@ public class HeroSelectController : MonoBehaviour
     public void PreviousScene ()
     {
         PlayerManager.Instance.ResetPlayerConfigs();
+        PlayerStatsManager.Instance.ClearAllStatsList();
+
         UnityEngine.SceneManagement.SceneManager.LoadScene(previousScene);
     }
 

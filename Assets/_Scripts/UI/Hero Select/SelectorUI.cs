@@ -43,24 +43,31 @@ public class SelectorUI : MonoBehaviour
 
     void Start ()
     {
+        GetOptionList();
+
         if (heroSelectController != null)
             if (heroSelectController.isFreeForAllMode)
-            {
-                transform.SetParent(heroSelectController.transform, false);
+                FreeForAllSelector();
 
-                //inputDevice = playerInput.devices[0];
-                playerConfig = playerConfigData.AddPlayerConfig(playerInput);
-                ColorFrame(playerConfig);
-
-                playerConfig.team = Team.FreeForAll;
-                PlayerManager.Instance.SetTeam(playerConfig.playerIndex, Team.FreeForAll);
-                PlayerManager.Instance.SetPlayerState(playerConfig.playerIndex, PlayerState.SelectingHero);
-            }
-
-        GetOptionList();
         selectedOptionIndex = 0;
         lastNavigationTime = -navigationCooldown;
         timeSinceInstantiation = 0;
+    }
+
+    private void FreeForAllSelector ()
+    {
+        transform.SetParent(heroSelectController.parentFreeForAll, false);
+        transform.SetSiblingIndex(0);
+        transform.localScale = new Vector3(4, 4, 4);
+
+        MoveSelectorToOption(0);
+
+        playerConfig = playerConfigData.AddPlayerConfig(playerInput);
+        ColorFrame(playerConfig);
+
+        playerConfig.team = Team.FreeForAll;
+        PlayerManager.Instance.SetTeam(playerConfig.playerIndex, Team.FreeForAll);
+        PlayerManager.Instance.SetPlayerState(playerConfig.playerIndex, PlayerState.SelectingHero);
     }
 
     void Update ()

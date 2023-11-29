@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class PauseMenuController : MonoBehaviour
 {
     public Button rematchButton;
-    public Button teamSelectButton;
+    //public Button teamSelectButton;
     public Button mainMenuButton;
 
     [SerializeField] private Button[] buttons;
@@ -23,7 +23,7 @@ public class PauseMenuController : MonoBehaviour
     {
         GameManager.Instance.SetPauseMenu(this);
         canvas = GetComponent<Canvas>();
-        buttons = new Button[] { rematchButton, teamSelectButton, mainMenuButton };
+        buttons = new Button[] { rematchButton, mainMenuButton };
         UpdateButtonSelection();
     }
 
@@ -132,18 +132,15 @@ public class PauseMenuController : MonoBehaviour
         HidePauseMenu();
     }
 
-    public void TeamSelect ()
+
+
+    public void MainMenu ()
     {
         PlayerManager.Instance.ResetPlayerConfigs();
         PlayerStatsManager.Instance.ClearAllStatsList();
         GameManager.Instance.ClearManagerAssignments();
         GameManager.Instance.StopTime(false);
-        SceneManager.LoadScene("TeamSelect");
-    }
-
-    public void MainMenu ()
-    {
-        // Implement when there is a main menu
+        SceneManager.LoadScene("MainMenu");
     }
 
 
