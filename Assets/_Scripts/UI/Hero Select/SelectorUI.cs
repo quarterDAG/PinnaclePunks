@@ -24,7 +24,7 @@ public class SelectorUI : MonoBehaviour
     private HeroSelectController heroSelectController;
     private MapSelectController mapSelectController;
 
-    private PlayerConfig playerConfig;
+    [SerializeField] private PlayerConfig playerConfig;
 
     private Image frame;
 
@@ -38,12 +38,13 @@ public class SelectorUI : MonoBehaviour
     private void Awake ()
     {
         heroSelectController = FindAnyObjectByType<HeroSelectController>();
+        frame = GetComponentInChildren<Image>();
+        GetOptionList();
 
     }
 
     void Start ()
     {
-        GetOptionList();
 
         if (heroSelectController != null)
             if (heroSelectController.isFreeForAllMode)
@@ -56,7 +57,7 @@ public class SelectorUI : MonoBehaviour
 
     private void FreeForAllSelector ()
     {
-        transform.SetParent(heroSelectController.parentFreeForAll, false);
+        transform.SetParent(heroSelectController.parentFFA, false);
         transform.SetSiblingIndex(0);
         transform.localScale = new Vector3(4, 4, 4);
 
@@ -173,6 +174,8 @@ public class SelectorUI : MonoBehaviour
 
     public void MoveSelectorToOption ( int optionIndex )
     {
+        GetOptionList();
+
         // Update the selected hero index first
         selectedOptionIndex = optionIndex;
 
@@ -216,20 +219,55 @@ public class SelectorUI : MonoBehaviour
         frame.color = config.playerColor;
     }
 
+    /*    public void UpdateVisual ( int count, bool isClockwise )
+        {
+            frame = GetComponentInChildren<Image>();
+
+            // Adjust the visual based on the count and the fill direction
+            if (count >= 2)
+            {
+                frame.fillMethod = Image.FillMethod.Radial360;
+                frame.fillAmount = 0.5f;
+                frame.fillClockwise = isClockwise;
+            }
+            else
+            {
+                frame.fillAmount = 1.0f;
+            }
+        }*/
+
     public void UpdateVisual ( int count, bool isClockwise )
     {
-        // Adjust the visual based on the count and the fill direction
-        if (count >= 2)
+        frame = GetComponentInChildren<Image>();
+
+        // Set the fill method to Radial360
+        frame.fillMethod = Image.FillMethod.Radial360;
+        //frame.fillClockwise = isClockwise;
+
+        // Calculate the fill amount for each segment
+        frame.fillAmount = count > 1 ? 1.0f / count : 1.0f;
+
+        // Rotate the image based on the player's index
+        if (count > 1)
         {
-            frame.fillMethod = Image.FillMethod.Radial360;
-            frame.fillAmount = 0.5f;
-            frame.fillClockwise = isClockwise;
+            // Assuming playerIndex is a 0-based index
+            int playerIndex = playerConfig.playerIndex;
+            float rotationAngle = (360f / count) * playerIndex;
+
+            // Apply the rotation
+            frame.transform.rotation = Quaternion.Euler(0, 0, -rotationAngle);
         }
         else
         {
-            frame.fillAmount = 1.0f;
+            // Reset rotation for a single player
+            frame.transform.rotation = Quaternion.identity;
         }
     }
+
+
+
+
+
 
     public PlayerConfig GetSelectorConfig ()
     {

@@ -13,12 +13,14 @@ public class HeroSelectController : MonoBehaviour
     public bool isFreeForAllMode = false;
 
     [Header("Free For All Settings")]
-    public List<Transform> avatarsFreeForAll;
-    public List<Image> heroImagesFreeForAll;
-    public List<Image> readyIconsFreeForAll;
-    public Transform parentFreeForAll;
+    public List<Transform> avatarsFFA;
+    public List<Image> heroImagesFFA;
+    public List<Image> readyIconsFFA;
+    public Transform parentFFA;
+    private Dictionary<SelectorUI, int> uiSelectorsFFA = new Dictionary<SelectorUI, int>();
 
-    private Dictionary<SelectorUI, int> uiSelectorsFreeForAll = new Dictionary<SelectorUI, int>();
+
+    //private Dictionary<SelectorUI, int> uiSelectorsFreeForAll = new Dictionary<SelectorUI, int>();
 
 
     [Header("Selectors Spawn Points")]
@@ -107,11 +109,6 @@ public class HeroSelectController : MonoBehaviour
 
         SetupHeroSelector(config, instantiatedPlayer);
 
-        if (isFreeForAllMode)
-        {
-            // Additional logic for Free for All mode
-        }
-
         return instantiatedPlayer;
     }
 
@@ -144,10 +141,19 @@ public class HeroSelectController : MonoBehaviour
 
     public void UpdateSelectorAvatar ( SelectorUI selector, int avatarIndex, PlayerConfigData.Team team )
     {
-        if (team == PlayerConfigData.Team.TeamA)
-            uiSelectorsTeamA[selector] = avatarIndex;
-        else if (team == PlayerConfigData.Team.TeamB)
-            uiSelectorsTeamB[selector] = avatarIndex;
+
+        switch (team)
+        {
+            case PlayerConfigData.Team.TeamA:
+                uiSelectorsTeamA[selector] = avatarIndex;
+                break;
+            case PlayerConfigData.Team.TeamB:
+                uiSelectorsTeamB[selector] = avatarIndex;
+                break;
+            case PlayerConfigData.Team.FreeForAll:
+                uiSelectorsFFA[selector] = avatarIndex;
+                break;
+        }
 
         UpdateHeroVisuals();
         UpdateHeroImages(team);
@@ -158,16 +164,33 @@ public class HeroSelectController : MonoBehaviour
         // Reset visual for all selectors in both teams
         ResetVisuals(uiSelectorsTeamA);
         ResetVisuals(uiSelectorsTeamB);
+        ResetVisuals(uiSelectorsFFA);
 
         // Update visuals for each team
         UpdateTeamVisuals(uiSelectorsTeamA);
         UpdateTeamVisuals(uiSelectorsTeamB);
+        UpdateTeamVisuals(uiSelectorsFFA);
     }
 
     private void UpdateHeroImages ( PlayerConfigData.Team team )
     {
         var selectorMap = GetSelectorMap(team);
-        List<Image> heroImages = team == PlayerConfigData.Team.TeamA ? heroImagesA : heroImagesB;
+        List<Image> heroImages = new List<Image>(); 
+
+        switch (team)
+        {
+            case PlayerConfigData.Team.TeamA:
+                heroImages = heroImagesA;
+                break;
+                case PlayerConfigData.Team.TeamB:
+                heroImages = heroImagesB;
+                break;
+                case PlayerConfigData.Team.FreeForAll:
+                heroImages = heroImagesFFA;
+                break;
+        }
+
+
 
         int teamPlayerIndex = 0;
 
@@ -404,7 +427,7 @@ public class HeroSelectController : MonoBehaviour
                 return avatarsTeamB;
 
             case PlayerConfigData.Team.FreeForAll:
-                return avatarsFreeForAll;
+                return avatarsFFA;
 
             default: return null;
 
@@ -414,10 +437,10 @@ public class HeroSelectController : MonoBehaviour
     private Transform GetFreeForAllSpawnPoint ( int playerCount )
     {
         // Ensure that the playerCount is within the range of available spawn points
-        if (avatarsFreeForAll != null && avatarsFreeForAll.Count > 0)
+        if (avatarsFFA != null && avatarsFFA.Count > 0)
         {
-            int spawnIndex = playerCount % avatarsFreeForAll.Count;
-            return avatarsFreeForAll[spawnIndex];
+            int spawnIndex = playerCount % avatarsFFA.Count;
+            return avatarsFFA[spawnIndex];
         }
         else
         {

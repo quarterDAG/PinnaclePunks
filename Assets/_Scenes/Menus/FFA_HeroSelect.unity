@@ -1533,17 +1533,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &706547083 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8337877535976544586, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
-  m_PrefabInstance: {fileID: 706547079}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &751169590
 GameObject:
   m_ObjectHideFlags: 0
@@ -2183,21 +2172,17 @@ MonoBehaviour:
   nextScene: MapSelect
   previousScene: MainMenu
   isFreeForAllMode: 1
-  avatarsFreeForAll:
+  avatarsFFA:
   - {fileID: 2483908516010922545}
   - {fileID: 602691240}
   - {fileID: 2119713943}
-  heroImagesFreeForAll:
-  - {fileID: 1207229283}
-  - {fileID: 706547083}
-  - {fileID: 1518396706}
-  - {fileID: 1746233363}
-  readyIconsFreeForAll:
-  - {fileID: 1207229282}
-  - {fileID: 706547082}
+  heroImagesFFA:
+  - {fileID: 1207229281}
+  - {fileID: 706547080}
   - {fileID: 1518396705}
   - {fileID: 1746233362}
-  parentFreeForAll: {fileID: 304150754}
+  readyIconsFFA: []
+  parentFFA: {fileID: 304150754}
   avatarsTeamA:
   - {fileID: 2483908516010922545}
   - {fileID: 602691240}
@@ -2481,17 +2466,6 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1207229283 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8337877535976544586, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
-  m_PrefabInstance: {fileID: 1207229279}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -3790,22 +3764,11 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
 --- !u!114 &1518396705 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7279900491131694877, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3418895093056905215, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
   m_PrefabInstance: {fileID: 1518396704}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1518396706 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8337877535976544586, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
-  m_PrefabInstance: {fileID: 1518396704}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -4245,22 +4208,11 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
 --- !u!114 &1746233362 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7279900491131694877, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3418895093056905215, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
   m_PrefabInstance: {fileID: 1746233361}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1746233363 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8337877535976544586, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
-  m_PrefabInstance: {fileID: 1746233361}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
