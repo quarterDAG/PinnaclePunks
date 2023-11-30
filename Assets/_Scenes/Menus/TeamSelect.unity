@@ -2796,6 +2796,7 @@ MonoBehaviour:
   - {fileID: 62265667}
   countdownUI: {fileID: 919302742}
   nextScene: HeroSelect
+  previousScene: MainMenu
 --- !u!1 &1184728308
 GameObject:
   m_ObjectHideFlags: 0

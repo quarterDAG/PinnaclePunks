@@ -18,9 +18,7 @@ public class HeroSelectController : MonoBehaviour
     public List<Image> readyIconsFFA;
     public Transform parentFFA;
     private Dictionary<SelectorUI, int> uiSelectorsFFA = new Dictionary<SelectorUI, int>();
-
-
-    //private Dictionary<SelectorUI, int> uiSelectorsFreeForAll = new Dictionary<SelectorUI, int>();
+    private Dictionary<SelectorUI, int> ffaPlayerIndices = new Dictionary<SelectorUI, int>();
 
 
     [Header("Selectors Spawn Points")]
@@ -131,7 +129,7 @@ public class HeroSelectController : MonoBehaviour
         GetSelectorMap(team)[selector] = nextAvailableIndex;
 
         // Assign team-specific index
-        var playerIndices = team == PlayerConfigData.Team.TeamA ? teamAPlayerIndices : teamBPlayerIndices;
+        var playerIndices = GetTeamPlayerIndiceList(team);
         playerIndices[selector] = playerIndices.Count; // Assign the next index in the team
 
         selector.MoveSelectorToOption(nextAvailableIndex);
@@ -175,17 +173,17 @@ public class HeroSelectController : MonoBehaviour
     private void UpdateHeroImages ( PlayerConfigData.Team team )
     {
         var selectorMap = GetSelectorMap(team);
-        List<Image> heroImages = new List<Image>(); 
+        List<Image> heroImages = new List<Image>();
 
         switch (team)
         {
             case PlayerConfigData.Team.TeamA:
                 heroImages = heroImagesA;
                 break;
-                case PlayerConfigData.Team.TeamB:
+            case PlayerConfigData.Team.TeamB:
                 heroImages = heroImagesB;
                 break;
-                case PlayerConfigData.Team.FreeForAll:
+            case PlayerConfigData.Team.FreeForAll:
                 heroImages = heroImagesFFA;
                 break;
         }
@@ -312,11 +310,12 @@ public class HeroSelectController : MonoBehaviour
     public void UpdateReadyIcon ( SelectorUI selector, bool isReady )
     {
         var team = selector.GetSelectorConfig().team;
-        var playerIndices = team == PlayerConfigData.Team.TeamA ? teamAPlayerIndices : teamBPlayerIndices;
+        var playerIndices = GetTeamPlayerIndiceList(team);
+
 
         if (playerIndices.TryGetValue(selector, out int teamPlayerIndex))
         {
-            List<Image> readyIcons = team == PlayerConfigData.Team.TeamA ? readyIconsA : readyIconsB;
+            List<Image> readyIcons = GetTeamReadyIconList(team);
             if (teamPlayerIndex >= 0 && teamPlayerIndex < readyIcons.Count)
             {
                 readyIcons[teamPlayerIndex].enabled = isReady;
@@ -385,7 +384,16 @@ public class HeroSelectController : MonoBehaviour
 
     private Dictionary<SelectorUI, int> GetSelectorMap ( PlayerConfigData.Team team )
     {
-        return team == PlayerConfigData.Team.TeamA ? uiSelectorsTeamA : uiSelectorsTeamB;
+        switch (team)
+        {
+            case PlayerConfigData.Team.TeamA:
+                return uiSelectorsTeamA;
+            case PlayerConfigData.Team.TeamB:
+                return uiSelectorsTeamB;
+            case PlayerConfigData.Team.FreeForAll:
+                return uiSelectorsFFA;
+            default: return null;
+        }
     }
 
     private Transform GetSpawnPoint ( PlayerConfig config )
@@ -432,8 +440,44 @@ public class HeroSelectController : MonoBehaviour
             default: return null;
 
         }
-
     }
+
+    public List<Image> GetTeamReadyIconList ( PlayerConfigData.Team team )
+    {
+        switch (team)
+        {
+            case PlayerConfigData.Team.TeamA:
+                return readyIconsA;
+
+            case PlayerConfigData.Team.TeamB:
+                return readyIconsB;
+
+            case PlayerConfigData.Team.FreeForAll:
+                return readyIconsFFA;
+
+            default: return null;
+
+        }
+    }
+
+    public Dictionary<SelectorUI, int> GetTeamPlayerIndiceList ( PlayerConfigData.Team team )
+    {
+        switch (team)
+        {
+            case PlayerConfigData.Team.TeamA:
+                return teamAPlayerIndices;
+
+            case PlayerConfigData.Team.TeamB:
+                return teamBPlayerIndices;
+
+            case PlayerConfigData.Team.FreeForAll:
+                return ffaPlayerIndices;
+
+            default: return null;
+
+        }
+    }
+
     private Transform GetFreeForAllSpawnPoint ( int playerCount )
     {
         // Ensure that the playerCount is within the range of available spawn points

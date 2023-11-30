@@ -3166,7 +3166,7 @@ GameObject:
   - component: {fileID: 260813181}
   m_Layer: 0
   m_Name: PlayerSpawn A
-  m_TagString: TeamB
+  m_TagString: TeamA
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

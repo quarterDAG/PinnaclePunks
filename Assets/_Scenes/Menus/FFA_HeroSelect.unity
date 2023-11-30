@@ -2016,6 +2016,17 @@ MonoBehaviour:
   countdownText: {fileID: 2018722486}
   timeRemaining: 1
   timerIsRunning: 0
+--- !u!114 &1028616800 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7279900491131694877, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
+  m_PrefabInstance: {fileID: 1518396704}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1115444811
 GameObject:
   m_ObjectHideFlags: 0
@@ -2047,6 +2058,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1122910653 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7279900491131694877, guid: f2ef85d784a3ff2429fc8748c6ba5a57, type: 3}
+  m_PrefabInstance: {fileID: 1746233361}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1153393010
 GameObject:
   m_ObjectHideFlags: 0
@@ -2181,29 +2203,22 @@ MonoBehaviour:
   - {fileID: 706547080}
   - {fileID: 1518396705}
   - {fileID: 1746233362}
-  readyIconsFFA: []
+  readyIconsFFA:
+  - {fileID: 1207229282}
+  - {fileID: 706547082}
+  - {fileID: 1028616800}
+  - {fileID: 1122910653}
   parentFFA: {fileID: 304150754}
-  avatarsTeamA:
-  - {fileID: 2483908516010922545}
-  - {fileID: 602691240}
-  - {fileID: 2119713943}
+  avatarsTeamA: []
   avatarsTeamB: []
-  teamAParent: {fileID: 304150754}
+  teamAParent: {fileID: 0}
   teamBParent: {fileID: 0}
   selectorPrefab: {fileID: 3450111750651732716, guid: 49df96f91d7def844b1347ba774caa13, type: 3}
   flipTeamB: 1
-  heroImagesA:
-  - {fileID: 1207229281}
-  - {fileID: 706547080}
-  heroImagesB:
-  - {fileID: 0}
-  - {fileID: 0}
-  readyIconsA:
-  - {fileID: 1207229282}
-  - {fileID: 706547082}
-  readyIconsB:
-  - {fileID: 0}
-  - {fileID: 0}
+  heroImagesA: []
+  heroImagesB: []
+  readyIconsA: []
+  readyIconsB: []
 --- !u!1 &1188586997
 GameObject:
   m_ObjectHideFlags: 0
@@ -4395,7 +4410,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1789131634}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}

@@ -69,6 +69,9 @@ public class SelectorUI : MonoBehaviour
         playerConfig.team = Team.FreeForAll;
         PlayerManager.Instance.SetTeam(playerConfig.playerIndex, Team.FreeForAll);
         PlayerManager.Instance.SetPlayerState(playerConfig.playerIndex, PlayerState.SelectingHero);
+
+        heroSelectController.RegisterSelector(this);
+
     }
 
     void Update ()

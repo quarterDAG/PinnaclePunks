@@ -92,10 +92,10 @@ public class PlayerSpawner : MonoBehaviour
         switch (config.team)
         {
             case PlayerConfigData.Team.TeamA:
-                // Existing logic for TeamA
+                spawnPoint = teamASpawnPoints[teamASpawnIndex];
                 break;
             case PlayerConfigData.Team.TeamB:
-                // Existing logic for TeamB
+                spawnPoint = teamBSpawnPoints[teamBSpawnIndex];
                 break;
             case PlayerConfigData.Team.FreeForAll:
                 // Logic for FreeForAll
