@@ -12,8 +12,7 @@ public class GameManager : MonoBehaviour
     public List<Inventory> inventoryList = new List<Inventory>();
     public PlayerSpawner playerSpawner;
     public CameraManager cameraManager;
-    public List<SlowmotionController> slowmotionControllerList;
-    public List<Bar> smBarList = new List<Bar>();
+    public List<Bar> manaBarList = new List<Bar>();
     public DangerZone safeZone;
     public InfinitePlatformGenerator platformGenerator;
 
@@ -56,11 +55,6 @@ public class GameManager : MonoBehaviour
             // Check if the _inputManager is the same instance that activated the pause
             if (_inputManager == activePauseInputManager)
             {
-                foreach (SlowmotionController slowmotionController in slowmotionControllerList)
-                {
-                    slowmotionController.SetIsPauseActive(false);
-                }
-
                 pauseMenuController.HidePauseMenu();
 
                 StopTime(false);
@@ -83,12 +77,6 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 1f;
             isPauseActive = false;
         }
-
-        foreach (SlowmotionController slowmotionController in slowmotionControllerList)
-        {
-            slowmotionController.SetIsPauseActive(isPauseActive);
-        }
-
     }
 
     public void Rematch ()
@@ -118,8 +106,7 @@ public class GameManager : MonoBehaviour
     public void ClearManagerAssignments ()
     {
         livesManagerList.Clear();
-        smBarList.Clear();
-        slowmotionControllerList.Clear();
+        manaBarList.Clear();
         inventoryList.Clear();
 
         playerSpawner = null;
@@ -162,7 +149,7 @@ public class GameManager : MonoBehaviour
 
     private void ResetSMBars ()
     {
-        foreach (Bar smBar in smBarList)
+        foreach (Bar smBar in manaBarList)
         {
             smBar.ResetBar();
         }
@@ -210,14 +197,9 @@ public class GameManager : MonoBehaviour
         livesManagerList.Add(_livesManager);
     }
 
-    public void AddSMController ( SlowmotionController _smController )
-    {
-        slowmotionControllerList.Add(_smController);
-    }
-
     public void AddSMBar ( Bar _smBar )
     {
-        smBarList.Add(_smBar);
+        manaBarList.Add(_smBar);
     }
 
     public void SetPauseMenu ( PauseMenuController _pmController )

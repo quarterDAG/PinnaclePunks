@@ -20338,7 +20338,6 @@ GameObject:
   - component: {fileID: 7526632956683015887}
   - component: {fileID: 1518033666845181718}
   - component: {fileID: 2540522577654663218}
-  - component: {fileID: 5721426548412157444}
   - component: {fileID: 6875853117583122160}
   - component: {fileID: 8495843112872683522}
   - component: {fileID: 2079246341268384381}
@@ -20401,6 +20400,7 @@ MonoBehaviour:
   bubble: {fileID: 2301383581000885719}
   powerUpImage: {fileID: 0}
   iceCube: {fileID: 3291683600127640022}
+  aiController: {fileID: 0}
 --- !u!114 &1518033666845181718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20437,20 +20437,7 @@ MonoBehaviour:
   damage: 0
   yAxisActivated: 0
   manaCost: 10
-  dash: {fileID: 8300000, guid: 19dbd82338acc49429cdb4dc73942070, type: 3}
---- !u!114 &5721426548412157444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6038754821143387965}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2d818642fe02444ab4b94d037ac1c78, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slowMotionDrainRate: 10
+  audioClip: {fileID: 0}
 --- !u!114 &6875853117583122160
 MonoBehaviour:
   m_ObjectHideFlags: 0

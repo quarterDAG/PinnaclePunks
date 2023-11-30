@@ -113,9 +113,6 @@ public class PlayerManager : MonoBehaviour
 
         // Instantiate Avatar component
         playerSpawner.InstantiateHeroAvatarComponent(config, instantiatedPlayer);
-
-        SlowmotionController slowmotionController = instantiatedPlayer.GetComponentInChildren<SlowmotionController>();
-        TimeManager.Instance.AssignBarToSMController(config, slowmotionController);
     }
 
     public void ResetPlayerConfigs ()

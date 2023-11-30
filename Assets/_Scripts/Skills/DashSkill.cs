@@ -67,6 +67,7 @@ public class DashSkill : MonoBehaviour
     private void Update ()
     {
         if (playerController.isDead) return;
+        if (!playerController.canMove) return;
 
         if (canDash)
             HandleDash();
@@ -88,7 +89,7 @@ public class DashSkill : MonoBehaviour
     private Vector2 GetDashDirectionForGamepad ()
     {
         // Assuming the dash direction is determined by the horizontal axis of the gamepad's left stick
-        Vector2 gamepadDirection = inputManager.InputVelocity;
+        Vector2 gamepadDirection = inputManager.InputAim;
         return gamepadDirection;
     }
 

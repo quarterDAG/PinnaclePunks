@@ -25135,7 +25135,6 @@ GameObject:
   - component: {fileID: 7526632956683015887}
   - component: {fileID: 1518033666845181718}
   - component: {fileID: 2540522577654663218}
-  - component: {fileID: 5721426548412157444}
   - component: {fileID: 6875853117583122160}
   - component: {fileID: 8495843112872683522}
   - component: {fileID: 2079246341268384381}
@@ -25237,19 +25236,6 @@ MonoBehaviour:
   yAxisActivated: 1
   manaCost: 10
   audioClip: {fileID: 8300000, guid: 1170899b7a379ea499e0ad179630a633, type: 3}
---- !u!114 &5721426548412157444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6038754821143387965}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2d818642fe02444ab4b94d037ac1c78, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slowMotionDrainRate: 10
 --- !u!114 &6875853117583122160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40322,7 +40308,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6028678352786882193}
   - component: {fileID: 7468092810000837734}
-  - component: {fileID: 5885429706121125744}
   - component: {fileID: 5205765936161403834}
   m_Layer: 0
   m_Name: Weapon
@@ -40442,31 +40427,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5885429706121125744
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7588801696254306056}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ca65e1464cf5cf428c1a53b6e3f5bc2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 5240961817479375904}
-  playerAnimator: {fileID: 1133885643701160458}
-  mouseAim: {fileID: 6231824700150868758}
-  whatToHit:
-    serializedVersion: 2
-    m_Bits: 513
-  firePoint: {fileID: 6028678352786882193}
-  arrowPrefab: {fileID: 2372949663694061506, guid: fd25a8149742d5d4892c84506e3cb098, type: 3}
-  damageThisTag: 
-  fireRate: 3
-  damage: 10
-  effectSpawnRate: 10
-  fireShot: {fileID: 0}
 --- !u!114 &5205765936161403834
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private Bar shieldBar;
     public Bar manaBar { get; private set; }
 
-    private bool canMove = true;
+    public bool canMove { get; private set; }
     private float originalGravityScale;
 
     private PlayerAnimator playerAnimator;
@@ -86,6 +86,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         _currentSpeed = movementStates.MaxSpeed;
         originalGravityScale = _rb.gravityScale;
+
+        canMove = true;
     }
 
 
@@ -188,14 +190,19 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     private void LateUpdate ()
     {
-        if (PlayerStatsManager.Instance != null)
-            if (inputManager.IsJumpPressed && PlayerStatsManager.Instance.canvas.enabled == true)
+        if (PlayerStatsManager.Instance.canvas.enabled == true)
+        {
+            if (inputManager.IsJumpPressed)
             {
                 PlayerStatsManager.Instance.VoteForRematch(playerConfig.playerIndex);
             }
+
+            if (inputManager.IsSecondaryPressed)
+                PlayerStatsManager.Instance.LoadMainMenu();
+        }
     }
 
-    public async void TakeDamage ( float damage, int otherPlayerIndex )
+    public void TakeDamage ( float damage, int otherPlayerIndex )
     {
         if (stats.Shield > 0 || stats.Health > 0)
         {
@@ -217,12 +224,6 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
                 stats.Health -= remainingDamage;
                 hpBar.AddValue(-remainingDamage);
                 playerRope?.DestroyCurrentRope();
-
-                if (TimeManager.Instance.isSlowMotionActive)
-                {
-                    await Task.Delay(1000);
-                    TimeManager.Instance.CancelSlowMotionRequest();
-                }
 
                 PlayerStatsManager.Instance.AddDamageToPlayerState(remainingDamage, otherPlayerIndex);
             }

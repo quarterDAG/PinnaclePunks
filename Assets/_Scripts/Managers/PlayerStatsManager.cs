@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerStatsManager : MonoBehaviour
 {
@@ -283,6 +284,11 @@ public class PlayerStatsManager : MonoBehaviour
                 displayItem.SetReady(false);
             }
         }
+    }
+
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 
     #endregion
