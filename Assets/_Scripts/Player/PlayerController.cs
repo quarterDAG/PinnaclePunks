@@ -190,16 +190,17 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     private void LateUpdate ()
     {
-        if (PlayerStatsManager.Instance.canvas.enabled == true)
-        {
-            if (inputManager.IsJumpPressed)
+        if (PlayerStatsManager.Instance != null)
+            if (PlayerStatsManager.Instance.canvas.enabled == true)
             {
-                PlayerStatsManager.Instance.VoteForRematch(playerConfig.playerIndex);
-            }
+                if (inputManager.IsJumpPressed)
+                {
+                    PlayerStatsManager.Instance.VoteForRematch(playerConfig.playerIndex);
+                }
 
-            if (inputManager.IsSecondaryPressed)
-                PlayerStatsManager.Instance.LoadMainMenu();
-        }
+                if (inputManager.IsSecondaryPressed)
+                    PlayerStatsManager.Instance.LoadMainMenu();
+            }
     }
 
     public void TakeDamage ( float damage, int otherPlayerIndex )

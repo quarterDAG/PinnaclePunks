@@ -20,6 +20,7 @@ public class MinionSpawnPoint : MonoBehaviour
             currentMinionInstance.OnDeath += HandleMinionDeath;
             currentMinionInstance.SetTagToAttack(TagToAttack);
             currentMinionInstance.gameObject.tag = playerMinionSpawner.gameObject.tag;
+            currentMinionInstance.SetOwnerConfig(playerMinionSpawner.GetComponent<PlayerController>().playerConfig);
             playerMinionSpawner.UpdateInventory();
             MinionsManager.Instance.AddMinion(currentMinionInstance);
         }

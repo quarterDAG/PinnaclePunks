@@ -107,7 +107,7 @@ public class PlayerManager : MonoBehaviour
         instantiatedPlayer.gameObject.tag = config.team.ToString();
 
         cameraManager.AddPlayerToCinemachineTargetGroup(instantiatedPlayer.transform);
-        instantiatedPlayer.GetComponentInChildren<PlayerMinionSpawner>().ConfigMinionSpawner();
+        instantiatedPlayer.GetComponentInChildren<PlayerMinionSpawner>().SetTagToAttack();
 
         instantiatedPlayer.GetComponentInChildren<PlayerParticlesAndAudio>().SetColor(config.playerColor);
 

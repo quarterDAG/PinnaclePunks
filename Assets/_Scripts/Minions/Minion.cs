@@ -11,7 +11,6 @@ using Spine.Unity;
 
 public class Minion : MonoBehaviour, ICharacter
 {
-
     [SerializeField] Bar hpBar;
     [SerializeField] GameObject weapon;
     [SerializeField] GameObject bulletPrefab; // Bullet that the enemy will shoot
@@ -44,6 +43,8 @@ public class Minion : MonoBehaviour, ICharacter
 
     [SerializeField] private SpriteRenderer iceCube;
 
+    private PlayerConfig playerConfigOwner;
+
 
     [System.Serializable]
     public class MinionStates
@@ -68,7 +69,7 @@ public class Minion : MonoBehaviour, ICharacter
         if (Time.time >= lastCheckTime + checkPlayerInterval)
         {
             lastCheckTime = Time.time;
-            SearchPlayersFromEnemyTeam();
+            SearchEnemies();
             closestPlayer = GetClosestPlayer();
         }
 
@@ -86,19 +87,21 @@ public class Minion : MonoBehaviour, ICharacter
         }
     }
 
-    private void SearchPlayersFromEnemyTeam ()
+    private void SearchEnemies ()
     {
         GameObject[] otherTeamObjects = new GameObject[0];
 
         otherTeamObjects = GameObject.FindGameObjectsWithTag(tagToAttack);
         foreach (var otherTeamObject in otherTeamObjects)
         {
-            Debug.Log(otherTeamObject.layer);
-
-            if (otherTeamObject.layer == 9) // 9 = player layer
+            PlayerController playerController = otherTeamObject.GetComponent<PlayerController>();
+            if (playerController != null)
             {
-                players.Add(otherTeamObject.transform);
-                Debug.Log(players);
+                if (playerController.playerConfig.playerIndex != playerConfigOwner.playerIndex)
+                //if (otherTeamObject.layer == 9) // 9 = player layer
+                {
+                    players.Add(otherTeamObject.transform);
+                }
             }
         }
     }
@@ -116,7 +119,6 @@ public class Minion : MonoBehaviour, ICharacter
             {
                 closestDistance = distanceToPlayer;
                 closestPlayer = player;
-                Debug.Log(closestPlayer);
             }
 
         }
@@ -275,6 +277,11 @@ public class Minion : MonoBehaviour, ICharacter
     public void SetTagToAttack ( string _tagToAttack )
     {
         tagToAttack = _tagToAttack;
+    }
+
+    public void SetOwnerConfig ( PlayerConfig config )
+    {
+        playerConfigOwner = config;
     }
 
 }

@@ -6,8 +6,8 @@ public class PlayerMinionSpawner : MonoBehaviour
 {
     private Minion selectedMinion;
     private Transform spawnPoint;
-    private string tagToAttack;
-    [SerializeField] private Inventory teamInventory;
+    [SerializeField] private string tagToAttack;
+    [SerializeField] private Inventory playerInventory;
     private InputManager inputManager;
 
     private void Awake ()
@@ -15,13 +15,13 @@ public class PlayerMinionSpawner : MonoBehaviour
         inputManager = GetComponent<InputManager>();
     }
 
- 
+
 
     private void Update ()
     {
         if (inputManager.IsSpawnMinionPressed && spawnPoint != null && selectedMinion != null && tagToAttack != null)
         {
-            if (teamInventory.GetSelectedMinionAmount(selectedMinion) <= 0) return;
+            if (playerInventory.GetSelectedMinionAmount(selectedMinion) <= 0) return;
             spawnPoint.GetComponent<MinionSpawnPoint>().SpawnMinion(selectedMinion, tagToAttack, this);
 
 
@@ -29,27 +29,25 @@ public class PlayerMinionSpawner : MonoBehaviour
     }
 
 
-    public void ConfigMinionSpawner ()
+    public void SetTagToAttack ()
     {
-
-        tagToAttack = (gameObject.tag == "TeamA") ? "TeamB" : "TeamA";
-
-        Inventory[] allInventories = FindObjectsOfType<Inventory>();
-
-        foreach (var inventory in allInventories)
+        switch (gameObject.tag)
         {
-            if (inventory.tag == gameObject.tag)
-            {
-                teamInventory = inventory;
-                inventory.AddInventoryOwner(this);
+            case "TeamA":
+                tagToAttack = "TeamB";
                 break;
-            }
+            case "TeamB":
+                tagToAttack = "TeamA";
+                break;
+            case "FreeForAll":
+                tagToAttack = "FreeForAll";
+                break;
         }
     }
 
     public void UpdateInventory ()
     {
-        teamInventory.UpdateInventoryAfterSpawn();
+        playerInventory.UpdateInventoryAfterSpawn();
 
     }
 

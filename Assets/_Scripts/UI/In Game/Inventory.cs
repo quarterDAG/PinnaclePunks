@@ -6,8 +6,9 @@ using UnityEngine.UI; // This is required for interacting with UI components
 
 public class Inventory : MonoBehaviour
 {
-    public PlayerMinionSpawner[] inventoryOwners;
-    private InputManager[] inputManagers;
+    [SerializeField] private PlayerMinionSpawner playerMinionSpawner;
+    private InputManager inputManager;
+    private GameObject buttons;
 
     // A struct to hold both the prefab and the count of each type
     [System.Serializable]
@@ -32,7 +33,8 @@ public class Inventory : MonoBehaviour
 
     private void Start ()
     {
-        //GatherInputManagersFromOwners();
+        buttons = transform.GetChild(0).gameObject;
+        inputManager = playerMinionSpawner.GetComponent<InputManager>();
 
         directionToIndexMapping = new Dictionary<Vector2, int>
         {
@@ -50,93 +52,28 @@ public class Inventory : MonoBehaviour
 
     }
 
-
-    public void AddInventoryOwner ( PlayerMinionSpawner newOwner )
-    {
-
-        if (inventoryOwners == null)
-        {
-            inventoryOwners = new PlayerMinionSpawner[1] { newOwner };
-        }
-        else
-        {
-            // Create a new array that is one element larger than the current one
-            PlayerMinionSpawner[] newInventoryOwners = new PlayerMinionSpawner[inventoryOwners.Length + 1];
-            inventoryOwners.CopyTo(newInventoryOwners, 0);
-            newInventoryOwners[inventoryOwners.Length] = newOwner;
-            inventoryOwners = newInventoryOwners;
-        }
-
-        GatherInputManagersFromOwners();
-    }
-
-    private void GatherInputManagersFromOwners ()
-    {
-        inputManagers = new InputManager[inventoryOwners.Length];
-
-        for (int i = 0; i < inventoryOwners.Length; i++)
-        {
-            inputManagers[i] = inventoryOwners[i].GetComponent<InputManager>();
-
-            if (inventoryOwners[i] != null)
-            {
-                InputManager manager = inventoryOwners[i].GetComponent<InputManager>();
-                if (manager != null)
-                {
-                    inputManagers[i] = manager;
-                }
-                else
-                {
-                    Debug.LogWarning("InputManager component not found on object with PlayerMonsterSpawner component.");
-                }
-            }
-        }
-    }
-
     private void Update ()
     {
-        if (inventoryOwners == null || inputManagers == null)
+        if (inputManager != null)
         {
-            return;
-        }
-
-
-        // Calculate the minimum length once, outside the loop
-        int minLength = Mathf.Min(inventoryOwners.Length, inputManagers.Length);
-
-        for (int i = 0; i < minLength; i++)
-        {
-            InputManager inputManager = inputManagers[i]; // Cache the inputManager
-            if (inputManager != null)
+            Vector2 inputDirection = inputManager.InventoryInput;
+            if (inputDirection != Vector2.zero)
             {
-                Vector2 inputDirection = inputManager.InventoryInput;
-                if (inputDirection != Vector2.zero)
-                {
-                    // Normalize the vector only if necessary
-                    Vector2 direction = inputDirection.normalized;
+                buttons.SetActive(true);
+                // Normalize the vector only if necessary
+                Vector2 direction = inputDirection.normalized;
 
-                    if (directionToIndexMapping.TryGetValue(direction, out int minionIndex))
-                    {
-                        OnMinionSelected(minionIndex, inventoryOwners[i]); // Cache inventoryOwner
-                    }
+                if (directionToIndexMapping.TryGetValue(direction, out int minionIndex))
+                {
+                    OnMinionSelected(minionIndex, playerMinionSpawner); // Cache inventoryOwner
                 }
             }
+            else
+                buttons.SetActive(false);
         }
+
+
     }
-
-
-
-    private void TrySelectMinionWithDirection ( Vector2 inputDirection, PlayerMinionSpawner owner )
-    {
-        Vector2 direction = inputDirection.normalized;
-
-
-        if (directionToIndexMapping.TryGetValue(direction, out int minionIndex))
-        {
-            OnMinionSelected(minionIndex, owner);
-        }
-    }
-
 
     public void OnMinionSelected ( int minionIndex, PlayerMinionSpawner owner )
     {
@@ -208,7 +145,7 @@ public class Inventory : MonoBehaviour
 
     public void ResetInventory ()
     {
-        inventoryOwners = null;
+        playerMinionSpawner = null;
 
         // Reset each item in the inventory
         for (int i = 0; i < minionInventory.Count; i++)

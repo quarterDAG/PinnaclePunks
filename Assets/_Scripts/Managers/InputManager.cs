@@ -33,11 +33,11 @@ public class InputManager : MonoBehaviour
         playerController = GetComponent<PlayerController>();
     }
 
-    private void LateUpdate ()
+  /*  private void LateUpdate ()
     {
         InventoryInput = Vector2.zero;
     }
-
+*/
 
     public void OnMovementChanged ( InputAction.CallbackContext context )
     {

@@ -58,7 +58,8 @@ public class Projectile : MonoBehaviour
             {
                 if (playerController == null || playerController.playerConfig.playerIndex != shotOwnerIndex)
                 {
-                    HandleDamage(character, rb, collision);
+                    if (collision.GetComponent<Minion>() == null)
+                        HandleDamage(character, rb, collision);
 
                     if (projectileType == ProjectileType.IceBolt)
                         character.Freeze(2f);
