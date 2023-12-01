@@ -16,14 +16,11 @@ public class SelectorUI : MonoBehaviour
     [SerializeField] private PlayerStats playerStats;
     [SerializeField] private PlayerInput playerInput;
 
-
     public bool flipTeamB;
     private bool isPlayerSelected;
     private bool secondaryButtonReleased = true;
 
     private HeroSelectController heroSelectController;
-    private MapSelectController mapSelectController;
-
     [SerializeField] private PlayerConfig playerConfig;
 
     private Image frame;
@@ -34,6 +31,8 @@ public class SelectorUI : MonoBehaviour
 
     private float selectionCooldown = 1.0f; // Cooldown time in seconds before allowing selection
     private float timeSinceInstantiation;
+
+
 
     private void Awake ()
     {
@@ -70,7 +69,7 @@ public class SelectorUI : MonoBehaviour
         PlayerManager.Instance.SetTeam(playerConfig.playerIndex, Team.FreeForAll);
         PlayerManager.Instance.SetPlayerState(playerConfig.playerIndex, PlayerState.SelectingHero);
 
-        heroSelectController.RegisterSelector(this);
+        heroSelectController.RegisterSelector(this, playerConfig);
 
     }
 
@@ -192,7 +191,7 @@ public class SelectorUI : MonoBehaviour
     private void UpdateController ()
     {
         if (heroSelectController != null)
-            heroSelectController.UpdateSelectorAvatar(this, selectedOptionIndex, playerConfig.team);
+            heroSelectController.UpdateSelectorAvatar(this, selectedOptionIndex, playerConfig);
     }
 
     public void GetOptionList ()
@@ -211,65 +210,41 @@ public class SelectorUI : MonoBehaviour
         heroSelectController = controller;
     }
 
-    public void SetMapSelectController ( MapSelectController controller )
-    {
-        mapSelectController = controller;
-    }
-
     public void ColorFrame ( PlayerConfig config )
     {
         frame = GetComponentInChildren<Image>();
         frame.color = config.playerColor;
     }
 
-    /*    public void UpdateVisual ( int count, bool isClockwise )
-        {
-            frame = GetComponentInChildren<Image>();
-
-            // Adjust the visual based on the count and the fill direction
-            if (count >= 2)
-            {
-                frame.fillMethod = Image.FillMethod.Radial360;
-                frame.fillAmount = 0.5f;
-                frame.fillClockwise = isClockwise;
-            }
-            else
-            {
-                frame.fillAmount = 1.0f;
-            }
-        }*/
-
-    public void UpdateVisual ( int count, bool isClockwise )
+    public void UpdateFrameVisual ( int playerIndex, int playersOnAvatar )
     {
         frame = GetComponentInChildren<Image>();
 
         // Set the fill method to Radial360
         frame.fillMethod = Image.FillMethod.Radial360;
-        //frame.fillClockwise = isClockwise;
 
         // Calculate the fill amount for each segment
-        frame.fillAmount = count > 1 ? 1.0f / count : 1.0f;
+        frame.fillAmount = playersOnAvatar > 1 ? 1.0f / playersOnAvatar : 1.0f;
 
-        // Rotate the image based on the player's index
-        if (count > 1)
-        {
-            // Assuming playerIndex is a 0-based index
-            int playerIndex = playerConfig.playerIndex;
-            float rotationAngle = (360f / count) * playerIndex;
-
-            // Apply the rotation
-            frame.transform.rotation = Quaternion.Euler(0, 0, -rotationAngle);
-        }
-        else
-        {
-            // Reset rotation for a single player
-            frame.transform.rotation = Quaternion.identity;
-        }
+        // Calculate and apply the rotation for each player's frame
+        float rotationAngle = CalculateRotationAngle(playerIndex, playersOnAvatar);
+        frame.rectTransform.localEulerAngles = new Vector3(0, 0, rotationAngle);
     }
 
 
-
-
+    private float CalculateRotationAngle ( int playerIndex, int playersOnAvatar )
+    {
+        // Calculate the angle of rotation for each player
+        // Use playersOnAvatar for the calculation as it represents the number of selectors on the avatar
+        if (playersOnAvatar > 1)
+        {
+            return 360f / playersOnAvatar * playerIndex;
+        }
+        else
+        {
+            return 0f; // No rotation needed for a single player
+        }
+    }
 
 
     public PlayerConfig GetSelectorConfig ()

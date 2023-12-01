@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static PlayerConfigData;
 
 public class HeroSelectController : MonoBehaviour
 {
@@ -27,10 +27,10 @@ public class HeroSelectController : MonoBehaviour
     private int teamASpawnIndex = 0;
     private int teamBSpawnIndex = 0;
 
-    private Dictionary<PlayerConfigData.Team, int> teamPlayerCounts = new Dictionary<PlayerConfigData.Team, int>
+    private Dictionary<Team, int> teamPlayerCounts = new Dictionary<Team, int>
     {
-        { PlayerConfigData.Team.TeamA, 0 },
-        { PlayerConfigData.Team.TeamB, 0 }
+        { Team.TeamA, 0 },
+        { Team.TeamB, 0 }
     };
 
     public Transform teamAParent;
@@ -60,6 +60,8 @@ public class HeroSelectController : MonoBehaviour
 
 
     private CountdownUI countdownUI;
+
+    private Dictionary<PlayerConfig, Image> playerConfigToHeroImageMap = new Dictionary<PlayerConfig, Image>();
 
     private void Awake ()
     {
@@ -119,14 +121,18 @@ public class HeroSelectController : MonoBehaviour
         heroSelector.ColorFrame(config);
         heroSelector.flipTeamB = flipTeamB;
 
-        RegisterSelector(heroSelector);
+        RegisterSelector(heroSelector, config);
     }
 
-    public void RegisterSelector ( SelectorUI selector )
+    public void RegisterSelector ( SelectorUI selector, PlayerConfig config )
     {
         var team = selector.GetSelectorConfig().team;
         int nextAvailableIndex = FindNextAvailableAvatarIndex(team);
-        GetSelectorMap(team)[selector] = nextAvailableIndex;
+        var selectorMap = GetSelectorMap(team);
+        selectorMap[selector] = nextAvailableIndex;
+
+        Image heroImage = DetermineHeroImageForPlayer(config, selectorMap);
+        playerConfigToHeroImageMap[config] = heroImage;
 
         // Assign team-specific index
         var playerIndices = GetTeamPlayerIndiceList(team);
@@ -136,25 +142,58 @@ public class HeroSelectController : MonoBehaviour
         UpdateHeroVisuals();
     }
 
-
-    public void UpdateSelectorAvatar ( SelectorUI selector, int avatarIndex, PlayerConfigData.Team team )
+    private Image DetermineHeroImageForPlayer ( PlayerConfig config, Dictionary<SelectorUI, int> selectorMap )
     {
+        List<Image> heroImages = GetHeroImagesByTeam(config.team);
 
-        switch (team)
+        // Check if it's Free For All mode
+        if (config.team == Team.FreeForAll)
         {
-            case PlayerConfigData.Team.TeamA:
-                uiSelectorsTeamA[selector] = avatarIndex;
-                break;
-            case PlayerConfigData.Team.TeamB:
-                uiSelectorsTeamB[selector] = avatarIndex;
-                break;
-            case PlayerConfigData.Team.FreeForAll:
-                uiSelectorsFFA[selector] = avatarIndex;
-                break;
+            if (config.playerIndex >= 0 && config.playerIndex < heroImages.Count)
+            {
+                return heroImages[config.playerIndex];
+            }
+            else
+            {
+                Debug.LogError("Invalid player index for Free For All mode: " + config.playerIndex);
+                return null; // or a default image if you have one
+            }
         }
+        else
+        {
+            int avatarIndex = -1;
+            // Find the avatar index for the given player config
+            foreach (var pair in selectorMap)
+            {
+                if (pair.Key.GetSelectorConfig().playerIndex == config.playerIndex)
+                {
+                    avatarIndex = pair.Value;
+                    break;
+                }
+            }
+
+            if (avatarIndex >= 0 && avatarIndex < heroImages.Count)
+            {
+                return heroImages[avatarIndex];
+            }
+            else
+            {
+                Debug.LogError("Invalid avatar index for player: " + config.playerIndex);
+                return null; // or a default image if you have one
+            }
+        }
+    }
+
+
+
+
+    public void UpdateSelectorAvatar ( SelectorUI selector, int avatarIndex, PlayerConfig playerConfig )
+    {
+        var uiSelectors = GetSelectorMap(playerConfig.team);
+        uiSelectors[selector] = avatarIndex;
 
         UpdateHeroVisuals();
-        UpdateHeroImages(team);
+        UpdateHeroImages(playerConfig);
     }
 
     private void UpdateHeroVisuals ()
@@ -165,30 +204,18 @@ public class HeroSelectController : MonoBehaviour
         ResetVisuals(uiSelectorsFFA);
 
         // Update visuals for each team
-        UpdateTeamVisuals(uiSelectorsTeamA);
-        UpdateTeamVisuals(uiSelectorsTeamB);
-        UpdateTeamVisuals(uiSelectorsFFA);
+        UpdateTeamVisuals(uiSelectorsTeamA, uiSelectorsTeamA.Count);
+        UpdateTeamVisuals(uiSelectorsTeamB, uiSelectorsTeamB.Count);
+        UpdateTeamVisuals(uiSelectorsFFA, uiSelectorsFFA.Count);
     }
 
-    private void UpdateHeroImages ( PlayerConfigData.Team team )
+
+    private void UpdateHeroImages ( PlayerConfig playerConfig )
     {
-        var selectorMap = GetSelectorMap(team);
-        List<Image> heroImages = new List<Image>();
+        var selectorMap = GetSelectorMap(playerConfig.team);
+        List<Image> heroImages = GetHeroImagesByTeam(playerConfig.team);
 
-        switch (team)
-        {
-            case PlayerConfigData.Team.TeamA:
-                heroImages = heroImagesA;
-                break;
-            case PlayerConfigData.Team.TeamB:
-                heroImages = heroImagesB;
-                break;
-            case PlayerConfigData.Team.FreeForAll:
-                heroImages = heroImagesFFA;
-                break;
-        }
-
-
+        UpdateStatueColor(playerConfig);
 
         int teamPlayerIndex = 0;
 
@@ -211,10 +238,9 @@ public class HeroSelectController : MonoBehaviour
                 animator.SetBool("Turtle", avatarIndex == 1);
                 animator.SetBool("Mage", avatarIndex == 2);
 
-
-
                 // Force native size
                 StartCoroutine(SetImageToNativeSizeNextFrame(playerImage));
+
 
                 // Re-enable Animator and AspectRatioFitter
                 if (animator != null) animator.enabled = true;
@@ -224,6 +250,27 @@ public class HeroSelectController : MonoBehaviour
             }
         }
     }
+
+    private void UpdateStatueColor ( PlayerConfig config )
+    {
+        Image playerImage;
+
+        if (!playerConfigToHeroImageMap.TryGetValue(config, out playerImage))
+            return;
+
+
+        // Update the color of the parent of the Image
+        if (playerImage != null && playerImage.transform.parent != null)
+        {
+            var parentImageComponent = playerImage.transform.parent.GetComponent<Image>();
+            if (parentImageComponent != null)
+            {
+                parentImageComponent.color = config.playerColor;
+            }
+        }
+    }
+
+
     private IEnumerator SetImageToNativeSizeNextFrame ( Image image )
     {
         // Wait until the end of the frame
@@ -237,11 +284,11 @@ public class HeroSelectController : MonoBehaviour
     {
         foreach (var selector in selectorMap.Keys)
         {
-            selector.UpdateVisual(1, true); // Default to a full frame
+            selector.UpdateFrameVisual(1, 0); // Default to a full frame
         }
     }
 
-    private void UpdateTeamVisuals ( Dictionary<SelectorUI, int> selectorMap )
+    private void UpdateTeamVisuals ( Dictionary<SelectorUI, int> selectorMap, int totalPlayerCount )
     {
         var avatarSelectorsMap = new Dictionary<int, List<SelectorUI>>();
 
@@ -264,13 +311,14 @@ public class HeroSelectController : MonoBehaviour
             {
                 for (int i = 0; i < selectorsOnAvatar.Count; i++)
                 {
-                    selectorsOnAvatar[i].UpdateVisual(selectorsOnAvatar.Count, i == 0);
+                    // Pass both the index of the selector and the total count of selectors on this avatar
+                    selectorsOnAvatar[i].UpdateFrameVisual(i, selectorsOnAvatar.Count);
                 }
             }
         }
     }
 
-    private int FindNextAvailableAvatarIndex ( PlayerConfigData.Team team )
+    private int FindNextAvailableAvatarIndex ( Team team )
     {
         List<Transform> avatars = GetTeamAvatarList(team);
         var avatarSelectorCount = new Dictionary<int, int>();
@@ -282,7 +330,7 @@ public class HeroSelectController : MonoBehaviour
         }
 
         // Determine the correct selector map based on the team
-        var selectorMap = team == PlayerConfigData.Team.TeamA ? uiSelectorsTeamA : uiSelectorsTeamB;
+        var selectorMap = team == Team.TeamA ? uiSelectorsTeamA : uiSelectorsTeamB;
 
         // Count the number of selectors per avatar
         foreach (var pair in selectorMap)
@@ -334,7 +382,7 @@ public class HeroSelectController : MonoBehaviour
 
         foreach (var playerConfig in playerConfigList)
         {
-            if (playerConfig.playerState != PlayerConfigData.PlayerState.Ready)
+            if (playerConfig.playerState != PlayerState.Ready)
             {
                 return false; // If any player is not ready
             }
@@ -348,7 +396,7 @@ public class HeroSelectController : MonoBehaviour
 
         foreach (var playerConfig in playerConfigList)
         {
-            if (playerConfig.playerState != PlayerConfigData.PlayerState.SelectingHero)
+            if (playerConfig.playerState != PlayerState.SelectingHero)
             {
                 return false; // If any player is not selcting hero
             }
@@ -382,15 +430,15 @@ public class HeroSelectController : MonoBehaviour
 
     #region Getters
 
-    private Dictionary<SelectorUI, int> GetSelectorMap ( PlayerConfigData.Team team )
+    private Dictionary<SelectorUI, int> GetSelectorMap ( Team team )
     {
         switch (team)
         {
-            case PlayerConfigData.Team.TeamA:
+            case Team.TeamA:
                 return uiSelectorsTeamA;
-            case PlayerConfigData.Team.TeamB:
+            case Team.TeamB:
                 return uiSelectorsTeamB;
-            case PlayerConfigData.Team.FreeForAll:
+            case Team.FreeForAll:
                 return uiSelectorsFFA;
             default: return null;
         }
@@ -401,14 +449,14 @@ public class HeroSelectController : MonoBehaviour
         Transform spawnPoint = null;
 
         // Determine the spawn point based on the team
-        if (config.team == PlayerConfigData.Team.TeamA)
+        if (config.team == Team.TeamA)
         {
             if (teamASpawnIndex < avatarsTeamA.Count)
             {
                 spawnPoint = avatarsTeamA[teamASpawnIndex];
             }
         }
-        else if (config.team == PlayerConfigData.Team.TeamB)
+        else if (config.team == Team.TeamB)
         {
             if (teamBSpawnIndex < avatarsTeamB.Count)
             {
@@ -421,20 +469,20 @@ public class HeroSelectController : MonoBehaviour
 
     private Transform GetParentGO ( PlayerConfig config )
     {
-        return config.team == PlayerConfigData.Team.TeamA ? teamAParent : teamBParent;
+        return config.team == Team.TeamA ? teamAParent : teamBParent;
     }
 
-    public List<Transform> GetTeamAvatarList ( PlayerConfigData.Team team )
+    public List<Transform> GetTeamAvatarList ( Team team )
     {
         switch (team)
         {
-            case PlayerConfigData.Team.TeamA:
+            case Team.TeamA:
                 return avatarsTeamA;
 
-            case PlayerConfigData.Team.TeamB:
+            case Team.TeamB:
                 return avatarsTeamB;
 
-            case PlayerConfigData.Team.FreeForAll:
+            case Team.FreeForAll:
                 return avatarsFFA;
 
             default: return null;
@@ -442,17 +490,17 @@ public class HeroSelectController : MonoBehaviour
         }
     }
 
-    public List<Image> GetTeamReadyIconList ( PlayerConfigData.Team team )
+    public List<Image> GetTeamReadyIconList ( Team team )
     {
         switch (team)
         {
-            case PlayerConfigData.Team.TeamA:
+            case Team.TeamA:
                 return readyIconsA;
 
-            case PlayerConfigData.Team.TeamB:
+            case Team.TeamB:
                 return readyIconsB;
 
-            case PlayerConfigData.Team.FreeForAll:
+            case Team.FreeForAll:
                 return readyIconsFFA;
 
             default: return null;
@@ -460,21 +508,36 @@ public class HeroSelectController : MonoBehaviour
         }
     }
 
-    public Dictionary<SelectorUI, int> GetTeamPlayerIndiceList ( PlayerConfigData.Team team )
+    public Dictionary<SelectorUI, int> GetTeamPlayerIndiceList ( Team team )
     {
         switch (team)
         {
-            case PlayerConfigData.Team.TeamA:
+            case Team.TeamA:
                 return teamAPlayerIndices;
 
-            case PlayerConfigData.Team.TeamB:
+            case Team.TeamB:
                 return teamBPlayerIndices;
 
-            case PlayerConfigData.Team.FreeForAll:
+            case Team.FreeForAll:
                 return ffaPlayerIndices;
 
             default: return null;
 
+        }
+    }
+
+    private List<Image> GetHeroImagesByTeam ( Team team )
+    {
+        switch (team)
+        {
+            case Team.TeamA:
+                return heroImagesA;
+            case Team.TeamB:
+                return heroImagesB;
+            case Team.FreeForAll:
+                return heroImagesFFA;
+            default:
+                return new List<Image>();
         }
     }
 
