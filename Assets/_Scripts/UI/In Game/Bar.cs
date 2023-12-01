@@ -10,7 +10,7 @@ public class Bar : MonoBehaviour
     [SerializeField] private float maxValue = 100f; // Assuming max health is 100
     public float currentValue { get; private set; }
 
-    [SerializeField] private float manaRefillRate = 2f; // Mana refill rate per second
+    [SerializeField] private float manaRefillRate = 1f; // Mana refill rate per second
     private bool isRefillingMana = false;
 
 

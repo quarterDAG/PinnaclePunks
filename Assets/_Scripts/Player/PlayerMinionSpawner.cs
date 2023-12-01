@@ -24,7 +24,6 @@ public class PlayerMinionSpawner : MonoBehaviour
             if (playerInventory.GetSelectedMinionAmount(selectedMinion) <= 0) return;
             spawnPoint.GetComponent<MinionSpawnPoint>().SpawnMinion(selectedMinion, tagToAttack, this);
 
-
         }
     }
 

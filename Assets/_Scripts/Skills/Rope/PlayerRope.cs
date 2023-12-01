@@ -65,7 +65,7 @@ public class PlayerRope : MonoBehaviour
         DestroyCurrentRope();
 
         if (playerController.manaBar != null)
-            if (playerController.manaBar.IsEmpty()) { return; }
+            if (playerController.manaBar.currentValue < ropeManaCost) { return; }
 
         playerAnimator.ThrowAnimation(true);
 

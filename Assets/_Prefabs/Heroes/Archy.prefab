@@ -10201,7 +10201,7 @@ MonoBehaviour:
   distanceFromChainEnd: 1.5
   joint: {fileID: 6786938023795512149}
   swingForce: 400
-  ropeManaCost: 5
+  ropeManaCost: 15
 --- !u!120 &2483302351212852573
 LineRenderer:
   serializedVersion: 2
@@ -35436,7 +35436,7 @@ MonoBehaviour:
   firePoint: {fileID: 8237473891179616149}
   arrowPrefab: {fileID: 2372949663694061506, guid: 16dd276d99a67bc45a6c9eeee83b875b, type: 3}
   damageThisTag: TeamB
-  fireRate: 7
+  fireRate: 5
   damage: 15
   effectSpawnRate: 10
   bowReleased: {fileID: 8300000, guid: 66ac5bf9b791daf4e9ed4a5a094c4b56, type: 3}

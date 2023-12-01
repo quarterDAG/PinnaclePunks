@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static PlayerConfigData;
 
@@ -101,13 +102,14 @@ public class InputIcon : MonoBehaviour
 
     private void SetPlayerStateChoosingTeam ()
     {
-        if (playerConfig.playerState != PlayerState.Playing)
+        if (playerConfig.playerState != PlayerState.ChoosingTeam)
         {
             playerConfig.playerState = PlayerState.ChoosingTeam;
             teamSelectionController.SetPlayerChoosingTeam(playerConfig.playerIndex);
             readyIcon.enabled = false;
 
         }
+
     }
 
     public void SetPlayerStateChoosingMap ()
@@ -119,6 +121,16 @@ public class InputIcon : MonoBehaviour
             readyIcon.enabled = false;
 
         }
+        else
+        {
+            LoadMainMenuScene();
+        }
+    }
+
+    private void LoadMainMenuScene ()
+    {
+        PlayerManager.Instance.ResetPlayerConfigs();
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void SetSelectedMap ( int _selectedMap )

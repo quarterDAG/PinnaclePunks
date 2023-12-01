@@ -164,8 +164,6 @@ public class MapSelectController : MonoBehaviour
 
         selectedMap = mapNameList[selectedMapIndex];
         countdownUI.StartTimer();
-
-        //LoadSelectedMap(selectedMapIndex);
     }
 
 

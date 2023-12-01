@@ -25236,7 +25236,7 @@ MonoBehaviour:
     m_Bits: 0
   damage: 20
   yAxisActivated: 1
-  manaCost: 10
+  manaCost: 20
   audioClip: {fileID: 8300000, guid: 1170899b7a379ea499e0ad179630a633, type: 3}
 --- !u!114 &6875853117583122160
 MonoBehaviour:

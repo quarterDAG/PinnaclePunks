@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -207,23 +208,27 @@ public class PlayerSpawner : MonoBehaviour
         int index;
         List<Vector2> statusPositions;
 
-        if (config.team == PlayerConfigData.Team.TeamA)
+        switch (config.team)
         {
-            statusPositions = teamAStatusPositions;
-            index = teamAPlayerCount % statusPositions.Count;
-            teamAPlayerCount++;
-        }
-        else // Team B
-        {
-            statusPositions = teamBStatusPositions;
-            index = teamBPlayerCount % statusPositions.Count;
-            teamBPlayerCount++;
-        }
+            case PlayerConfigData.Team.TeamA:
+                statusPositions = teamAStatusPositions;
+                index = teamAPlayerCount % statusPositions.Count;
+                teamAPlayerCount++;
+                break;
 
-        if (statusPositions.Count == 0)
-        {
-            Debug.LogError("No status positions defined for team: " + config.team);
-            return Vector2.zero;
+            case PlayerConfigData.Team.TeamB:
+                statusPositions = teamBStatusPositions;
+                index = teamBPlayerCount % statusPositions.Count;
+                teamBPlayerCount++;
+                break;
+
+            case PlayerConfigData.Team.FreeForAll:
+                statusPositions = teamAStatusPositions;
+                index = teamAPlayerCount % statusPositions.Count;
+                teamAPlayerCount++;
+                break;
+
+            default: return new Vector2(0, 0);
         }
 
         return statusPositions[index];
@@ -231,7 +236,16 @@ public class PlayerSpawner : MonoBehaviour
 
     private Transform GetParentGO ( PlayerConfig config )
     {
-        return config.team == PlayerConfigData.Team.TeamA ? teamAStatusParent : teamBStatusParent;
+        switch (config.team)
+        {
+            case PlayerConfigData.Team.TeamA:
+                return teamAStatusParent;
+            case PlayerConfigData.Team.TeamB:
+                return teamBStatusParent;
+            case PlayerConfigData.Team.FreeForAll:
+                return teamAStatusParent;
+            default: return null;
+        }
     }
 
     public void UpdateAllPlayerRespawnPoints ()

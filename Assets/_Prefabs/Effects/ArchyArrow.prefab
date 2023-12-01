@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileType: 0
-  moveSpeed: 50
+  moveSpeed: 35
   hitTheseLayers:
     serializedVersion: 2
     m_Bits: 24
