@@ -7,7 +7,7 @@ public class ProjectileWeapon : MonoBehaviour, IWeapon
     [SerializeField] private Transform player;
     private PlayerController playerController;
     [SerializeField] private PlayerAnimator playerAnimator;
-    [SerializeField] private MouseAim mouseAim;
+    [SerializeField] private Aim mouseAim;
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject arrowPrefab;
     //[SerializeField] private Gradient bulletGradient;
@@ -67,12 +67,17 @@ public class ProjectileWeapon : MonoBehaviour, IWeapon
 
     void Update ()
     {
-        if (playerController.isDead) return;
-
         HandleRotation();
 
-        if (canShoot)
-            HandleAttack();
+        if (playerController != null)
+        {
+            if (playerController.isDead) return;
+            if (canShoot)
+                HandleAttack();
+
+        }
+
+
 
     }
 
@@ -90,16 +95,31 @@ public class ProjectileWeapon : MonoBehaviour, IWeapon
 
     public void HandleAttack ()
     {
-
-        if (inputManager.IsAttackPressed && Time.time > timeToFire)
+        if (inputManager != null)
         {
-            timeToFire = Time.time + 1 / fireRate;
-            Shoot();
+            if (inputManager.IsAttackPressed && Time.time > timeToFire)
+            {
+                timeToFire = Time.time + 1 / fireRate;
+                Shoot();
+            }
+
+            if (!inputManager.IsAttackPressed)
+                StopShoot();
+
         }
+        else
+        {
+            if (Time.time > timeToFire)
+            {
+                timeToFire = Time.time + 1 / fireRate;
+                Shoot();
+            }
+            else
+            {
+                StopShoot();
+            }
 
-        if (!inputManager.IsAttackPressed)
-            StopShoot();
-
+        }
     }
 
     private void Shoot ()

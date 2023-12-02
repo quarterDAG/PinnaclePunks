@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
-    private FrameInput _frameInput;
+    public FrameInput _frameInput;
     private Vector2 _frameVelocity;
     private bool _cachedQueryStartInColliders;
     private Vector2 _colOffsetDefault;
@@ -483,6 +483,20 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
             _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, -movementStates.MaxFallSpeed, inAirGravity * Time.fixedDeltaTime);
         }
     }
+
+    void OnDrawGizmos ()
+    {
+        if (_col == null) return;
+
+        Gizmos.color = Color.green;
+        Vector2 castPosition = (Vector2)_col.bounds.center;
+        Vector2 castSize = _col.size;
+        Vector2 castDirection = Vector2.down;
+        float castDistance = movementStates.GrounderDistance;
+
+        Gizmos.DrawWireCube(castPosition + castDirection * castDistance, castSize);
+    }
+
 
     public void ApplySpeedModifier ( float modifier, float newGravityScale, float duration )
     {

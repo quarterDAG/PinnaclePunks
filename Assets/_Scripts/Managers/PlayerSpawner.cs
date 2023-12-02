@@ -196,7 +196,7 @@ public class PlayerSpawner : MonoBehaviour
         Image playerColorImage = playerColorTransform.GetComponent<Image>();
         playerColorImage.color = config.playerColor; // Set the color to the one specified in config
 
-        instantiatedPlayer.GetComponentInChildren<MouseAim>().GetComponent<SpriteRenderer>().color = config.playerColor;
+        instantiatedPlayer.GetComponentInChildren<Aim>().GetComponent<SpriteRenderer>().color = config.playerColor;
 
         instantiatedPlayer.transform.Find("Indicator").GetComponent<SpriteRenderer>().color = config.playerColor;
         instantiatedPlayer.GetComponent<ShadowCaster>().SetColor(config.playerColor);

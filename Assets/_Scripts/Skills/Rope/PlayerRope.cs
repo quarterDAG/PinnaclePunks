@@ -8,7 +8,7 @@ public class PlayerRope : MonoBehaviour
     private PlayerController playerController;
     private PlayerAnimator playerAnimator;
 
-    [SerializeField] private MouseAim mouseAim;
+    [SerializeField] private Aim mouseAim;
 
     [SerializeField] private GameObject ropePrefab;
     private GameObject currentRope;

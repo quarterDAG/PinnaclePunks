@@ -7,7 +7,7 @@ public class ThrowBombs : MonoBehaviour
     [SerializeField] private Transform player;
     private PlayerController playerController;
     [SerializeField] private PlayerAnimator playerAnimator;
-    [SerializeField] private MouseAim mouseAim;
+    [SerializeField] private Aim mouseAim;
     [SerializeField] private LayerMask whatToHit;
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bombPrefab;

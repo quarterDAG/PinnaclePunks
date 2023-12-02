@@ -6,9 +6,8 @@ public class AIController : MonoBehaviour
     private PlayerController playerController;
     private Transform currentTarget;
     private string enemyTeamTag;
-    private Rigidbody2D rb;
-    public float moveSpeed = 5f;
     public float stopDistance = 2f;
+    public float moveSpeed = 5f;
 
     public float jumpProbability = 0.1f; // Probability of jumping each frame
     public float minJumpInterval = 1f; // Minimum time interval between jumps
@@ -20,16 +19,26 @@ public class AIController : MonoBehaviour
 
     void Start ()
     {
-        rb = GetComponent<Rigidbody2D>();
         playerController = GetComponent<PlayerController>();
 
-        if (gameObject.CompareTag("TeamA"))
+        SetEnemyTag();
+    }
+
+    private void SetEnemyTag ()
+    {
+        switch (gameObject.tag)
         {
-            enemyTeamTag = "TeamB";
-        }
-        else
-        {
-            enemyTeamTag = "TeamA";
+            case "TeamA":
+                enemyTeamTag = "TeamB";
+                break;
+
+            case "TeamB":
+                enemyTeamTag = "TeamA";
+                break;
+
+            case "FreeForAll":
+                enemyTeamTag = "FreeForAll";
+                break;
         }
     }
 
@@ -65,42 +74,36 @@ public class AIController : MonoBehaviour
     }
     void MoveTowardsTarget ()
     {
-        float velocityX = 0f;
+        float directionX = 0f;
+
         if (currentTarget != null)
         {
             float distanceToTarget = Vector2.Distance(transform.position, currentTarget.position);
 
-
             if (distanceToTarget > stopDistance)
             {
-                // Calculate only the X-axis direction and velocity
-                float directionX = Mathf.Sign(currentTarget.position.x - transform.position.x);
-                velocityX = directionX * moveSpeed;
-
-                // Jumping logic - Jump only if the target is higher than the AI
-                if (currentTarget.position.y > transform.position.y)
-                {
-                    // Check time and probability for jumping
-                    if (Time.time > lastJumpTime + minJumpInterval && Random.value < jumpProbability)
-                    {
-                        playerController.JumpTriggered(); // Trigger the jump
-                        lastJumpTime = Time.time;
-                    }
-                }
+                directionX = Mathf.Sign(currentTarget.position.x - transform.position.x);
             }
-            else
+
+            // Jumping logic - Jump only if the target is higher than the AI
+            if (currentTarget.position.y > transform.position.y)
             {
-                // Stop horizontal movement, but keep vertical movement (like falling)
-                velocityX = 0;
+                // Check time and probability for jumping
+                if (Time.time > lastJumpTime + minJumpInterval && Random.value < jumpProbability)
+                {
+                    playerController.JumpTriggered(); // Trigger the jump
+                    playerController._frameInput.JumpHeld = true;
+                    lastJumpTime = Time.time;
+                }
             }
         }
         else
         {
             // Stop horizontal movement, but keep vertical movement (like falling)
-            velocityX = 0;
+            directionX = 0;
         }
 
-        playerController.SetFrameVelocityX(velocityX);
+        playerController.SetFrameVelocityX(directionX * moveSpeed);
 
     }
 

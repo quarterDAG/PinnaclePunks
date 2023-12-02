@@ -33,15 +33,15 @@ public class InputManager : MonoBehaviour
         playerController = GetComponent<PlayerController>();
     }
 
-  /*  private void LateUpdate ()
+    private void LateUpdate ()
     {
-        InventoryInput = Vector2.zero;
+        IsJumpPressed = false;
     }
-*/
+
 
     public void OnMovementChanged ( InputAction.CallbackContext context )
     {
-        
+
         if (!context.performed)
         {
             return;
@@ -65,7 +65,7 @@ public class InputManager : MonoBehaviour
     public void OnJump ( InputAction.CallbackContext context )
     {
         float value = context.ReadValue<float>();
-        float releaseThreshold = 0.1f; 
+        float releaseThreshold = 0.1f;
 
         if (value > releaseThreshold)
         {
@@ -205,7 +205,7 @@ public class InputManager : MonoBehaviour
         StopAllCoroutines();
     }
 
-    public void SetCurrentInputDevice(InputDevice _inputDevice)
+    public void SetCurrentInputDevice ( InputDevice _inputDevice )
     {
         if (_inputDevice is Gamepad)
         {
