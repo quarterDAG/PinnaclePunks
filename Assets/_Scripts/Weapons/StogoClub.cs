@@ -8,7 +8,7 @@ public class StogoClub : MonoBehaviour, IWeapon
     [SerializeField] private Transform player;
     private PlayerController playerController;
     [SerializeField] private PlayerAnimator playerAnimator;
-    [SerializeField] private LayerMask layerToHit;
+    [SerializeField] private LayerMask obsticleLayer;
     [SerializeField] private string damageThisTag;
     [SerializeField] private Transform hitPoint;
     //[SerializeField] private float attackCooldown = 0.5f;
@@ -99,7 +99,7 @@ public class StogoClub : MonoBehaviour, IWeapon
         }
     }
 
-    private void Attack ()
+    public void Attack ()
     {
         if (!canAttack) return;
 
@@ -114,6 +114,11 @@ public class StogoClub : MonoBehaviour, IWeapon
         {
             PerformMeleeAttack();
         }
+
+    }
+
+    public void StopAttack ()
+    {
 
     }
 
@@ -132,7 +137,7 @@ public class StogoClub : MonoBehaviour, IWeapon
     {
         hitEnemies.Clear();
 
-        Collider2D[] detectedEnemies = Physics2D.OverlapCircleAll(hitPoint.position, meleeAttackRange, layerToHit);
+        Collider2D[] detectedEnemies = Physics2D.OverlapCircleAll(hitPoint.position, meleeAttackRange, obsticleLayer);
         foreach (Collider2D enemyCollider in detectedEnemies)
         {
             if (!hitEnemies.Contains(enemyCollider) && enemyCollider.gameObject.CompareTag(damageThisTag))

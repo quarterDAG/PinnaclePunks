@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 public class PlayerAnimator : MonoBehaviour
 {
     private Animator animator;
-    private Aim mouseAim;
     private PlayerController playerController;
 
 
@@ -24,7 +23,6 @@ public class PlayerAnimator : MonoBehaviour
         rb = GetComponentInParent<Rigidbody2D>();
         playerController = GetComponentInParent<PlayerController>();
         animator = GetComponent<Animator>();
-        mouseAim = playerController.GetComponentInChildren<Aim>();
 
         if (slashFX != null)
             transparent = slashFX.color;
@@ -33,7 +31,8 @@ public class PlayerAnimator : MonoBehaviour
 
     private void Update ()
     {
-        if (playerController.isDead) return;
+        if (playerController != null)
+            if (playerController.isDead) return;
 
         HandleFlip();
         HandleRunningAnimation();

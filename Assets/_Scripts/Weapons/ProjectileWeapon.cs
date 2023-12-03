@@ -26,22 +26,28 @@ public class ProjectileWeapon : MonoBehaviour, IWeapon
     private bool canShoot = true;
     private InputManager inputManager;
 
-    private int playerIndex;
+    private int playerIndex = -1;
     private AudioSource audioSource;
 
     [SerializeField] private AudioClip bowReleased;
+
+    private EnemyAI enemyAI;
+
 
 
     void Awake ()
     {
         audioSource = GetComponent<AudioSource>();
         playerController = GetComponentInParent<PlayerController>();
-        inputManager = GetComponentInParent<InputManager>();
+        inputManager = playerController.GetComponent<InputManager>();
+        enemyAI = playerController.GetComponent<EnemyAI>();
     }
 
     private void Start ()
     {
-        playerIndex = playerController.playerConfig.playerIndex;
+        if (playerController != null)
+            playerIndex = playerController.playerConfig.playerIndex;
+
         SetDamageTag();
 
         originalFireRate = fireRate;
@@ -74,10 +80,7 @@ public class ProjectileWeapon : MonoBehaviour, IWeapon
             if (playerController.isDead) return;
             if (canShoot)
                 HandleAttack();
-
         }
-
-
 
     }
 
@@ -97,39 +100,30 @@ public class ProjectileWeapon : MonoBehaviour, IWeapon
     {
         if (inputManager != null)
         {
-            if (inputManager.IsAttackPressed && Time.time > timeToFire)
+            if (inputManager.IsAttackPressed)
             {
-                timeToFire = Time.time + 1 / fireRate;
-                Shoot();
+                Attack();
             }
 
             if (!inputManager.IsAttackPressed)
-                StopShoot();
-
-        }
-        else
-        {
-            if (Time.time > timeToFire)
-            {
-                timeToFire = Time.time + 1 / fireRate;
-                Shoot();
-            }
-            else
-            {
-                StopShoot();
-            }
-
+                StopAttack();
         }
     }
 
-    private void Shoot ()
+
+    public void Attack ()
     {
-        if (Time.unscaledTime >= timeToSpawnEffect)
+        if (Time.time > timeToFire)
         {
-            playerAnimator.ShootAnimation(true);
-            audioSource.PlayOneShot(bowReleased);
-            CreateShot();
-            timeToSpawnEffect = Time.time + 1 / effectSpawnRate;
+            timeToFire = Time.time + 1 / fireRate;
+
+            if (Time.unscaledTime >= timeToSpawnEffect)
+            {
+                playerAnimator.ShootAnimation(true);
+                audioSource.PlayOneShot(bowReleased);
+                CreateShot();
+                timeToSpawnEffect = Time.time + 1 / effectSpawnRate;
+            }
         }
     }
 
@@ -145,7 +139,7 @@ public class ProjectileWeapon : MonoBehaviour, IWeapon
     }
 
 
-    private void StopShoot ()
+    public void StopAttack ()
     {
         playerAnimator.ShootAnimation(false);
     }

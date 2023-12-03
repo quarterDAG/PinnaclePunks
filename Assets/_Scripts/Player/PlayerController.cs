@@ -44,9 +44,12 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private float _time;
 
     private PlayerRope playerRope;
-    private Bar hpBar;
-    private Bar shieldBar;
-    public Bar manaBar { get; private set; }
+
+    [Header("Status Avatar")]
+    [SerializeField] private LivesManager livesManager;
+    [SerializeField] private Bar hpBar;
+    [SerializeField] private Bar shieldBar;
+    public Bar manaBar;
 
     public bool canMove { get; private set; }
     private float originalGravityScale;
@@ -58,17 +61,16 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
     private string teamTag;
 
     private InputManager inputManager;
-    private LivesManager livesManager;
 
+    [Header("Misc.")]
     [SerializeField] private SpriteRenderer bubble;
-    public PowerUpImage powerUpImage;
+    public PowerUpImage powerUpImageScript;
     [SerializeField] private SpriteRenderer iceCube;
 
-    [SerializeField] private AIController aiController;
+    private EnemyAI enemyAI;
 
-
-
-    public PlayerConfig playerConfig { get; private set; }
+    [Header("Player Config")]
+    public PlayerConfig playerConfig;
 
     private void Awake ()
     {
@@ -78,8 +80,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         playerAnimator = GetComponentInChildren<PlayerAnimator>();
         respawnCountdownUI = GetComponentInChildren<CountdownUI>();
         inputManager = GetComponent<InputManager>();
-        powerUpImage = GetComponentInChildren<PowerUpImage>();
-        aiController = GetComponentInChildren<AIController>();
+        powerUpImageScript = GetComponentInChildren<PowerUpImage>();
+        enemyAI = GetComponent<EnemyAI>();
 
         _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         _colOffsetDefault = _col.offset;
@@ -137,7 +139,7 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
         _time += Time.deltaTime;
 
-        if (aiController != null) return;
+        if (enemyAI != null) return; // AI Control
 
         GatherInput();
     }
@@ -178,13 +180,13 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         CheckCollisions();
         HandleJump();
 
-        if (aiController == null)
-            HandleDirection();
+        HandleDirection();
 
         if (!OnRope())
         {
             HandleGravity();
-            ApplyMovement();
+            if (!enemyAI)
+                ApplyMovement();
         }
     }
 
@@ -208,13 +210,17 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
         if (stats.Shield > 0 || stats.Health > 0)
         {
             Hit?.Invoke();
-            inputManager.StartVibration(0.5f, 250);
+            if (inputManager != null)
+                inputManager.StartVibration(0.5f, 250);
+
             playerAnimator.GetHitAnimation();
 
             // First, apply damage to the shield
             float damageToShield = Mathf.Min(damage, stats.Shield);
             stats.Shield -= damageToShield;
-            shieldBar.AddValue(-damageToShield);
+
+            if (shieldBar != null)
+                shieldBar.AddValue(-damageToShield);
 
             // Calculate remaining damage after shield
             float remainingDamage = damage - damageToShield;
@@ -226,7 +232,8 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
                 hpBar.AddValue(-remainingDamage);
                 playerRope?.DestroyCurrentRope();
 
-                PlayerStatsManager.Instance.AddDamageToPlayerState(remainingDamage, otherPlayerIndex);
+                if (PlayerStatsManager.Instance != null)
+                    PlayerStatsManager.Instance.AddDamageToPlayerState(remainingDamage, otherPlayerIndex);
             }
 
             if (stats.Health <= 0 && !isDead)
@@ -244,11 +251,17 @@ public class PlayerController : MonoBehaviour, IPlayerController, ICharacter
 
     public void Die ( int killerIndex )
     {
+        if (teamTag == null)
+            teamTag = gameObject.tag;
+
         gameObject.tag = "Dodge";
         isDead = true;
-        PlayerStatsManager.Instance.allPlayerStats[playerConfig.playerIndex].RecordDeath();
+
+        PlayerStatsManager.Instance?.allPlayerStats[playerConfig.playerIndex].RecordDeath();
+
         if (killerIndex >= 0)
-            PlayerStatsManager.Instance.allPlayerStats[killerIndex].RecordKill();
+            PlayerStatsManager.Instance?.allPlayerStats[killerIndex].RecordKill();
+
 
         playerRope?.DestroyCurrentRope();
         playerAnimator.DeathAnimation(true);

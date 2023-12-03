@@ -1,6 +1,11 @@
 using Pathfinding;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using static Cinemachine.DocumentationSortingAttribute;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -31,7 +36,7 @@ public class EnemyAI : MonoBehaviour
 
     [Header("Weapon")]
     [SerializeField] private IWeapon weapon;
-    [SerializeField] private Aim aim;
+    private Aim aim;
 
 
     private Path path;
@@ -41,12 +46,16 @@ public class EnemyAI : MonoBehaviour
     private Rigidbody2D rb;
     private bool isOnCoolDown;
 
+    private PlayerAnimator playerAnimator;
+
+
     public void Start ()
     {
         seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
         weapon = GetComponentInChildren<IWeapon>();
         aim = GetComponentInChildren<Aim>();
+        playerAnimator = GetComponentInChildren<PlayerAnimator>();
 
         isJumping = false;
         isOnCoolDown = false;
@@ -60,13 +69,9 @@ public class EnemyAI : MonoBehaviour
         {
             PathFollow();
             GroundCheck();
-
-            if (ClearPathToPlayer(target))
-            {
-                weapon.HandleAttack();
-            }
         }
     }
+
 
     private void UpdatePath ()
     {
@@ -75,6 +80,8 @@ public class EnemyAI : MonoBehaviour
             seeker.StartPath(rb.position, target.position, OnPathComplete);
         }
     }
+
+
 
     private void GroundCheck ()
     {
@@ -91,7 +98,11 @@ public class EnemyAI : MonoBehaviour
 
         if (currentWaypoint >= path.vectorPath.Count) return;
 
-        bool clearPath = ClearPathToPlayer(target);
+        bool clearPath = ClearPathToTarget();
+
+        // Shoot
+        if (clearPath) weapon.Attack();
+        else weapon.StopAttack();
 
         // Calculate horizontal distance to the target
         float horizontalDistanceToTarget = Mathf.Abs(transform.position.x - target.position.x);
@@ -156,10 +167,10 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    bool ClearPathToPlayer ( Transform player )
+    public bool ClearPathToTarget ()
     {
         Vector2 aiPosition = new Vector2(transform.position.x, transform.position.y + 1f);
-        Vector2 targetPosition = new Vector2(player.position.x, player.position.y + 1f);
+        Vector2 targetPosition = new Vector2(target.position.x, target.position.y + 1f);
         Vector2 directionToPlayer = (targetPosition - aiPosition).normalized;
 
         float distanceToPlayer = Vector3.Distance(aiPosition, targetPosition);
@@ -174,7 +185,7 @@ public class EnemyAI : MonoBehaviour
         UpdateDirectionGraphics(directionToPlayer);
         aim.UpdateAimPostion(directionToPlayer);
 
-        return hit.collider == null || hit.collider.transform == player;
+        return hit.collider == null || hit.collider.transform == target;
     }
 
 
@@ -198,4 +209,8 @@ public class EnemyAI : MonoBehaviour
         yield return new WaitForSeconds(1f);
         isOnCoolDown = false;
     }
+
+
+
+
 }

@@ -25197,9 +25197,8 @@ MonoBehaviour:
     MaxMana: 100
   lives: 3
   bubble: {fileID: 2586947911717814191}
-  powerUpImage: {fileID: 6306015463748190880}
+  powerUpImageScript: {fileID: 6306015463748190880}
   iceCube: {fileID: 6514146931280459538}
-  aiController: {fileID: 0}
 --- !u!114 &1518033666845181718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40736,7 +40735,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneCamera: {fileID: 0}
-  player: {fileID: 5240961817479375904}
+  weapon: {fileID: 0}
   maxAimDistance: 5
   gamepadAimSensitivity: 1
   deadzone: 0.5

@@ -16,7 +16,7 @@ public class Projectile : MonoBehaviour
 
     [SerializeField] private int moveSpeed = 230;
 
-    [SerializeField] private LayerMask hitTheseLayers;
+    [SerializeField] private LayerMask obsticleLayer;
     [SerializeField] private string damageTag;
 
     [SerializeField] private float bulletDamage = 10;
@@ -62,11 +62,13 @@ public class Projectile : MonoBehaviour
                         HandleDamage(character, rb, collision);
 
                     if (projectileType == ProjectileType.IceBolt)
+                    {
                         character.Freeze(2f);
+                    }
                 }
             }
         }
-        else if (IsInLayerMask(collision.gameObject.layer, hitTheseLayers))
+        else if (IsInLayerMask(collision.gameObject.layer, obsticleLayer))
         {
             Destroy(gameObject);
         }

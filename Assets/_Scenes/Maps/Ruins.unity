@@ -62909,10 +62909,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1992911d20949b741980f8a8eebcfece, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slowdownFactor: 0.05
-  isSlowMotionActive: 0
-  slowmotionBarA: {fileID: 0}
-  slowmotionBarB: {fileID: 0}
 --- !u!4 &2049960160
 Transform:
   m_ObjectHideFlags: 0

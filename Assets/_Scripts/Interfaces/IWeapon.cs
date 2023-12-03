@@ -6,4 +6,8 @@ public interface IWeapon
     void IncreaseFireRate ( float fireRateMultiplier, float duration );
 
     void IncreaseFireDamage ( float fireDamageMultiplier, float duration );
+
+    void Attack ();
+
+    void StopAttack ();
 }

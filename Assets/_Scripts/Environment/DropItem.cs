@@ -174,17 +174,17 @@ public class DropItem : MonoBehaviour
                 break;
 
             case DropType.IncreaseFireRate:
-                player.powerUpImage.ActivatePowerUp(0, powerupDuration);
+                player.powerUpImageScript.ActivatePowerUp(0, powerupDuration);
                 player.GetComponentInChildren<IWeapon>().IncreaseFireRate(fireRateMultiplier, powerupDuration);
                 break;
 
             case DropType.IncreaseFireDamage:
-                player.powerUpImage.ActivatePowerUp(1, powerupDuration);
+                player.powerUpImageScript.ActivatePowerUp(1, powerupDuration);
                 player.GetComponentInChildren<IWeapon>().IncreaseFireDamage(fireDamageMultiplier, powerupDuration);
                 break;
 
             case DropType.IncreaseSpeed:
-                player.powerUpImage.ActivatePowerUp(2, powerupDuration);
+                player.powerUpImageScript.ActivatePowerUp(2, powerupDuration);
                 player.IncreaseSpeed(speedMultiplier, powerupDuration);
                 break;
 
