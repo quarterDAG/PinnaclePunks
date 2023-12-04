@@ -20397,11 +20397,22 @@ MonoBehaviour:
     MaxShield: 99
     spawnWithShield: 0
     MaxMana: 100
+  livesManager: {fileID: 0}
+  hpBar: {fileID: 0}
+  shieldBar: {fileID: 0}
+  manaBar: {fileID: 0}
   lives: 3
   bubble: {fileID: 2301383581000885719}
-  powerUpImage: {fileID: 0}
+  powerUpImageScript: {fileID: 6127471136032365323}
   iceCube: {fileID: 3291683600127640022}
-  aiController: {fileID: 0}
+  playerConfig:
+    playerIndex: 0
+    playerName: 
+    playerColor: {r: 0, g: 0, b: 0, a: 0}
+    team: 0
+    controlScheme: 0
+    playerState: 0
+    selectedHero: 0
 --- !u!114 &1518033666845181718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35667,7 +35678,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneCamera: {fileID: 0}
-  player: {fileID: 5240961817479375904}
+  weapon: {fileID: 6028678352786882193}
   maxAimDistance: 5
   gamepadAimSensitivity: 1
   deadzone: 0.5
@@ -40936,6 +40947,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6428856632811812404, guid: 544878f9ece346a4db3ccf3c316b079c, type: 3}
   m_PrefabInstance: {fileID: 5594913268889658397}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6127471136032365323 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1777859110530891542, guid: 544878f9ece346a4db3ccf3c316b079c, type: 3}
+  m_PrefabInstance: {fileID: 5594913268889658397}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2773e58db6c8a14bb987c5692276b51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6586017919730058719
 PrefabInstance:
   m_ObjectHideFlags: 0

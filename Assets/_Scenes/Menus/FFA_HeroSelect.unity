@@ -335,7 +335,7 @@ GameObject:
   m_Component:
   - component: {fileID: 304150754}
   m_Layer: 5
-  m_Name: Hero Avatars A
+  m_Name: Hero Avatars
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2209,16 +2209,19 @@ MonoBehaviour:
   - {fileID: 1028616800}
   - {fileID: 1122910653}
   parentFFA: {fileID: 304150754}
+  selectorPrefab: {fileID: 3450111750651732716, guid: 49df96f91d7def844b1347ba774caa13, type: 3}
+  flipTeamB: 1
   avatarsTeamA: []
   avatarsTeamB: []
   teamAParent: {fileID: 0}
   teamBParent: {fileID: 0}
-  selectorPrefab: {fileID: 3450111750651732716, guid: 49df96f91d7def844b1347ba774caa13, type: 3}
-  flipTeamB: 1
   heroImagesA: []
   heroImagesB: []
   readyIconsA: []
   readyIconsB: []
+  avatarsBot: []
+  heroImageBot: {fileID: 0}
+  readyIconBot: {fileID: 0}
 --- !u!1 &1188586997
 GameObject:
   m_ObjectHideFlags: 0
@@ -6097,6 +6100,10 @@ PrefabInstance:
     - target: {fileID: 1249004898277256818, guid: a463b78c16c0e4f429f3a4f0316b8520, type: 3}
       propertyPath: m_Name
       value: Add Bot Menu
+      objectReference: {fileID: 0}
+    - target: {fileID: 1249004898277256818, guid: a463b78c16c0e4f429f3a4f0316b8520, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6164981604086183079, guid: a463b78c16c0e4f429f3a4f0316b8520, type: 3}
       propertyPath: m_Enabled

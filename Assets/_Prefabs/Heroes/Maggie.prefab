@@ -25195,10 +25195,22 @@ MonoBehaviour:
     MaxShield: 99
     spawnWithShield: 0
     MaxMana: 100
+  livesManager: {fileID: 0}
+  hpBar: {fileID: 0}
+  shieldBar: {fileID: 0}
+  manaBar: {fileID: 0}
   lives: 3
   bubble: {fileID: 2586947911717814191}
   powerUpImageScript: {fileID: 6306015463748190880}
   iceCube: {fileID: 6514146931280459538}
+  playerConfig:
+    playerIndex: 0
+    playerName: 
+    playerColor: {r: 0, g: 0, b: 0, a: 0}
+    team: 0
+    controlScheme: 0
+    playerState: 0
+    selectedHero: 0
 --- !u!114 &1518033666845181718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40735,7 +40747,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneCamera: {fileID: 0}
-  weapon: {fileID: 0}
+  weapon: {fileID: 6028678352786882193}
   maxAimDistance: 5
   gamepadAimSensitivity: 1
   deadzone: 0.5

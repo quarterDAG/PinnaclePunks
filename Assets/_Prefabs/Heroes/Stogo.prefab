@@ -25060,11 +25060,22 @@ MonoBehaviour:
     MaxShield: 99
     spawnWithShield: 0
     MaxMana: 100
+  livesManager: {fileID: 0}
+  hpBar: {fileID: 0}
+  shieldBar: {fileID: 0}
+  manaBar: {fileID: 0}
   lives: 3
   bubble: {fileID: 5505561408297007410}
-  powerUpImage: {fileID: 248617351419064688}
+  powerUpImageScript: {fileID: 0}
   iceCube: {fileID: 430998635770500135}
-  aiController: {fileID: 0}
+  playerConfig:
+    playerIndex: 0
+    playerName: 
+    playerColor: {r: 0, g: 0, b: 0, a: 0}
+    team: 0
+    controlScheme: 0
+    playerState: 0
+    selectedHero: 0
 --- !u!114 &1518033666845181718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40106,9 +40117,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 5240961817479375904}
   playerAnimator: {fileID: 2096821917475351624}
-  layerToHit:
+  obsticleLayer:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 0
   damageThisTag: 
   hitPoint: {fileID: 537444450710121095}
   fireRate: 1
@@ -40636,7 +40647,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneCamera: {fileID: 0}
-  player: {fileID: 5240961817479375904}
+  weapon: {fileID: 6028678352786882193}
   maxAimDistance: 5
   gamepadAimSensitivity: 1
   deadzone: 0.5
@@ -40772,17 +40783,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 544878f9ece346a4db3ccf3c316b079c, type: 3}
---- !u!114 &248617351419064688 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1777859110530891542, guid: 544878f9ece346a4db3ccf3c316b079c, type: 3}
-  m_PrefabInstance: {fileID: 2008461779829935718}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2773e58db6c8a14bb987c5692276b51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &4821277481310828626 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6428856632811812404, guid: 544878f9ece346a4db3ccf3c316b079c, type: 3}

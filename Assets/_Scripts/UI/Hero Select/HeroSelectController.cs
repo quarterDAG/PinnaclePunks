@@ -16,7 +16,7 @@ public class HeroSelectController : MonoBehaviour
     [SerializeField] private List<Transform> avatarsFFA;
     [SerializeField] private List<Image> heroImagesFFA;
     [SerializeField] private List<Image> readyIconsFFA;
-    public Transform parentFFA { get; private set; }
+    public Transform parentFFA;
 
     private Dictionary<SelectorUI, int> uiSelectorsFFA = new Dictionary<SelectorUI, int>();
     private Dictionary<SelectorUI, int> ffaPlayerIndices = new Dictionary<SelectorUI, int>();
@@ -45,6 +45,7 @@ public class HeroSelectController : MonoBehaviour
 
     private Dictionary<Team, int> teamPlayerCounts = new Dictionary<Team, int>
     {
+        //{ Team.FreeForAll, 0 },
         { Team.TeamA, 0 },
         { Team.TeamB, 0 },
         { Team.Bot, 0 }
