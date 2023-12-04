@@ -28,7 +28,8 @@ public class PlayerConfigData : ScriptableObject
     public enum ControlScheme
     {
         Keyboard,
-        Gamepad
+        Gamepad,
+        Bot
     }
 
     public enum Team
@@ -36,7 +37,8 @@ public class PlayerConfigData : ScriptableObject
         FreeForAll,
         TeamA,
         TeamB,
-        Spectator
+        Spectator,
+        Bot
     }
 
     public enum PlayerState
@@ -50,12 +52,12 @@ public class PlayerConfigData : ScriptableObject
 
     public List<Color> playerColors = new List<Color>();
 
-/*
-    // You can add methods to manage player configs if necessary
-    public void AddPlayerConfig ( PlayerConfig config )
-    {
-        playerConfigs.Add(config);
-    }*/
+    /*
+        // You can add methods to manage player configs if necessary
+        public void AddPlayerConfig ( PlayerConfig config )
+        {
+            playerConfigs.Add(config);
+        }*/
 
     public void RemovePlayerConfig ( PlayerConfig config )
     {
@@ -63,13 +65,31 @@ public class PlayerConfigData : ScriptableObject
     }
 
     // Call this method when a player joins the game.
-    public PlayerConfig AddPlayerConfig (PlayerInput playerInput)
+    public PlayerConfig AddPlayerConfig ( PlayerInput playerInput )
     {
         // Get the control scheme from the input manager, typically based on the last input received.
         int _playerIndex = PlayerManager.Instance.GetUniquePlayerIndex();
-
         Color _playerColor = GetUniquePlayerColor(_playerIndex);
         string _playerName = GetPlayerNameByColor(_playerIndex);
+
+        ControlScheme _controlScheme;
+        InputDevice _inputDevice;
+        Team _team;
+
+        if (playerInput == null)
+        {
+            // This is a bot
+            _controlScheme = ControlScheme.Bot; // You might need to add 'Bot' to the ControlScheme enum
+            _inputDevice = null;
+            _team = Team.Bot;
+        }
+        else
+        {
+            // This is a human player
+            _controlScheme = ControlScheme.Gamepad; // or derive this from the playerInput
+            _inputDevice = playerInput.devices[0];
+            _team = Team.Spectator;
+        }
 
 
         // Create the new PlayerConfig with the unique color and control scheme.
@@ -78,9 +98,9 @@ public class PlayerConfigData : ScriptableObject
             playerIndex = _playerIndex,
             playerName = _playerName,
             playerColor = _playerColor,
-            team = Team.Spectator,
-            controlScheme = ControlScheme.Gamepad,
-            inputDevice = playerInput.devices[0]
+            team = _team,
+            controlScheme = _controlScheme,
+            inputDevice = _inputDevice
         };
 
 

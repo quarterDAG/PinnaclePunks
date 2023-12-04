@@ -1,11 +1,7 @@
 using Pathfinding;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
+
 using UnityEngine;
-using static Cinemachine.DocumentationSortingAttribute;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -46,16 +42,12 @@ public class EnemyAI : MonoBehaviour
     private Rigidbody2D rb;
     private bool isOnCoolDown;
 
-    private PlayerAnimator playerAnimator;
-
-
     public void Start ()
     {
         seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
         weapon = GetComponentInChildren<IWeapon>();
         aim = GetComponentInChildren<Aim>();
-        playerAnimator = GetComponentInChildren<PlayerAnimator>();
 
         isJumping = false;
         isOnCoolDown = false;

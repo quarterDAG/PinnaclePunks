@@ -197,6 +197,9 @@ public class PlayerManager : MonoBehaviour
         configCopy.playerState = PlayerState.Ready;
         playerConfigs[config.playerIndex] = configCopy;
 
+        if (config.controlScheme == ControlScheme.Bot) return;
+
+
         if (heroSelectController.AreAllPlayersReady())
             heroSelectController.StartCountdownTimer();
     }

@@ -13,38 +13,42 @@ public class HeroSelectController : MonoBehaviour
     public bool isFreeForAllMode = false;
 
     [Header("Free For All Settings")]
-    public List<Transform> avatarsFFA;
-    public List<Image> heroImagesFFA;
-    public List<Image> readyIconsFFA;
-    public Transform parentFFA;
+    [SerializeField] private List<Transform> avatarsFFA;
+    [SerializeField] private List<Image> heroImagesFFA;
+    [SerializeField] private List<Image> readyIconsFFA;
+    public Transform parentFFA { get; private set; }
+
     private Dictionary<SelectorUI, int> uiSelectorsFFA = new Dictionary<SelectorUI, int>();
     private Dictionary<SelectorUI, int> ffaPlayerIndices = new Dictionary<SelectorUI, int>();
 
 
-    [Header("Selectors Spawn Points")]
-    public List<Transform> avatarsTeamA;
-    public List<Transform> avatarsTeamB;
-    private int teamASpawnIndex = 0;
-    private int teamBSpawnIndex = 0;
-
-    private Dictionary<Team, int> teamPlayerCounts = new Dictionary<Team, int>
-    {
-        { Team.TeamA, 0 },
-        { Team.TeamB, 0 }
-    };
-
-    public Transform teamAParent;
-    public Transform teamBParent;
 
 
     [Header("Prefab")]
-    public GameObject selectorPrefab;
+    [SerializeField] private GameObject selectorPrefab;
     [SerializeField] private bool flipTeamB;
 
 
     // Avatar Disctionaries
     private Dictionary<SelectorUI, int> uiSelectorsTeamA = new Dictionary<SelectorUI, int>();
     private Dictionary<SelectorUI, int> uiSelectorsTeamB = new Dictionary<SelectorUI, int>();
+
+    [Header("Team Deathmatch")]
+    [Header("Selectors Spawn Points")]
+    [SerializeField] private List<Transform> avatarsTeamA;
+    [SerializeField] private List<Transform> avatarsTeamB;
+    [SerializeField] private Transform teamAParent;
+    [SerializeField] private Transform teamBParent;
+
+    private int teamASpawnIndex = 0;
+    private int teamBSpawnIndex = 0;
+
+    private Dictionary<Team, int> teamPlayerCounts = new Dictionary<Team, int>
+    {
+        { Team.TeamA, 0 },
+        { Team.TeamB, 0 },
+        { Team.Bot, 0 }
+    };
 
     [Header("Hero Images")]
     [SerializeField] private List<Image> heroImagesA;
@@ -62,6 +66,16 @@ public class HeroSelectController : MonoBehaviour
     private CountdownUI countdownUI;
 
     private Dictionary<PlayerConfig, Image> playerConfigToHeroImageMap = new Dictionary<PlayerConfig, Image>();
+
+
+    [Header("Bots")]
+    [SerializeField] private List<Transform> avatarsBot;
+    [SerializeField] private Image heroImageBot;
+    [SerializeField] private Image readyIconBot;
+
+    private Dictionary<SelectorUI, int> botsIndices = new Dictionary<SelectorUI, int>();
+
+
 
     private void Awake ()
     {
@@ -88,7 +102,8 @@ public class HeroSelectController : MonoBehaviour
 
         if (spawnPoint == null)
         {
-            Debug.LogError("No available spawn points for team: " + config.team);
+            if (config.controlScheme != ControlScheme.Bot)
+                Debug.LogError("No available spawn points for team: " + config.team);
             return null; // Return null if no spawn point is available
         }
 
@@ -184,9 +199,6 @@ public class HeroSelectController : MonoBehaviour
         }
     }
 
-
-
-
     public void UpdateSelectorAvatar ( SelectorUI selector, int avatarIndex, PlayerConfig playerConfig )
     {
         var uiSelectors = GetSelectorMap(playerConfig.team);
@@ -199,14 +211,14 @@ public class HeroSelectController : MonoBehaviour
     private void UpdateHeroVisuals ()
     {
         // Reset visual for all selectors in both teams
-        ResetVisuals(uiSelectorsTeamA);
-        ResetVisuals(uiSelectorsTeamB);
-        ResetVisuals(uiSelectorsFFA);
+        ResetSelectorFrameUI(uiSelectorsTeamA);
+        ResetSelectorFrameUI(uiSelectorsTeamB);
+        ResetSelectorFrameUI(uiSelectorsFFA);
 
         // Update visuals for each team
-        UpdateTeamVisuals(uiSelectorsTeamA, uiSelectorsTeamA.Count);
-        UpdateTeamVisuals(uiSelectorsTeamB, uiSelectorsTeamB.Count);
-        UpdateTeamVisuals(uiSelectorsFFA, uiSelectorsFFA.Count);
+        UpdateSelectorUI(uiSelectorsTeamA, uiSelectorsTeamA.Count);
+        UpdateSelectorUI(uiSelectorsTeamB, uiSelectorsTeamB.Count);
+        UpdateSelectorUI(uiSelectorsFFA, uiSelectorsFFA.Count);
     }
 
 
@@ -270,7 +282,6 @@ public class HeroSelectController : MonoBehaviour
         }
     }
 
-
     private IEnumerator SetImageToNativeSizeNextFrame ( Image image )
     {
         // Wait until the end of the frame
@@ -280,15 +291,15 @@ public class HeroSelectController : MonoBehaviour
         image.SetNativeSize();
     }
 
-    private void ResetVisuals ( Dictionary<SelectorUI, int> selectorMap )
+    private void ResetSelectorFrameUI ( Dictionary<SelectorUI, int> selectorMap )
     {
         foreach (var selector in selectorMap.Keys)
         {
-            selector.UpdateFrameVisual(1, 0); // Default to a full frame
+            selector.UpdateFrameUI(1, 0); // Default to a full frame
         }
     }
 
-    private void UpdateTeamVisuals ( Dictionary<SelectorUI, int> selectorMap, int totalPlayerCount )
+    private void UpdateSelectorUI ( Dictionary<SelectorUI, int> selectorMap, int totalPlayerCount )
     {
         var avatarSelectorsMap = new Dictionary<int, List<SelectorUI>>();
 
@@ -312,7 +323,7 @@ public class HeroSelectController : MonoBehaviour
                 for (int i = 0; i < selectorsOnAvatar.Count; i++)
                 {
                     // Pass both the index of the selector and the total count of selectors on this avatar
-                    selectorsOnAvatar[i].UpdateFrameVisual(i, selectorsOnAvatar.Count);
+                    selectorsOnAvatar[i].UpdateFrameUI(i, selectorsOnAvatar.Count);
                 }
             }
         }
@@ -358,6 +369,13 @@ public class HeroSelectController : MonoBehaviour
     public void UpdateReadyIcon ( SelectorUI selector, bool isReady )
     {
         var team = selector.GetSelectorConfig().team;
+
+        if (team == Team.Bot)
+        {
+            readyIconBot.enabled = isReady;
+            return;
+        }
+
         var playerIndices = GetTeamPlayerIndiceList(team);
 
 
@@ -484,6 +502,9 @@ public class HeroSelectController : MonoBehaviour
 
             case Team.FreeForAll:
                 return avatarsFFA;
+
+            case Team.Bot:
+                return avatarsBot;
 
             default: return null;
 

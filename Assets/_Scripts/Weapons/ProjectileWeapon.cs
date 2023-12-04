@@ -113,6 +113,8 @@ public class ProjectileWeapon : MonoBehaviour, IWeapon
 
     public void Attack ()
     {
+        if (playerController.isDead) return;
+
         if (Time.time > timeToFire)
         {
             timeToFire = Time.time + 1 / fireRate;

@@ -32,22 +32,27 @@ public class SelectorUI : MonoBehaviour
     private float selectionCooldown = 1.0f; // Cooldown time in seconds before allowing selection
     private float timeSinceInstantiation;
 
+    [SerializeField] private bool isBot;
+
 
 
     private void Awake ()
     {
         heroSelectController = FindAnyObjectByType<HeroSelectController>();
         frame = GetComponentInChildren<Image>();
-        GetOptionList();
-
     }
 
     void Start ()
     {
-
-        if (heroSelectController != null)
+        if (!isBot)
+        {
             if (heroSelectController.isFreeForAllMode)
                 FreeForAllSelector();
+        }
+        else
+            playerConfig = playerConfigData.AddPlayerConfig(null);
+
+        GetOptionList();
 
         selectedOptionIndex = 0;
         lastNavigationTime = -navigationCooldown;
@@ -106,7 +111,7 @@ public class SelectorUI : MonoBehaviour
             {
                 secondaryButtonReleased = false;
                 isPlayerSelected = false;
-                heroSelectController.UpdateReadyIcon(this, false);
+                heroSelectController?.UpdateReadyIcon(this, false);
                 PlayerManager.Instance.SetPlayerState(playerConfig.playerIndex, PlayerConfigData.PlayerState.SelectingHero);
             }
         }
@@ -185,7 +190,8 @@ public class SelectorUI : MonoBehaviour
         transform.position = optionList[optionIndex].transform.position;
 
         // Notify the HeroSelectManager about the new selected index
-        UpdateController();
+        if (!isBot)
+            UpdateController();
     }
 
     private void UpdateController ()
@@ -196,8 +202,7 @@ public class SelectorUI : MonoBehaviour
 
     public void GetOptionList ()
     {
-        if (heroSelectController != null)
-            optionList = heroSelectController.GetTeamAvatarList(playerConfig.team);
+        optionList = heroSelectController?.GetTeamAvatarList(playerConfig.team);
     }
 
     public void SetPlayerConfig ( PlayerConfig config )
@@ -216,7 +221,7 @@ public class SelectorUI : MonoBehaviour
         frame.color = config.playerColor;
     }
 
-    public void UpdateFrameVisual ( int playerIndex, int playersOnAvatar )
+    public void UpdateFrameUI ( int playerIndex, int playersOnAvatar )
     {
         frame = GetComponentInChildren<Image>();
 
