@@ -70,12 +70,13 @@ public class HeroSelectController : MonoBehaviour
 
 
     [Header("Bots")]
+    [SerializeField] private GameObject botMenu;
+    public SelectorUI botHeroSelector;
+    public SelectorUI botTeamSelector;
+
     [SerializeField] private List<Transform> avatarsBot;
     [SerializeField] private Image heroImageBot;
     [SerializeField] private Image readyIconBot;
-
-    private Dictionary<SelectorUI, int> botsIndices = new Dictionary<SelectorUI, int>();
-
 
 
     private void Awake ()
@@ -94,6 +95,13 @@ public class HeroSelectController : MonoBehaviour
     {
         countdownUI.OnCountdownFinished -= NextScene;
     }
+
+    public void ShowBotMenu ( bool _isactive )
+    {
+        botMenu.SetActive(_isactive);
+    }
+
+    #region Selector Handling
 
     public PlayerInput InstantiateSelector ( PlayerConfig config, int playerCount )
     {
@@ -128,18 +136,6 @@ public class HeroSelectController : MonoBehaviour
         return instantiatedPlayer;
     }
 
-    public void SetupHeroSelector ( PlayerConfig config, PlayerInput instantiatedPlayer )
-    {
-        SelectorUI heroSelector = instantiatedPlayer.GetComponent<SelectorUI>();
-        heroSelector.SetHeroSelectController(this);
-        heroSelector.SetPlayerConfig(config);
-        //heroSelector.GetOptionList();
-        heroSelector.ColorFrame(config);
-        heroSelector.flipTeamB = flipTeamB;
-
-        RegisterSelector(heroSelector, config);
-    }
-
     public void RegisterSelector ( SelectorUI selector, PlayerConfig config )
     {
         var team = selector.GetSelectorConfig().team;
@@ -158,139 +154,32 @@ public class HeroSelectController : MonoBehaviour
         UpdateHeroVisuals();
     }
 
-    private Image DetermineHeroImageForPlayer ( PlayerConfig config, Dictionary<SelectorUI, int> selectorMap )
-    {
-        List<Image> heroImages = GetHeroImagesByTeam(config.team);
-
-        // Check if it's Free For All mode
-        if (config.team == Team.FreeForAll)
-        {
-            if (config.playerIndex >= 0 && config.playerIndex < heroImages.Count)
-            {
-                return heroImages[config.playerIndex];
-            }
-            else
-            {
-                Debug.LogError("Invalid player index for Free For All mode: " + config.playerIndex);
-                return null; // or a default image if you have one
-            }
-        }
-        else
-        {
-            int avatarIndex = -1;
-            // Find the avatar index for the given player config
-            foreach (var pair in selectorMap)
-            {
-                if (pair.Key.GetSelectorConfig().playerIndex == config.playerIndex)
-                {
-                    avatarIndex = pair.Value;
-                    break;
-                }
-            }
-
-            if (avatarIndex >= 0 && avatarIndex < heroImages.Count)
-            {
-                return heroImages[avatarIndex];
-            }
-            else
-            {
-                Debug.LogError("Invalid avatar index for player: " + config.playerIndex);
-                return null; // or a default image if you have one
-            }
-        }
-    }
 
     public void UpdateSelectorAvatar ( SelectorUI selector, int avatarIndex, PlayerConfig playerConfig )
     {
-        var uiSelectors = GetSelectorMap(playerConfig.team);
-        uiSelectors[selector] = avatarIndex;
+        if (selector.selectorType == SelectorUI.SelectorType.PlayerHeroSelector)
+        {
+            var uiSelectors = GetSelectorMap(playerConfig.team);
+            uiSelectors[selector] = avatarIndex;
+
+        }
 
         UpdateHeroVisuals();
-        UpdateHeroImages(playerConfig);
+        UpdateHeroImages(playerConfig, avatarIndex);
     }
 
-    private void UpdateHeroVisuals ()
+    public void SetupHeroSelector ( PlayerConfig config, PlayerInput instantiatedPlayer )
     {
-        // Reset visual for all selectors in both teams
-        ResetSelectorFrameUI(uiSelectorsTeamA);
-        ResetSelectorFrameUI(uiSelectorsTeamB);
-        ResetSelectorFrameUI(uiSelectorsFFA);
+        SelectorUI heroSelector = instantiatedPlayer.GetComponent<SelectorUI>();
+        heroSelector.SetHeroSelectController(this);
+        heroSelector.SetPlayerConfig(config);
+        //heroSelector.GetOptionList();
+        heroSelector.ColorFrame(config);
+        heroSelector.flipTeamB = flipTeamB;
 
-        // Update visuals for each team
-        UpdateSelectorUI(uiSelectorsTeamA, uiSelectorsTeamA.Count);
-        UpdateSelectorUI(uiSelectorsTeamB, uiSelectorsTeamB.Count);
-        UpdateSelectorUI(uiSelectorsFFA, uiSelectorsFFA.Count);
+        RegisterSelector(heroSelector, config);
     }
 
-
-    private void UpdateHeroImages ( PlayerConfig playerConfig )
-    {
-        var selectorMap = GetSelectorMap(playerConfig.team);
-        List<Image> heroImages = GetHeroImagesByTeam(playerConfig.team);
-
-        UpdateStatueColor(playerConfig);
-
-        int teamPlayerIndex = 0;
-
-        foreach (var pair in selectorMap)
-        {
-            SelectorUI selector = pair.Key;
-            int avatarIndex = pair.Value;
-
-            if (avatarIndex >= 0)
-            {
-                Image playerImage = heroImages[teamPlayerIndex % heroImages.Count];
-                Animator animator = playerImage.GetComponent<Animator>();
-                AspectRatioFitter aspectRatioFitter = playerImage.GetComponent<AspectRatioFitter>();
-
-                // Temporarily disable Animator and AspectRatioFitter
-                if (animator != null) animator.enabled = false;
-
-                // Reset animator bools and set the correct animation state
-                animator.SetBool("Archy", avatarIndex == 0);
-                animator.SetBool("Turtle", avatarIndex == 1);
-                animator.SetBool("Mage", avatarIndex == 2);
-
-                // Force native size
-                StartCoroutine(SetImageToNativeSizeNextFrame(playerImage));
-
-
-                // Re-enable Animator and AspectRatioFitter
-                if (animator != null) animator.enabled = true;
-
-                playerImage.enabled = true;
-                teamPlayerIndex++;
-            }
-        }
-    }
-
-    private void UpdateStatueColor ( PlayerConfig config )
-    {
-        Image playerImage;
-
-        if (!playerConfigToHeroImageMap.TryGetValue(config, out playerImage))
-            return;
-
-
-        // Update the color of the parent of the Image
-        if (playerImage != null && playerImage.transform.parent != null)
-        {
-            var parentImageComponent = playerImage.transform.parent.GetComponent<Image>();
-            if (parentImageComponent != null)
-            {
-                parentImageComponent.color = config.playerColor;
-            }
-        }
-    }
-
-    private IEnumerator SetImageToNativeSizeNextFrame ( Image image )
-    {
-        // Wait until the end of the frame
-        yield return new WaitForEndOfFrame();
-
-        // Apply SetNativeSize
-        image.SetNativeSize();
-    }
 
     private void ResetSelectorFrameUI ( Dictionary<SelectorUI, int> selectorMap )
     {
@@ -395,6 +284,161 @@ public class HeroSelectController : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Hero Image Handling
+
+    private Image DetermineHeroImageForPlayer ( PlayerConfig config, Dictionary<SelectorUI, int> selectorMap )
+    {
+        List<Image> heroImages = GetHeroImagesByTeam(config.team);
+
+        // Check if it's Free For All mode
+        if (config.team == Team.FreeForAll)
+        {
+            if (config.playerIndex >= 0 && config.playerIndex < heroImages.Count)
+            {
+                return heroImages[config.playerIndex];
+            }
+            else
+            {
+                Debug.LogError("Invalid player index for Free For All mode: " + config.playerIndex);
+                return null; // or a default image if you have one
+            }
+        }
+        else
+        {
+            int avatarIndex = -1;
+            // Find the avatar index for the given player config
+            foreach (var pair in selectorMap)
+            {
+                if (pair.Key.GetSelectorConfig().playerIndex == config.playerIndex)
+                {
+                    avatarIndex = pair.Value;
+                    break;
+                }
+            }
+
+            if (avatarIndex >= 0 && avatarIndex < heroImages.Count)
+            {
+                return heroImages[avatarIndex];
+            }
+            else
+            {
+                Debug.LogError("Invalid avatar index for player: " + config.playerIndex);
+                return null; // or a default image if you have one
+            }
+        }
+    }
+    private void UpdateHeroVisuals ()
+    {
+        // Reset visual for all selectors in both teams
+        ResetSelectorFrameUI(uiSelectorsTeamA);
+        ResetSelectorFrameUI(uiSelectorsTeamB);
+        ResetSelectorFrameUI(uiSelectorsFFA);
+
+        // Update visuals for each team
+        UpdateSelectorUI(uiSelectorsTeamA, uiSelectorsTeamA.Count);
+        UpdateSelectorUI(uiSelectorsTeamB, uiSelectorsTeamB.Count);
+        UpdateSelectorUI(uiSelectorsFFA, uiSelectorsFFA.Count);
+    }
+
+    private void UpdateHeroImages ( PlayerConfig playerConfig, int avatarIndex )
+    {
+        UpdateStatueColor(playerConfig);
+
+        if (playerConfig.team == Team.Bot)
+        {
+            Animator animator = heroImageBot.GetComponent<Animator>();
+            AspectRatioFitter aspectRatioFitter = heroImageBot.GetComponent<AspectRatioFitter>();
+
+            // Temporarily disable Animator and AspectRatioFitter
+            if (animator != null) animator.enabled = false;
+
+            // Reset animator bools and set the correct animation state
+            animator.SetBool("Archy", avatarIndex == 0);
+            animator.SetBool("Turtle", avatarIndex == 1);
+            animator.SetBool("Mage", avatarIndex == 2);
+
+            // Force native size
+            StartCoroutine(SetImageToNativeSizeNextFrame(heroImageBot));
+
+
+            // Re-enable Animator and AspectRatioFitter
+            if (animator != null) animator.enabled = true;
+
+            heroImageBot.enabled = true;
+            return;
+        }
+
+        var selectorMap = GetSelectorMap(playerConfig.team);
+        List<Image> heroImages = GetHeroImagesByTeam(playerConfig.team);
+
+        int teamPlayerIndex = 0;
+
+        foreach (var pair in selectorMap)
+        {
+            SelectorUI selector = pair.Key;
+            int _avatarIndex = pair.Value;
+
+            if (avatarIndex >= 0)
+            {
+                Image playerImage = heroImages[teamPlayerIndex % heroImages.Count];
+                Animator animator = playerImage.GetComponent<Animator>();
+                AspectRatioFitter aspectRatioFitter = playerImage.GetComponent<AspectRatioFitter>();
+
+                // Temporarily disable Animator and AspectRatioFitter
+                if (animator != null) animator.enabled = false;
+
+                // Reset animator bools and set the correct animation state
+                animator.SetBool("Archy", _avatarIndex == 0);
+                animator.SetBool("Turtle", _avatarIndex == 1);
+                animator.SetBool("Mage", _avatarIndex == 2);
+
+                // Force native size
+                StartCoroutine(SetImageToNativeSizeNextFrame(playerImage));
+
+
+                // Re-enable Animator and AspectRatioFitter
+                if (animator != null) animator.enabled = true;
+
+                playerImage.enabled = true;
+                teamPlayerIndex++;
+            }
+        }
+    }
+
+    private void UpdateStatueColor ( PlayerConfig config )
+    {
+        Image playerImage;
+
+        if (!playerConfigToHeroImageMap.TryGetValue(config, out playerImage))
+            return;
+
+
+        // Update the color of the parent of the Image
+        if (playerImage != null && playerImage.transform.parent != null)
+        {
+            var parentImageComponent = playerImage.transform.parent.GetComponent<Image>();
+            if (parentImageComponent != null)
+            {
+                parentImageComponent.color = config.playerColor;
+            }
+        }
+    }
+
+    private IEnumerator SetImageToNativeSizeNextFrame ( Image image )
+    {
+        // Wait until the end of the frame
+        yield return new WaitForEndOfFrame();
+
+        // Apply SetNativeSize
+        image.SetNativeSize();
+    }
+
+    #endregion
+
+    #region Status Checkers
+
     public bool AreAllPlayersReady ()
     {
         List<PlayerConfig> playerConfigList = PlayerManager.Instance.GetPlayerConfigList();
@@ -423,6 +467,10 @@ public class HeroSelectController : MonoBehaviour
         return true; // All players are selcting hero
     }
 
+    #endregion
+
+    #region Timer
+
     public void StartCountdownTimer ()
     {
         countdownUI.StartTimer();
@@ -432,6 +480,10 @@ public class HeroSelectController : MonoBehaviour
     {
         countdownUI.StopTimer();
     }
+
+    #endregion
+
+    #region Scenes
 
     public void PreviousScene ()
     {
@@ -446,6 +498,7 @@ public class HeroSelectController : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(nextScene);
     }
 
+    #endregion
 
     #region Getters
 
@@ -577,7 +630,6 @@ public class HeroSelectController : MonoBehaviour
             return null; // Return null if no spawn points are available
         }
     }
-
 
 
     #endregion

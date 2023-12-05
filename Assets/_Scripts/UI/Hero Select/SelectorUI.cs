@@ -32,8 +32,14 @@ public class SelectorUI : MonoBehaviour
     private float selectionCooldown = 1.0f; // Cooldown time in seconds before allowing selection
     private float timeSinceInstantiation;
 
-    [SerializeField] private bool isBot;
+    public enum SelectorType
+    {
+        PlayerHeroSelector,
+        BotHeroSelector,
+        TeamSelector
+    }
 
+    public SelectorType selectorType;
 
 
     private void Awake ()
@@ -44,15 +50,19 @@ public class SelectorUI : MonoBehaviour
 
     void Start ()
     {
-        if (!isBot)
+        if (selectorType == SelectorType.PlayerHeroSelector)
         {
             if (heroSelectController.isFreeForAllMode)
                 FreeForAllSelector();
+            GetHeroList();
         }
-        else
-            playerConfig = playerConfigData.AddPlayerConfig(null);
 
-        GetOptionList();
+        if (selectorType == SelectorType.BotHeroSelector)
+        {
+            playerConfig = playerConfigData.AddPlayerConfig(null);
+        }
+
+
 
         selectedOptionIndex = 0;
         lastNavigationTime = -navigationCooldown;
@@ -112,7 +122,7 @@ public class SelectorUI : MonoBehaviour
                 secondaryButtonReleased = false;
                 isPlayerSelected = false;
                 heroSelectController?.UpdateReadyIcon(this, false);
-                PlayerManager.Instance.SetPlayerState(playerConfig.playerIndex, PlayerConfigData.PlayerState.SelectingHero);
+                PlayerManager.Instance.SetPlayerState(playerConfig.playerIndex, PlayerState.SelectingHero);
             }
         }
 
@@ -121,7 +131,23 @@ public class SelectorUI : MonoBehaviour
         {
             secondaryButtonReleased = true;
         }
+
+        if (inputManager.IsSpawnMinionPressed)
+        {
+            heroSelectController.ShowBotMenu(true);
+
+            // Control the Bot Hero Selector
+            heroSelectController.botHeroSelector.playerInput = playerInput;
+            heroSelectController.botHeroSelector.inputManager = inputManager;
+
+
+            if (selectorType == SelectorType.PlayerHeroSelector)
+                this.enabled = false;
+
+        }
     }
+
+
 
     private void JumpButtonPressed ()
     {
@@ -130,12 +156,23 @@ public class SelectorUI : MonoBehaviour
 
         if (heroSelectController != null)
             SelectHero();
+
     }
 
     private void SelectHero ()
     {
         heroSelectController.UpdateReadyIcon(this, true);
         PlayerManager.Instance.SetPlayerSelectedHero(selectedOptionIndex, playerConfig);
+
+        if (selectorType == SelectorType.BotHeroSelector)
+        {
+            // Move to Bot Team Selector
+            heroSelectController.botTeamSelector.gameObject.SetActive(true);
+            heroSelectController.botTeamSelector.playerInput = playerInput;
+            heroSelectController.botTeamSelector.inputManager = inputManager;
+            heroSelectController.botTeamSelector.playerConfig = playerConfig;
+            this.enabled = false;
+        }
     }
 
     private void HandleOptionsNavigation ()
@@ -181,7 +218,8 @@ public class SelectorUI : MonoBehaviour
 
     public void MoveSelectorToOption ( int optionIndex )
     {
-        GetOptionList();
+        if (optionList.Count == 0)
+            GetHeroList();
 
         // Update the selected hero index first
         selectedOptionIndex = optionIndex;
@@ -190,17 +228,17 @@ public class SelectorUI : MonoBehaviour
         transform.position = optionList[optionIndex].transform.position;
 
         // Notify the HeroSelectManager about the new selected index
-        if (!isBot)
-            UpdateController();
+        if (selectorType != SelectorType.TeamSelector)
+            UpdateHeroSelectController();
     }
 
-    private void UpdateController ()
+    private void UpdateHeroSelectController ()
     {
         if (heroSelectController != null)
             heroSelectController.UpdateSelectorAvatar(this, selectedOptionIndex, playerConfig);
     }
 
-    public void GetOptionList ()
+    public void GetHeroList ()
     {
         optionList = heroSelectController?.GetTeamAvatarList(playerConfig.team);
     }

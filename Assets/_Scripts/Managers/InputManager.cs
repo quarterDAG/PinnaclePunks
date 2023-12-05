@@ -152,7 +152,8 @@ public class InputManager : MonoBehaviour
 
     public void OnSpawnMinion ( InputAction.CallbackContext context )
     {
-        if (playerController.isDead) return;
+        if (playerController)
+            if (playerController.isDead) return;
 
         if (!context.performed)
         {

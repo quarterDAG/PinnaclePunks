@@ -187,9 +187,18 @@ MonoBehaviour:
   optionList: []
   selectedOptionIndex: 0
   playerConfigData: {fileID: 11400000, guid: d3e8662a30226a343a404490b291db19, type: 2}
-  playerStats: {fileID: 0}
+  playerStats: {fileID: 11400000, guid: d39cfeff5f86f8447a21d0651fba2ee9, type: 2}
   playerInput: {fileID: -1252300234644729528}
   flipTeamB: 0
+  playerConfig:
+    playerIndex: 0
+    playerName: 
+    playerColor: {r: 0, g: 0, b: 0, a: 0}
+    team: 0
+    controlScheme: 0
+    playerState: 0
+    selectedHero: 0
+  selectorType: 0
 --- !u!114 &6125324141952652097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,7 +317,19 @@ MonoBehaviour:
     m_ActionId: 437faafd-4e53-464d-827f-dbfc2e0100c5
     m_ActionName: Player/Arrows[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow,/DualShock4GamepadHID/dpad/up,/DualShock4GamepadHID1/dpad/up,/XInputControllerWindows/dpad/up,/XInputControllerWindows1/dpad/up,/XInputControllerWindows2/dpad/up,/DualShock4GamepadHID/dpad/down,/DualShock4GamepadHID1/dpad/down,/XInputControllerWindows/dpad/down,/XInputControllerWindows1/dpad/down,/XInputControllerWindows2/dpad/down,/DualShock4GamepadHID/dpad/left,/DualShock4GamepadHID1/dpad/left,/XInputControllerWindows/dpad/left,/XInputControllerWindows1/dpad/left,/XInputControllerWindows2/dpad/left,/DualShock4GamepadHID/dpad/right,/DualShock4GamepadHID1/dpad/right,/XInputControllerWindows/dpad/right,/XInputControllerWindows1/dpad/right,/XInputControllerWindows2/dpad/right]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6125324141952652097}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: OnSpawnMinion
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: d051035f-0b44-4aa3-ba45-13345ce878b7
     m_ActionName: Player/SpawnMonster[/Keyboard/r,/DualShock4GamepadHID/buttonNorth,/DualShock4GamepadHID1/buttonNorth,/XInputControllerWindows/buttonNorth,/XInputControllerWindows1/buttonNorth,/XInputControllerWindows2/buttonNorth]
   - m_PersistentCalls:
